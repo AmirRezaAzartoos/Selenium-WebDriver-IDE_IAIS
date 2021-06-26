@@ -655,7 +655,7 @@ namespace FirstTry_app_1
                                     {
                                         sumTrue--;
                                         tabNeeded = string.Concat(Enumerable.Repeat("\t", sumTrue));
-                                        inWhileOrIf.Remove(inWhileOrIf.Keys.LastOrDefault());
+                                        inWhileOrIf[inWhileOrIf.Keys.LastOrDefault()] = false;
                                     }
 
                                 CommandCounterTB.Text = Convert.ToString(CommandCounter);
@@ -1150,6 +1150,324 @@ namespace FirstTry_app_1
             {
                 string OUT = IN.Replace("' + str(StoreEvalDB.vars[\"", "${").Replace("\" + str(StoreEvalDB.vars[\"", "${").Replace("str(StoreEvalDB.vars[\"", "${").Replace("\"]) + '", "}").Replace("\"]) + \"", "}").Replace("\"]) + ", "}").Replace("\"])", "}").Replace("' or '", "*").Replace("\" or \"", "*").Replace("' or ", "*").Replace("\" or ", "*").Replace(" or '", "*").Replace(" or \"", "*").Replace(" or ", "*");
                 return OUT;
+            }
+        }
+
+        string suittemp;
+        int indexError = 0;
+        double step;
+        private async void Update_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateAckDialog();
+            string AllSuit = "C:\\run-test-selenium\\Source\\Test-suits\\AllSuits.txt";
+            List<string> Suits = File.ReadLines(@AllSuit).ToList();
+            PBar.Maximum = mainWindow.Width;
+            step = mainWindow.Width / Suits.Count;
+            PBar.Visibility = Visibility.Visible;
+            PBar.Value = 0;
+            PBar.Opacity = 0.3;
+            await Task.Run(() => updateMethod());
+            PBar.Opacity = 0;
+            PBar.Visibility = Visibility.Hidden;
+        }
+
+        bool notConvertedTest = false;
+        private async Task updateMethod()
+        {
+            try
+            {
+                if (updateAck)
+                {
+                    string AllSuit = "C:\\run-test-selenium\\Source\\Test-suits\\AllSuits.txt";
+                    List<string> Suits = File.ReadLines(@AllSuit).ToList();
+                    List<string> builtSuits = Directory.GetFiles(@"C:\\run-test-selenium\\Source\\Test-suits-ubuntu", "*", SearchOption.AllDirectories).ToList();
+                    for (int j = 0; j < builtSuits.Count; j++)
+                        builtSuits[j] = FindBetween(builtSuits[j], "Test-suits-ubuntu\\", "_ubuntu.py");
+                    var needsBuild = Suits.Except(builtSuits).ToList();
+                    if (needsBuild.Count != 0)
+                    {
+                        BL.BuildFile _buildFile = new BL.BuildFile();
+                        notConvertedTest = true;
+                        for (int k = 0; k < needsBuild.Count; k++)
+                        {
+                            string tempneedsBuild = "C:\\seleniums\\Test_suits\\" + needsBuild[k] + "\\suit";
+                            string needsBuildSuit = File.ReadAllText(@tempneedsBuild);
+                            List<string> needsBuildTestCaseDR = TestCase(needsBuildSuit, true);
+                            for (int k1 = 0; k1 < needsBuildTestCaseDR.Count; k1++)
+                            {
+                                Application.Current.Dispatcher.Invoke(new Action(() => {
+                                    BL.OldIDEConverter.openOldTestCase("C:\\seleniums\\" + needsBuildTestCaseDR[k1].ToString() + ".html");
+                                    if (!File.Exists("C:\\run-test-selenium\\Source\\" + needsBuildTestCaseDR[k1].ToString() + ".py"))
+                                        _buildFile.TestMethod("C:\\run-test-selenium\\Source\\" + needsBuildTestCaseDR[k1].ToString() + ".py");
+                                }));
+                            }
+                        }
+                        notConvertedTest = false;
+                    }
+                    for (int i = 0; i < Suits.Count; i++)
+                    {
+                        string initJ = null;
+                        string temp1 = "C:\\seleniums\\Test_suits\\" + Suits[i] + "\\suit";
+                        string temp2 = "C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i] + "\\suit";
+                        Directory.CreateDirectory("C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i]);
+                        string Suit = File.ReadAllText(@temp1);
+                        List<string> TestCaseDR = TestCase(Suit, true);
+                        List<string> TestCaseNames = TestCase(Suit, false);
+
+                        string StaticCodeNew = File.ReadAllText(@"StaticCode.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
+                        int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
+                        string StaticCodeNew_First = StaticCodeNew.Substring(0, splitterIndex);
+                        string StaticCodeNew_Last = StaticCodeNew.Remove(0, splitterIndex + 11);
+
+                        string StaticCodeNew_ubuntu = File.ReadAllText(@"StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
+                        int splitterIndex_ubuntu = StaticCodeNew_ubuntu.IndexOf("#bodyCode#");
+                        string StaticCodeNew_First_ubuntu = StaticCodeNew_ubuntu.Substring(0, splitterIndex_ubuntu);
+                        string StaticCodeNew_Last_ubuntu = StaticCodeNew_ubuntu.Remove(0, splitterIndex_ubuntu + 11);
+
+                        string tempSuit = StaticCodeNew_First;
+                        string tempSuit_ubuntu = StaticCodeNew_First_ubuntu;
+                        for (int j = 0; j < TestCaseDR.Count; j++)
+                        {
+                            string temp3 = "C:\\run-test-selenium\\Source\\" + TestCaseDR[j] + ".py";
+                            tempSuit += "\n";
+                            tempSuit_ubuntu += "\n";
+                            string testCaseName = TestCaseDR[j].Split(new[] { "\\" }, StringSplitOptions.None)[1].Replace("-", "_").Replace(".", "_").Replace(" ", "_").Replace("&", "_");
+                            string tempSuit2 = File.ReadAllText(@temp3);
+                            int classStartLine = tempSuit2.IndexOf(":\r\n\t#");
+                            if (classStartLine == -1)
+                                classStartLine = tempSuit2.IndexOf(":\n\t#");
+                            tempSuit2 = "\r\nclass " + testCaseName + ":" + tempSuit2.Remove(0, classStartLine + 1);
+                            tempSuit += tempSuit2.Replace("\t", "\t\t").Replace("\r\nclass ", "\r\n\tclass ").Replace(testCaseName + ":", testCaseName + ":\r\n\t\tlog.debug(\"{:<8} {:<" + (_testCaseNameCount + 8) + "} {:<18}\".format('|  #" + (j + 1) + "', '|  " + testCaseName + "', '|  is running ...  |'))\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Failure'])");
+                            tempSuit += "\t\tTestCases.del_row(-1)\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Success'])\r\n";
+                            tempSuit_ubuntu += tempSuit2.Replace("\t", "\t\t").Replace("\r\nclass ", "\r\n\tclass ").Replace(testCaseName + ":", testCaseName + ":\r\n\t\tlog.debug(\"{:<8} {:<" + (_testCaseNameCount + 8) + "} {:<18}\".format('|  #" + (j + 1) + "', '|  " + testCaseName + "', '|  is running ...  |'))\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Failure'])");
+                            tempSuit_ubuntu += "\t\tTestCases.del_row(-1)\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Success'])\r\n";
+                            initJ = temp3;
+                        }
+                        suittemp = initJ + " in " + Suits[i];
+                        string A = "C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i] + "\\" + Suits[i] + ".py";
+                        string A_ubuntu = "C:\\run-test-selenium\\Source\\Test-suits-ubuntu\\" + Suits[i] + "_ubuntu.py";
+                        FileInfo file1 = new FileInfo(@A);
+                        FileInfo file1_ubuntu = new FileInfo(@A_ubuntu);
+                        StreamWriter tempSuit1 = file1.CreateText();
+                        StreamWriter tempSuit1_ubuntu = file1_ubuntu.CreateText();
+                        tempSuit += StaticCodeNew_Last;
+                        tempSuit = tempSuit.Replace("\t\t\t\t", "\t\t\t");
+                        tempSuit = tempSuit.Replace("\t\t\t\t\t", "\t\t\t\t");
+                        tempSuit = tempSuit.Replace("\t\t\t\t\t\t", "\t\t\t\t\t");
+                        tempSuit1.WriteLine(tempSuit);
+                        tempSuit1.Close();
+
+                        tempSuit_ubuntu += StaticCodeNew_Last_ubuntu;
+                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t", "\t\t\t");
+                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t\t", "\t\t\t\t");
+                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t\t\t", "\t\t\t\t\t");
+                        tempSuit1_ubuntu.WriteLine(tempSuit_ubuntu);
+                        tempSuit1_ubuntu.Close();
+
+                        string[] fixDates = File.ReadAllLines(@A_ubuntu);
+                        int _currentLine = 0;
+                        string className = "";
+                        using (StreamWriter writer = new StreamWriter(@A_ubuntu))
+                        {
+                            for (int currentLine = 0; currentLine < fixDates.Length - 4; currentLine++)
+                            {
+                                int temp = 0;
+                                if (fixDates[currentLine].Contains("class "))
+                                {
+                                    className = FindBetween(fixDates[currentLine], "class ", ":");
+                                    if (fixDates[currentLine].Contains("class downloadQoarri"))
+                                    {
+                                        temp = currentLine;
+                                    }
+                                }
+                                if (fixDates[currentLine].Contains("class downloadQoarri"))
+                                {
+                                    while (!fixDates[currentLine + 1].Contains("class "))
+                                    {
+                                        if (currentLine == temp + 3)
+                                        {
+                                            writer.WriteLine("\t\t# 2 | storeEval");
+                                            writer.WriteLine("\t\tStoreEvalDB.vars[\"allText\"] = \"\"");
+                                            writer.WriteLine("\t\t# Description: None");
+                                        }
+                                        if (fixDates[currentLine].Contains(" | sendKeys"))
+                                        {
+                                            string element = FindBetween(fixDates[currentLine + 1], " = ", ")") + ")";
+                                            string elementValue;
+                                            elementValue = FindBetween(fixDates[currentLine + 3], "send_keys(", ")");
+                                            if (elementValue.Contains("Keys.ENTER"))
+                                            {
+                                                writer.WriteLine("\t\t# 5 | runScript");
+                                                writer.WriteLine("\t\tdriver.execute_script('var ele=arguments[0]; ele.innerHTML += \"\\\\r\"; ', " + element + ")");
+                                                writer.WriteLine("\t\t# Description: None");
+                                            }
+                                            else
+                                            {
+                                                writer.WriteLine("\t\t# 5 | runScript");
+                                                writer.WriteLine("\t\tdriver.execute_script('var ele=arguments[0]; ele.innerHTML += " + elementValue.Replace("\'", "\"").Replace("\" + str(", "' + str(").Replace("]) + \"", "]) + '").Replace(")) + \"", ")) + '")/**/ + "; ', " + element + ")");
+                                                writer.WriteLine("\t\t# Description: None");
+                                            }
+                                            currentLine += 5;
+                                        }
+                                        else
+                                        {
+                                            writer.WriteLine(fixDates[currentLine].Replace("highlight", "# highlight"));
+                                            currentLine++;
+                                        }
+                                    }
+                                    writer.WriteLine(fixDates[currentLine]);
+                                }
+
+                                if (fixDates[currentLine + 4].Contains(".send_keys(") && fixDates[currentLine + 4].Contains("/"))
+                                {
+                                    string element = FindBetween(fixDates[currentLine + 1], " = ", ")") + ")";
+                                    string elementValue;
+                                    if (fixDates[currentLine + 4].Contains("'"))
+                                    {
+                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys('", "')");
+                                    }
+                                    else
+                                    {
+                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys(\"", "\")");
+                                    }
+                                    writer.WriteLine("\t\t# 5 | runScript");
+                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].focus();', " + element + ")");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 2 | pause");
+                                    writer.WriteLine("\t\ttime.sleep(3)");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 5 | runScript");
+                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].removeAttribute(\"value\");', " + element + ")");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 2 | pause");
+                                    writer.WriteLine("\t\ttime.sleep(3)");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 5 | runScript");
+                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].setAttribute(\"value\", \"" + elementValue + "\");', " + element + ")");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 2 | pause");
+                                    writer.WriteLine("\t\ttime.sleep(2)");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 5 | runScript");
+                                    writer.WriteLine("\t\tdriver.execute_script(\"arguments[0].click();\", " + element + ")");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    currentLine += 6;
+                                }
+                                else if (fixDates[currentLine].Contains("number_of_windows_to_be") || (fixDates[currentLine].Contains("window_handles") && fixDates[currentLine + 3].Contains("document.querySelector('print-preview-app').shadowRoot"))
+                                     || (fixDates[currentLine].Contains("window_handles") && fixDates[currentLine - 9].Contains("document.querySelector('print-preview-app').shadowRoot")) || fixDates[currentLine].Contains("document.querySelector('print-preview-app').shadowRoot"))
+                                {
+                                    writer.WriteLine(fixDates[currentLine].Replace("\t\t", "\t\t# "));
+                                }
+                                else if (fixDates[currentLine].Contains("\thighlight"))
+                                {
+                                    writer.WriteLine(fixDates[currentLine].Replace("highlight", "# highlight"));
+                                }
+                                else
+                                {
+                                    writer.WriteLine(fixDates[currentLine]);
+                                }
+                                _currentLine = currentLine;
+                            }
+                            writer.WriteLine(fixDates[_currentLine + 1]);
+                            writer.WriteLine(fixDates[_currentLine + 2]);
+                            writer.WriteLine(fixDates[_currentLine + 3]);
+                            writer.WriteLine(fixDates[_currentLine + 4]);
+                        }
+                        indexError = i;
+                        Application.Current.Dispatcher.Invoke(new Action(() => { PBar.Value += step; }));
+                    }
+                    Application.Current.Dispatcher.Invoke(new Action(() => {
+                        Log.Items.Add("Successfully updated");
+                    }));
+                    updateAck = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("Update_Click ---> Failed Because of error : " + ex.ToString());
+            }
+        }
+
+        public List<string> TestCase(string suit, bool wich)
+        {
+            string[] temp = null;
+            if (suit.Contains("</b></td></tr>\r\n"))
+            {
+                suit = FindBetween(suit, "</b></td></tr>\r\n", "\r\n</tbody></table>");
+                temp = suit.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            }
+            else if (suit.Contains("</b></td></tr>\n"))
+            {
+                suit = FindBetween(suit, "</b></td></tr>\n", "\n</tbody></table>");
+                temp = suit.Split(new string[] { "\n" }, StringSplitOptions.None);
+            }
+            int lines = suit.Split(new string[] { "\n" }, StringSplitOptions.None).Length;
+            List<string> temp2 = new List<string>();
+            List<string> temp3 = new List<string>();
+            if (wich)
+            {
+                for (int i = 0; i < lines; i++)
+                {
+                    string temp4 = FindBetween(temp[i], "<tr><td><a href=\"../../", "\">").Replace(".html", "").Replace(".htm", "");
+                    if (temp4.Contains("setGeneralPort") && temp4.Contains("setUploadPath") && temp4.Contains("pause2s"))
+                        continue;
+                    else
+                    {
+                        if (notConvertedTest)
+                            temp2.Add(temp4.Replace("/", "\\"));
+                        else
+                            temp2.Add(temp4.Replace(".", "_").Replace("/", "\\"));
+                    }
+                    if (temp4.Contains("ezharPishAzVorud3"))
+                    {
+
+                    }
+                }
+                return temp2;
+            }
+            else
+            {
+                _testCaseNameCount = 32;
+                for (int i = 0; i < lines; i++)
+                {
+                    string temp5 = FindBetween(temp[i], "\">", "</a></td></tr>");
+                    if (temp5.Contains("setGeneralPort") && temp5.Contains("setUploadPath") && temp5.Contains("pause2s"))
+                        continue;
+                    else
+                    {
+                        if (notConvertedTest)
+                            temp3.Add(temp5);
+                        else
+                            temp3.Add(temp5.Replace(".", "_"));
+                    }
+                    if (temp5.Contains("ezharPishAzVorud3"))
+                    {
+
+                    }
+                    _testCaseNameCount = (temp3[i].Length > _testCaseNameCount) ? temp3[i].Length : _testCaseNameCount;
+                }
+                return temp3;
+            }
+        }
+
+        private void CopyLogItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                multiplication = Multiplication.copy;
+                CopiedLogItem = Log.SelectedItems[0].ToString();
+                Clipboard.SetText(CopiedLogItem);
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("CopiedLogItem ---> Failed Because of error : " + ex.ToString());
+            }
+        }
+
+        public void handleTabs()
+        {
+            for (int i = 0; i < ListDB.Count; i++)
+            {
             }
         }
 
@@ -2103,316 +2421,6 @@ namespace FirstTry_app_1
             handleRightClickBugTestlist = true;
         }
 
-        string suittemp;
-        int indexError = 0;
-        double step;
-        private async void Update_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateAckDialog();
-            string AllSuit = "C:\\run-test-selenium\\Source\\Test-suits\\AllSuits.txt";
-            List<string> Suits = File.ReadLines(@AllSuit).ToList();
-            PBar.Maximum = mainWindow.Width;
-            step = mainWindow.Width / Suits.Count;
-            PBar.Visibility = Visibility.Visible;
-            PBar.Value = 0;
-            PBar.Opacity = 0.3;
-            await Task.Run(() => updateMethod());
-            PBar.Opacity = 0;
-            PBar.Visibility = Visibility.Hidden;
-        }
-
-        bool notConvertedTest = false;
-        private async Task updateMethod()
-        {
-            try
-            {
-                if (updateAck)
-                {
-                    string AllSuit = "C:\\run-test-selenium\\Source\\Test-suits\\AllSuits.txt";
-                    List<string> Suits = File.ReadLines(@AllSuit).ToList();
-                    List<string> builtSuits = Directory.GetFiles(@"C:\\run-test-selenium\\Source\\Test-suits-ubuntu", "*", SearchOption.AllDirectories).ToList();
-                    for (int j = 0; j < builtSuits.Count; j++)
-                        builtSuits[j] = FindBetween(builtSuits[j], "Test-suits-ubuntu\\", "_ubuntu.py");
-                    var needsBuild = Suits.Except(builtSuits).ToList();
-                    if (needsBuild.Count != 0)
-                    {
-                        BL.BuildFile _buildFile = new BL.BuildFile();
-                        notConvertedTest = true;
-                        for (int k = 0; k < needsBuild.Count; k++)
-                        {
-                            string tempneedsBuild = "C:\\seleniums\\Test_suits\\" + needsBuild[k] + "\\suit";
-                            string needsBuildSuit = File.ReadAllText(@tempneedsBuild);
-                            List<string> needsBuildTestCaseDR = TestCase(needsBuildSuit, true);
-                            for (int k1 = 0; k1 < needsBuildTestCaseDR.Count; k1++)
-                            {
-                                Application.Current.Dispatcher.Invoke(new Action(() => {
-                                    BL.OldIDEConverter.openOldTestCase("C:\\seleniums\\" + needsBuildTestCaseDR[k1].ToString() + ".html");
-                                    if (!File.Exists("C:\\run-test-selenium\\Source\\" + needsBuildTestCaseDR[k1].ToString() + ".py"))
-                                        _buildFile.TestMethod("C:\\run-test-selenium\\Source\\" + needsBuildTestCaseDR[k1].ToString() + ".py");
-                                }));
-                            }
-                        }
-                        notConvertedTest = false;
-                    }
-                    for (int i = 0; i < Suits.Count; i++)
-                    {
-                        string initJ = null;
-                        string temp1 = "C:\\seleniums\\Test_suits\\" + Suits[i] + "\\suit";
-                        string temp2 = "C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i] + "\\suit";
-                        Directory.CreateDirectory("C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i]);
-                        string Suit = File.ReadAllText(@temp1);
-                        List<string> TestCaseDR = TestCase(Suit, true);
-                        List<string> TestCaseNames = TestCase(Suit, false);
-
-                        string StaticCodeNew = File.ReadAllText(@"StaticCode.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
-                        int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
-                        string StaticCodeNew_First = StaticCodeNew.Substring(0, splitterIndex);
-                        string StaticCodeNew_Last = StaticCodeNew.Remove(0, splitterIndex + 11);
-
-                        string StaticCodeNew_ubuntu = File.ReadAllText(@"StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
-                        int splitterIndex_ubuntu = StaticCodeNew_ubuntu.IndexOf("#bodyCode#");
-                        string StaticCodeNew_First_ubuntu = StaticCodeNew_ubuntu.Substring(0, splitterIndex_ubuntu);
-                        string StaticCodeNew_Last_ubuntu = StaticCodeNew_ubuntu.Remove(0, splitterIndex_ubuntu + 11);
-
-                        string tempSuit = StaticCodeNew_First;
-                        string tempSuit_ubuntu = StaticCodeNew_First_ubuntu;
-                        for (int j = 0; j < TestCaseDR.Count; j++)
-                        {
-                            string temp3 = "C:\\run-test-selenium\\Source\\" + TestCaseDR[j] + ".py";
-                            tempSuit += "\n";
-                            tempSuit_ubuntu += "\n";
-                            string testCaseName = TestCaseDR[j].Split(new[] { "\\" }, StringSplitOptions.None)[1].Replace("-", "_").Replace(".", "_").Replace(" ", "_").Replace("&", "_");
-                            string tempSuit2 = File.ReadAllText(@temp3);
-                            int classStartLine = tempSuit2.IndexOf(":\r\n\t#");
-                            if (classStartLine == -1)
-                                classStartLine = tempSuit2.IndexOf(":\n\t#");
-                            tempSuit2 = "\r\nclass " + testCaseName + ":" + tempSuit2.Remove(0, classStartLine + 1);
-                            tempSuit += tempSuit2.Replace("\t", "\t\t").Replace("\r\nclass ", "\r\n\tclass ").Replace(testCaseName + ":", testCaseName + ":\r\n\t\tlog.debug(\"{:<8} {:<" + (_testCaseNameCount + 8) + "} {:<18}\".format('|  #" + (j + 1) + "', '|  " + testCaseName + "', '|  is running ...  |'))\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Failure'])");
-                            tempSuit += "\t\tTestCases.del_row(-1)\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Success'])\r\n";
-                            tempSuit_ubuntu += tempSuit2.Replace("\t", "\t\t").Replace("\r\nclass ", "\r\n\tclass ").Replace(testCaseName + ":", testCaseName + ":\r\n\t\tlog.debug(\"{:<8} {:<" + (_testCaseNameCount + 8) + "} {:<18}\".format('|  #" + (j + 1) + "', '|  " + testCaseName + "', '|  is running ...  |'))\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Failure'])");
-                            tempSuit_ubuntu += "\t\tTestCases.del_row(-1)\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Success'])\r\n";
-                            initJ = temp3;
-                        }
-                        suittemp = initJ + " in " + Suits[i];
-                        string A = "C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i] + "\\" + Suits[i] + ".py";
-                        string A_ubuntu = "C:\\run-test-selenium\\Source\\Test-suits-ubuntu\\" + Suits[i] + "_ubuntu.py";
-                        FileInfo file1 = new FileInfo(@A);
-                        FileInfo file1_ubuntu = new FileInfo(@A_ubuntu);
-                        StreamWriter tempSuit1 = file1.CreateText();
-                        StreamWriter tempSuit1_ubuntu = file1_ubuntu.CreateText();
-                        tempSuit += StaticCodeNew_Last;
-                        tempSuit = tempSuit.Replace("\t\t\t\t", "\t\t\t");
-                        tempSuit = tempSuit.Replace("\t\t\t\t\t", "\t\t\t\t");
-                        tempSuit = tempSuit.Replace("\t\t\t\t\t\t", "\t\t\t\t\t");
-                        tempSuit1.WriteLine(tempSuit);
-                        tempSuit1.Close();
-
-                        tempSuit_ubuntu += StaticCodeNew_Last_ubuntu;
-                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t", "\t\t\t");
-                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t\t", "\t\t\t\t");
-                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t\t\t", "\t\t\t\t\t");
-                        tempSuit1_ubuntu.WriteLine(tempSuit_ubuntu);
-                        tempSuit1_ubuntu.Close();
-
-                        string[] fixDates = File.ReadAllLines(@A_ubuntu);
-                        int _currentLine = 0;
-                        string className = "";
-                        using (StreamWriter writer = new StreamWriter(@A_ubuntu))
-                        {
-                            for (int currentLine = 0; currentLine < fixDates.Length - 4; currentLine++)
-                            {
-                                int temp = 0;
-                                if (fixDates[currentLine].Contains("class "))
-                                {
-                                    className = FindBetween(fixDates[currentLine], "class ", ":");
-                                    if (fixDates[currentLine].Contains("class downloadQoarri"))
-                                    {
-                                        temp = currentLine;
-                                    }
-                                }
-                                if (fixDates[currentLine].Contains("class downloadQoarri"))
-                                {
-                                    while (!fixDates[currentLine + 1].Contains("class "))
-                                    {
-                                        if (currentLine == temp + 3)
-                                        {
-                                            writer.WriteLine("\t\t# 2 | storeEval");
-                                            writer.WriteLine("\t\tStoreEvalDB.vars[\"allText\"] = \"\"");
-                                            writer.WriteLine("\t\t# Description: None");
-                                        }
-                                        if (fixDates[currentLine].Contains(" | sendKeys"))
-                                        {
-                                            string element = FindBetween(fixDates[currentLine + 1], " = ", ")") + ")";
-                                            string elementValue;
-                                            elementValue = FindBetween(fixDates[currentLine + 3], "send_keys(", ")");
-                                            if (elementValue.Contains("Keys.ENTER"))
-                                            {
-                                                writer.WriteLine("\t\t# 5 | runScript");
-                                                writer.WriteLine("\t\tdriver.execute_script('var ele=arguments[0]; ele.innerHTML += \"\\\\r\"; ', " + element + ")");
-                                                writer.WriteLine("\t\t# Description: None");
-                                            }
-                                            else
-                                            {
-                                                writer.WriteLine("\t\t# 5 | runScript");
-                                                writer.WriteLine("\t\tdriver.execute_script('var ele=arguments[0]; ele.innerHTML += " + elementValue.Replace("\'", "\"").Replace("\" + str(", "' + str(").Replace("]) + \"", "]) + '").Replace(")) + \"", ")) + '")/**/ + "; ', " + element + ")");
-                                                writer.WriteLine("\t\t# Description: None");
-                                            }
-                                            currentLine += 5;
-                                        }
-                                        else
-                                        {
-                                            writer.WriteLine(fixDates[currentLine].Replace("highlight", "# highlight"));
-                                            currentLine++;
-                                        }
-                                    }
-                                    writer.WriteLine(fixDates[currentLine]);
-                                }
-
-                                if (fixDates[currentLine + 4].Contains(".send_keys(") && fixDates[currentLine + 4].Contains("/"))
-                                {
-                                    string element = FindBetween(fixDates[currentLine + 1], " = ", ")") + ")";
-                                    string elementValue;
-                                    if (fixDates[currentLine + 4].Contains("'"))
-                                    {
-                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys('", "')");
-                                    }
-                                    else
-                                    {
-                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys(\"", "\")");
-                                    }
-                                    writer.WriteLine("\t\t# 5 | runScript");
-                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].focus();', " + element + ")");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 2 | pause");
-                                    writer.WriteLine("\t\ttime.sleep(3)");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 5 | runScript");
-                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].removeAttribute(\"value\");', " + element + ")");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 2 | pause");
-                                    writer.WriteLine("\t\ttime.sleep(3)");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 5 | runScript");
-                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].setAttribute(\"value\", \"" + elementValue + "\");', " + element + ")");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 2 | pause");
-                                    writer.WriteLine("\t\ttime.sleep(2)");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 5 | runScript");
-                                    writer.WriteLine("\t\tdriver.execute_script(\"arguments[0].click();\", " + element + ")");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    currentLine += 6;
-                                }
-                                else if (fixDates[currentLine].Contains("number_of_windows_to_be") || (fixDates[currentLine].Contains("window_handles") && fixDates[currentLine + 3].Contains("document.querySelector('print-preview-app').shadowRoot"))
-                                     || (fixDates[currentLine].Contains("window_handles") && fixDates[currentLine - 9].Contains("document.querySelector('print-preview-app').shadowRoot")) || fixDates[currentLine].Contains("document.querySelector('print-preview-app').shadowRoot"))
-                                {
-                                    writer.WriteLine(fixDates[currentLine].Replace("\t\t", "\t\t# "));
-                                }
-                                else if (fixDates[currentLine].Contains("\thighlight"))
-                                {
-                                    writer.WriteLine(fixDates[currentLine].Replace("highlight", "# highlight"));
-                                }
-                                else
-                                {
-                                    writer.WriteLine(fixDates[currentLine]);
-                                }
-                                _currentLine = currentLine;
-                            }
-                            writer.WriteLine(fixDates[_currentLine + 1]);
-                            writer.WriteLine(fixDates[_currentLine + 2]);
-                            writer.WriteLine(fixDates[_currentLine + 3]);
-                            writer.WriteLine(fixDates[_currentLine + 4]);
-                        }
-                        indexError = i;
-                        Application.Current.Dispatcher.Invoke(new Action(() => { PBar.Value += step; }));
-                    }
-                    Application.Current.Dispatcher.Invoke(new Action(() => {
-                        Log.Items.Add("Successfully updated");
-                    }));
-                    updateAck = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Items.Add("Update_Click ---> Failed Because of error : " + ex.ToString());
-            }
-        }
-
-        public List<string> TestCase(string suit, bool wich)
-        {
-            string[] temp = null;
-            if (suit.Contains("</b></td></tr>\r\n"))
-            {
-                suit = FindBetween(suit, "</b></td></tr>\r\n", "\r\n</tbody></table>");
-                temp = suit.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-            }
-            else if (suit.Contains("</b></td></tr>\n"))
-            {
-                suit = FindBetween(suit, "</b></td></tr>\n", "\n</tbody></table>");
-                temp = suit.Split(new string[] { "\n" }, StringSplitOptions.None);
-            }
-            int lines = suit.Split(new string[] { "\n" }, StringSplitOptions.None).Length;
-            List<string> temp2 = new List<string>();
-            List<string> temp3 = new List<string>();
-            if (wich)
-            {
-                for (int i = 0; i < lines; i++)
-                {
-                    string temp4 = FindBetween(temp[i], "<tr><td><a href=\"../../", "\">").Replace(".html", "").Replace(".htm", "");
-                    if (temp4.Contains("setGeneralPort") && temp4.Contains("setUploadPath") && temp4.Contains("pause2s"))
-                        continue;
-                    else
-                    {
-                        if (notConvertedTest)
-                            temp2.Add(temp4.Replace("/", "\\"));
-                        else
-                            temp2.Add(temp4.Replace(".", "_").Replace("/", "\\"));
-                    }
-                    if (temp4.Contains("ezharPishAzVorud3"))
-                    {
-
-                    }
-                }
-                return temp2;
-            }
-            else
-            {
-                _testCaseNameCount = 32;
-                for (int i = 0; i < lines; i++)
-                {
-                    string temp5 = FindBetween(temp[i], "\">", "</a></td></tr>");
-                    if (temp5.Contains("setGeneralPort") && temp5.Contains("setUploadPath") && temp5.Contains("pause2s"))
-                        continue;
-                    else
-                    {
-                        if (notConvertedTest)
-                            temp3.Add(temp5);
-                        else
-                            temp3.Add(temp5.Replace(".", "_"));
-                    }
-                    if (temp5.Contains("ezharPishAzVorud3"))
-                    {
-
-                    }
-                    _testCaseNameCount = (temp3[i].Length > _testCaseNameCount) ? temp3[i].Length : _testCaseNameCount;
-                }
-                return temp3;
-            }
-        }
-
-        private void CopyLogItem_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                multiplication = Multiplication.copy;
-                CopiedLogItem = Log.SelectedItems[0].ToString();
-                Clipboard.SetText(CopiedLogItem);
-            }
-            catch (Exception ex)
-            {
-                Log.Items.Add("CopiedLogItem ---> Failed Because of error : " + ex.ToString());
-            }
-        }
         #endregion
 
     }

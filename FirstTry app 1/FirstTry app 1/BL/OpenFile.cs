@@ -473,7 +473,7 @@ namespace FirstTry_app_1.BL
                         {
                             MainWindow.sumTrue--;
                             MainWindow.tabNeeded = string.Concat(Enumerable.Repeat("\t", MainWindow.sumTrue));
-                            MainWindow.inWhileOrIf.Remove(MainWindow.inWhileOrIf.Keys.LastOrDefault());
+                            MainWindow.inWhileOrIf[MainWindow.inWhileOrIf.Keys.LastOrDefault()] = false;
                         }
                     }
 
