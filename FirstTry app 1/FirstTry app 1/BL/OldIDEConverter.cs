@@ -65,7 +65,12 @@ namespace FirstTry_app_1.BL
                     }
                     else
                         tempTarget = _mainWindow.FindBetween(input[i + 2], "<td>", "</td>");*/
-                    MainWindow.ListDB.Add(new Commands(CommandCounter, _mainWindow.FindBetween(input[i + 1], "<td>", "</td>"), _mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", ";").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 3], "<td>", "</td>"), _mainWindow.FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter + 1), "None"));
+                    string tempCommand = _mainWindow.FindBetween(input[i + 1], "<td>", "</td>");
+                    if (tempCommand == "open2" || tempCommand == "open2AndWait")
+                        tempCommand = "open";
+                    if (tempCommand == "clickAndWait")
+                        tempCommand = "click";
+                    MainWindow.ListDB.Add(new Commands(CommandCounter, tempCommand, _mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter + 1), "None"));
                     i += 4;
                 }
             }

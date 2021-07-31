@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\
 FirstTry_app_1
 none
 false
 DEBUG;TRACE
-D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\App.xaml
-11-669707456
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\App.xaml
+11-1950749296
 
-20907355050
-21-118400763
-AddTestCase.xaml;CreateNewProject.xaml;MainWindow.xaml;MessageBox\AddTestFirst.xaml;MessageBox\ProgressBar.xaml;MessageBox\UnsavedContent.xaml;MessageBox\UnvalidCommand.xaml;MessageBox\EmptyField.xaml;MessageBox\UpdateAck.xaml;RenameTestCase.xaml;StartUpMessage.xaml;
+251255991860
+231332323451
+AddTestCase.xaml;CreateNewProject.xaml;MainWindow.xaml;MessageBox\AddTestFirst.xaml;MessageBox\TestSuitNameWarn.xaml;MessageBox\UnsavedContent.xaml;MessageBox\UnvalidCommand.xaml;MessageBox\EmptyField.xaml;MessageBox\UpdateAck.xaml;RenameTestCase.xaml;StartUpMessage.xaml;
 
 False
 

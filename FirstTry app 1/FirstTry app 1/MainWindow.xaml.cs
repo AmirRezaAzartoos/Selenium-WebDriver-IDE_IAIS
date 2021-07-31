@@ -163,6 +163,7 @@ namespace FirstTry_app_1
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(TestCaseListView.ItemsSource);
             view.Filter = UserFilter;
             Refrence.Text = "  Selenium WebDriver IDE\n  Version : 0.106";
+
         }
 
         ///////BUILD
@@ -183,6 +184,8 @@ namespace FirstTry_app_1
                 string tabNeededTemp = "";
                 while (CommandCounter > _counter)
                 {
+                    needCotBefore = needCotAfter = true;
+
                     ///////specifyTarget
                     string targetType = "";
                     if (ListDB.ElementAt(_counter).Target.Contains('=') && !ListDB.ElementAt(_counter).Target.Contains("//"))
@@ -205,7 +208,7 @@ namespace FirstTry_app_1
                             break;
                         case "link":
                             targetType = "link text";
-                            tempTarget = ListDB.ElementAt(_counter).Target.Replace("class=", "");
+                            tempTarget = ListDB.ElementAt(_counter).Target.Replace("link=", "");
                             break;
                         case "name":
                             tempTarget = ListDB.ElementAt(_counter).Target.Replace("name=", "");
@@ -219,7 +222,7 @@ namespace FirstTry_app_1
                             tempTarget = ListDB.ElementAt(_counter).Target.Replace("tag=", "");
                             break;
                         case "xpath":
-                            tempTarget = ListDB.ElementAt(_counter).Target;
+                            tempTarget = ListDB.ElementAt(_counter).Target.Replace("xpath=", "");
                             break;
                         default:
                             tempTarget = ListDB.ElementAt(_counter).Target;
@@ -232,7 +235,7 @@ namespace FirstTry_app_1
                         #region ===> open
                         case "open":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | open\n";
-                            string _open = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.get(" + ConvertTextToIdeFormat(tempTarget) + ")\n";
+                            string _open = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.get(" + ConvertTextToIdeFormat(tempTarget, false, true) + ")\n";
                             mainString += _open;
                             mainString += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             break;
@@ -272,7 +275,7 @@ namespace FirstTry_app_1
                         #region ===> waitForNotText
                         case "waitForNotText":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForNotText\n";
-                            string _waitForNotText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until_not(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "))\n";
+                            string _waitForNotText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until_not(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                             _waitForNotText += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _waitForNotText;
                             break;
@@ -281,7 +284,7 @@ namespace FirstTry_app_1
                         #region ===> waitForText
                         case "waitForText":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForText\n";
-                            string _waitForText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "))\n";
+                            string _waitForText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                             _waitForText += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _waitForText += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                             _waitForText += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -292,7 +295,7 @@ namespace FirstTry_app_1
                         #region ===> waitForValue
                         case "waitForValue":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForValue\n";
-                            string _waitForValue = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element_value((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "))\n";
+                            string _waitForValue = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element_value((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                             _waitForValue += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _waitForValue += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                             _waitForValue += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -341,7 +344,7 @@ namespace FirstTry_app_1
                             string _type = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _type += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                             _type += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".clear()\n";
-                            _type += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".send_keys(" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + ")\n";
+                            _type += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".send_keys(" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + ")\n";
                             _type += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _type;
                             break;
@@ -352,7 +355,7 @@ namespace FirstTry_app_1
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | sendKeys\n";
                             string _sendKeys = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _sendKeys += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
-                            _sendKeys += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".send_keys(" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + ")\n";
+                            _sendKeys += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".send_keys(" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + ")\n";
                             _sendKeys += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _sendKeys;
                             break;
@@ -388,7 +391,7 @@ namespace FirstTry_app_1
                                 tempLabel = tempLabel.Replace("label=", "");
                             string _select = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _select += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
-                            _select += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + "_2 = " + ListDB.ElementAt(_counter).VariableName + ".find_element_by_" + targetType.Replace(" ", "_") + "(\"option[. = '" + ConvertTextToIdeFormat(tempLabel) + "']\")\n";
+                            _select += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + "_2 = " + ListDB.ElementAt(_counter).VariableName + ".find_element_by_" + targetType.Replace(" ", "_") + "(\"option[. = '" + ConvertTextToIdeFormat(tempLabel, false, true) + "']\")\n";
                             _select += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + "_2)\n";
                             _select += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + "_2.click()\n";
                             _select += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -404,7 +407,7 @@ namespace FirstTry_app_1
                                 tempLabel1 = tempLabel1.Replace("label=", "");
                             string _selectByVisibleText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                             _selectByVisibleText += tabNeededTemp + "\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
-                            _selectByVisibleText += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_visible_text(" + ConvertTextToIdeFormat(tempLabel1) + ")\n";
+                            _selectByVisibleText += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_visible_text(" + ConvertTextToIdeFormat(tempLabel1, false, true) + ")\n";
                             _selectByVisibleText += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _selectByVisibleText;
                             break;
@@ -418,7 +421,7 @@ namespace FirstTry_app_1
                                 tempLabel2 = tempLabel2.Replace("label=", "");
                             string _selectByValue = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                             _selectByValue += tabNeededTemp + "\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
-                            _selectByValue += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_value(" + ConvertTextToIdeFormat(tempLabel2) + ")\n";
+                            _selectByValue += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_value(" + ConvertTextToIdeFormat(tempLabel2, false, true) + ")\n";
                             _selectByValue += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _selectByValue;
                             break;
@@ -521,8 +524,9 @@ namespace FirstTry_app_1
 
                         #region ===> storeEval
                         case "storeEval":
+                            needCotBefore = needCotAfter = false;
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | storeEval\n";
-                            string _storeEval = tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ConvertTextToIdeFormat(tempTarget) + "\n";
+                            string _storeEval = tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ConvertTextToIdeFormat(tempTarget, false, true) + "\n";
                             _storeEval += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeEval;
                             Stored.Items.Add(_storeEval);
@@ -555,8 +559,9 @@ namespace FirstTry_app_1
 
                         #region ===> replace
                         case "replace":
+                            needCotBefore = needCotAfter = false;
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | replace\n";
-                            string _replace = tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).VariableName + "\"] = " + ConvertTextToIdeFormat(tempTarget) + "\n";
+                            string _replace = tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).VariableName + "\"] = " + ConvertTextToIdeFormat(tempTarget, false, true) + "\n";
                             _replace += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _replace;
                             Stored.Items.Add(_replace);
@@ -700,6 +705,8 @@ namespace FirstTry_app_1
 
                 while (testCaseCounter > _counter1)
                 {
+                    needCotBefore = needCotAfter = true;
+
                     var obj = TestList.FirstOrDefault(x => x.TestNumber == _counter1 + 1);
                     if (obj != null)
                     {
@@ -758,7 +765,7 @@ namespace FirstTry_app_1
                             #region ===> open
                             case "open":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | open\n";
-                                string _open = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.get(" + ConvertTextToIdeFormat(tempTarget) + ")\n";
+                                string _open = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.get(" + ConvertTextToIdeFormat(tempTarget, false, true) + ")\n";
                                 mainString += _open;
                                 mainString += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 break;
@@ -798,7 +805,7 @@ namespace FirstTry_app_1
                             #region ===> waitForNotText
                             case "waitForNotText":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForNotText\n";
-                                string _waitForNotText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until_not(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "))\n";
+                                string _waitForNotText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until_not(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                                 _waitForNotText += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _waitForNotText;
                                 break;
@@ -807,7 +814,7 @@ namespace FirstTry_app_1
                             #region ===> waitForText
                             case "waitForText":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForText\n";
-                                string _waitForText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "))\n";
+                                string _waitForText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                                 _waitForText += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _waitForText += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                                 _waitForText += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -818,7 +825,7 @@ namespace FirstTry_app_1
                             #region ===> waitForValue
                             case "waitForValue":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForValue\n";
-                                string _waitForValue = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element_value((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "))\n";
+                                string _waitForValue = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element_value((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                                 _waitForValue += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _waitForValue += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                                 _waitForValue += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -867,7 +874,7 @@ namespace FirstTry_app_1
                                 string _type = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _type += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                                 _type += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".clear()\n";
-                                _type += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".send_keys(" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + ")\n";
+                                _type += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".send_keys(" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + ")\n";
                                 _type += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _type;
                                 break;
@@ -878,7 +885,7 @@ namespace FirstTry_app_1
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | sendKeys\n";
                                 string _sendKeys = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _sendKeys += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
-                                _sendKeys += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".send_keys(" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + ")\n";
+                                _sendKeys += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".send_keys(" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + ")\n";
                                 _sendKeys += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _sendKeys;
                                 break;
@@ -911,7 +918,7 @@ namespace FirstTry_app_1
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | select\n";
                                 string _select = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _select += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
-                                _select += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + "_2 = " + ListDB.ElementAt(_counter).VariableName + ".find_element_by_" + targetType.Replace(" ", "_") + "(\"option[. = '" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "']\")\n";
+                                _select += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + "_2 = " + ListDB.ElementAt(_counter).VariableName + ".find_element_by_" + targetType.Replace(" ", "_") + "(\"option[. = '" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + "']\")\n";
                                 _select += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + "_2)\n";
                                 _select += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + "_2.click()\n";
                                 _select += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -924,7 +931,7 @@ namespace FirstTry_app_1
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | selectByVisibleText\n";
                                 string _selectByVisibleText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByVisibleText += tabNeededTemp + "\t\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
-                                _selectByVisibleText += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_visible_text(\"" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "\")\n";
+                                _selectByVisibleText += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_visible_text(\"" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + "\")\n";
                                 _selectByVisibleText += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _selectByVisibleText;
                                 break;
@@ -935,7 +942,7 @@ namespace FirstTry_app_1
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | selectByValue\n";
                                 string _selectByValue = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByValue += tabNeededTemp + "\t\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
-                                _selectByValue += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_value(\"" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "\")\n";
+                                _selectByValue += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_value(\"" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + "\")\n";
                                 _selectByValue += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _selectByValue;
                                 break;
@@ -946,7 +953,7 @@ namespace FirstTry_app_1
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | selectByIndex\n";
                                 string _selectByIndex = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByIndex += tabNeededTemp + "\t\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
-                                _selectByIndex += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_index(\"" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value) + "\")\n";
+                                _selectByIndex += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_index(\"" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + "\")\n";
                                 _selectByIndex += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _selectByIndex;
                                 break;
@@ -1038,8 +1045,9 @@ namespace FirstTry_app_1
 
                             #region ===> storeEval
                             case "storeEval":
+                                needCotBefore = needCotAfter = false;
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | storeEval\n";
-                                string _storeEval = tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ConvertTextToIdeFormat(tempTarget) + "\n";
+                                string _storeEval = tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ConvertTextToIdeFormat(tempTarget, false, true) + "\n";
                                 _storeEval += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeEval;
                                 Stored.Items.Add(_storeEval);
@@ -1072,8 +1080,9 @@ namespace FirstTry_app_1
 
                             #region ===> replace
                             case "replace":
+                                needCotBefore = needCotAfter = false;
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | replace\n";
-                                string _replace = tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).VariableName + "\"] = " + ConvertTextToIdeFormat(tempTarget) + "\n";
+                                string _replace = tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).VariableName + "\"] = " + ConvertTextToIdeFormat(tempTarget, false, true) + "\n";
                                 _replace += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _replace;
                                 Stored.Items.Add(_replace);
@@ -2249,17 +2258,6 @@ namespace FirstTry_app_1
             OpenFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
         }
 
-        private void OpenOldFile_MouseEnter(object sender, MouseEventArgs e)
-        {
-            var bc = new BrushConverter();
-            OpenOldFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF00C6FF");
-        }
-
-        private void OpenOldFile_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var bc = new BrushConverter();
-            OpenOldFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
-        }
         private void SaveAsFile_MouseEnter(object sender, MouseEventArgs e)
         {
             var bc = new BrushConverter();
@@ -3014,114 +3012,99 @@ namespace FirstTry_app_1
             }
         }
 
-        public string ConvertTextToIdeFormat(string IN)
+        bool needCotBefore = true;
+        bool needCotAfter = true;
+
+        public string ConvertTextToIdeFormat(string IN, bool considerStar, bool considerDolar)
         {
             try
             {
-                bool needCotBefore = true;
-                bool needCotAfter = true;
                 string OUT = "";
-                if (!IN.Contains('*') && !IN.Contains("${"))
+                if (IN.Contains("Math.floor"))
                 {
-                    if (IN.Substring(0, 1) == "\"" && IN.Substring(IN.Length - 1, 1) == "\"")
-                    {
-                        IN = IN.Remove(0, 1);
-                        IN = IN.Remove(IN.Length - 1, 1);
-                        OUT = "'" + IN + "'";
-                    }
-                    else if ((IN.Substring(0, 1) != "\"" && IN.Substring(0, 1) != "'") && (IN.Substring(IN.Length - 1, 1) != "\"" && IN.Substring(IN.Length - 1, 1) != "'"))
-                        OUT = "'" + IN + "'";
-                    else
-                        OUT = IN;
-
-                    return OUT;
+                    string period = FindBetween(IN, "random()*", ")").Remove(FindBetween(IN, "random()*", ")").Length - 2, 1);
+                    OUT = "random.randint(" + period + ", " + period.Replace("1", "9").Replace("0", "9") + ")";
                 }
-                else
+                if (IN.Contains('*') && considerStar)
                 {
-                    if (IN.Substring(0, 1) == "\"" && IN.Substring(IN.Length - 1, 1) == "\"")
+                    /*if (IN.Substring(0, 1) == "*")
+                        needCotBefore = false;
+                    if (IN.Substring(IN.Length - 1, 1) == "*")
+                        needCotAfter = false;*/
+                    string[] INStar = IN.Split('*');
+                    INStar = INStar.Where(val => val != "").ToArray();
+                    for (int i = 0; i < INStar.Length; i++)
                     {
-                        IN = IN.Remove(0, 1);
-                        IN = IN.Remove(IN.Length - 1, 1);
-                    }
-                    if (IN.Contains('*'))
-                    {
-                        if (IN.Substring(0, 1) == "*")
-                            needCotBefore = false;
-                        if (IN.Substring(IN.Length - 1, 1) == "*")
-                            needCotAfter = false;
-                        string[] INStar = IN.Split('*');
-                        INStar = INStar.Where(val => val != "").ToArray();
-                        for (int i = 0; i < INStar.Length; i++)
+                        OUT += INStar[i];
+                        if (i < INStar.Length - 1)
                         {
-                            OUT += INStar[i];
-                            if (i < INStar.Length - 1)
+                            if (INStar[i + 1].Substring(0) == "${" && INStar[i].Contains("${") && INStar[i].Substring(INStar[i].Length - 1) == "}")
                             {
-                                if (INStar[i + 1].Substring(0) == "${" && INStar[i].Contains("${") && INStar[i].Substring(INStar[i].Length - 1) == "}")
-                                {
-                                    OUT += " or ";
-                                }
-                                else if (INStar[i + 1].Substring(0, 2) == "${")
-                                {
-                                    OUT += "' or ";
-                                }
-                                else if (INStar[i].Contains("${") && INStar[i].Substring(INStar[i].Length - 1) == "}")
-                                {
-                                    OUT += " or '";
-                                }
-                                else
-                                {
-                                    OUT += "' or '";
-                                }
+                                OUT += " or ";
                             }
-                        }
-                        IN = OUT;
-                        OUT = "";
-                    }
-                    if (IN.Contains("${"))
-                    {
-                        if (IN.Substring(0, 2) == "${")
-                            needCotBefore = false;
-                        if (IN.Substring(IN.Length - 1, 1) == "}")
-                            needCotAfter = false;
-                        string[] INDolar = IN.Split('$');
-                        INDolar = INDolar.Where(val => val != "").ToArray();
-                        for (int i = 0; i < INDolar.Length; i++)
-                        {
-                            if (INDolar[i].Contains('{') && INDolar[i].Contains('}'))
+                            else if (INStar[i + 1].Substring(0, 2) == "${")
                             {
-                                // start
-                                if (i == 0)
-                                    INDolar[i] = INDolar[i].Replace("{", "str(StoreEvalDB.vars[\"");
-                                else
-                                    INDolar[i] = (INDolar[i - 1].Contains(" or ") && INDolar[i - 1].Substring(INDolar[i - 1].Length - 4, 4) == " or ") ?
-                                        INDolar[i].Replace("{", "str(StoreEvalDB.vars[\"") : INDolar[i].Replace("{", "' + str(StoreEvalDB.vars[\"");
-
-                                if (INDolar[i].Contains(" or ") && INDolar[i].Substring(INDolar[i].IndexOf("}") + 1, 4) == " or ")
-                                    INDolar[i] = INDolar[i].Replace("}", "\"])");
-                                else if (INDolar[i].IndexOf('}') == INDolar[i].Length - 1 && i == INDolar.Length - 1)
-                                    INDolar[i] = INDolar[i].Replace("}", "\"])");
-                                else if (INDolar[i].IndexOf('}') == INDolar[i].Length - 1)
-                                    INDolar[i] = INDolar[i].Replace("}", "\"]) + ");
-                                else
-                                    INDolar[i] = INDolar[i].Replace("}", "\"]) + '");
-                                // end
-                                INDolar[i] = INDolar[i].IndexOf('}') + 1 != null ? INDolar[i].Replace("}", "\"])") : INDolar[i].Replace("}", "\"]) + '");
-                                OUT += INDolar[i];
+                                OUT += "' or ";
+                            }
+                            else if (INStar[i].Contains("${") && INStar[i].Substring(INStar[i].Length - 1) == "}")
+                            {
+                                OUT += " or '";
                             }
                             else
                             {
-                                OUT += INDolar[i];
+                                OUT += "' or '";
                             }
                         }
                     }
-                    if (needCotBefore)
-                        OUT = "'" + OUT;
-                    if (needCotAfter)
-                        OUT = OUT + "'";
-                    return OUT;
+                    IN = OUT;
+                    OUT = "";
                 }
+                if (IN.Contains("${") && considerDolar)
+                {
+                    if (IN.Substring(0, 2) == "${")
+                        needCotBefore = false;
+                    if (IN.Substring(IN.Length - 1, 1) == "}")
+                        needCotAfter = false;
+                    string[] INDolar = IN.Split('$');
+                    INDolar = INDolar.Where(val => val != "").ToArray();
+                    for (int i = 0; i < INDolar.Length; i++)
+                    {
+                        if (INDolar[i].Contains('{') && INDolar[i].Contains('}'))
+                        {
+                            // start
+                            if (i == 0)
+                                INDolar[i] = INDolar[i].Replace("{", "str(StoreEvalDB.vars[\"");
+                            else
+                                INDolar[i] = (INDolar[i - 1].Contains(" or ") && INDolar[i - 1].Substring(INDolar[i - 1].Length - 4, 4) == " or ") ?
+                                    INDolar[i].Replace("{", "str(StoreEvalDB.vars[\"") : INDolar[i].Replace("{", "' + str(StoreEvalDB.vars[\"");
+
+                            if (INDolar[i].Contains(" or ") && INDolar[i].Substring(INDolar[i].IndexOf("}") + 1, 4) == " or ")
+                                INDolar[i] = INDolar[i].Replace("}", "\"])");
+                            else if (INDolar[i].IndexOf('}') == INDolar[i].Length - 1 && i == INDolar.Length - 1)
+                                INDolar[i] = INDolar[i].Replace("}", "\"])");
+                            else if (INDolar[i].IndexOf('}') == INDolar[i].Length - 1)
+                                INDolar[i] = INDolar[i].Replace("}", "\"]) + ");
+                            else
+                                INDolar[i] = INDolar[i].Replace("}", "\"]) + '");
+                            // end
+                            INDolar[i] = INDolar[i].IndexOf('}') + 1 != null ? INDolar[i].Replace("}", "\"])") : INDolar[i].Replace("}", "\"]) + '");
+                            OUT += INDolar[i];
+                        }
+                        else
+                        {
+                            OUT += INDolar[i];
+                        }
+                    }
+                }
+                if (OUT == "")
+                    OUT = IN;
+                if (needCotBefore)
+                    OUT = "'" + OUT;
+                if (needCotAfter)
+                    OUT = OUT + "'";
+                return OUT;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Items.Add("ConvertTextToIdeFormat ---> Failed Because of error : " + ex.ToString() + " in line ");
                 return IN;
@@ -3130,13 +3113,24 @@ namespace FirstTry_app_1
 
         public string ConvertTextFromIdeFormat(string IN)
         {
+            string OUT = "";
+            if (IN.Substring(0, 1) == "'")
+            {
+                IN = IN.Remove(0, 1);
+                OUT = IN;
+            }
+            if (IN.Substring(IN.Length - 1, 1) == "'")
+            {
+                IN = IN.Remove(IN.Length - 1, 1);
+                OUT = IN;
+            }
             if (!IN.Contains("str(StoreEvalDB.vars") && !IN.Contains(" or "))
             {
-                return IN;
+                return OUT;
             }
             else
             {
-                string OUT = IN.Replace("' + str(StoreEvalDB.vars[\"", "${").Replace("\" + str(StoreEvalDB.vars[\"", "${").Replace("str(StoreEvalDB.vars[\"", "${").Replace("\"]) + '", "}").Replace("\"]) + \"", "}").Replace("\"]) + ", "}").Replace("\"])", "}").Replace("' or '", "*").Replace("\" or \"", "*").Replace("' or ", "*").Replace("\" or ", "*").Replace(" or '", "*").Replace(" or \"", "*").Replace(" or ", "*");
+                OUT = IN.Replace("' + str(StoreEvalDB.vars[\"", "${").Replace("\" + str(StoreEvalDB.vars[\"", "${").Replace("str(StoreEvalDB.vars[\"", "${").Replace("\"]) + '", "}").Replace("\"]) + \"", "}").Replace("\"]) + ", "}").Replace("\"])", "}").Replace("' or '", "*").Replace("\" or \"", "*").Replace("' or ", "*").Replace("\" or ", "*").Replace(" or '", "*").Replace(" or \"", "*").Replace(" or ", "*");
                 return OUT;
             }
         }
@@ -4096,17 +4090,24 @@ namespace FirstTry_app_1
         double step;
         private async void Update_Click(object sender, RoutedEventArgs e)
         {
-            UpdateAckDialog();
-            string AllSuit = "C:\\run-test-selenium\\Source\\Test-suits\\AllSuits.txt";
-            List<string> Suits = File.ReadLines(@AllSuit).ToList();
-            PBar.Maximum = mainWindow.Width;
-            step = mainWindow.Width / Suits.Count;
-            PBar.Visibility = Visibility.Visible;
-            PBar.Value = 0;
-            PBar.Opacity = 0.3;
-            await Task.Run(() => updateMethod());
-            PBar.Opacity = 0;
-            PBar.Visibility = Visibility.Hidden;
+            try
+            {
+                UpdateAckDialog();
+                string AllSuit = "C:\\run-test-selenium\\Source\\Test-suits\\AllSuits.txt";
+                List<string> Suits = File.ReadLines(@AllSuit).ToList();
+                PBar.Maximum = mainWindow.Width;
+                step = mainWindow.Width / Suits.Count;
+                PBar.Visibility = Visibility.Visible;
+                PBar.Value = 0;
+                PBar.Opacity = 0.3;
+                await Task.Run(() => updateMethod());
+                PBar.Opacity = 0;
+                PBar.Visibility = Visibility.Hidden;
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("Update_Click ---> Failed Because of error : " + ex.ToString());
+            }
         }
 
         bool notConvertedTest = false;
@@ -4114,17 +4115,19 @@ namespace FirstTry_app_1
         {
             try
             {
+                Application.Current.Dispatcher.Invoke(new Action(() => {
+                    BL.BuildFile _buildFile = new BL.BuildFile();
+                }));
                 if (updateAck)
                 {
                     string AllSuit = "C:\\run-test-selenium\\Source\\Test-suits\\AllSuits.txt";
                     List<string> Suits = File.ReadLines(@AllSuit).ToList();
-                    List<string> builtSuits = Directory.GetFiles(@"C:\\run-test-selenium\\Source\\Test-suits-ubuntu", "*", SearchOption.AllDirectories).ToList();
+                    /*List<string> builtSuits = Directory.GetFiles(@"C:\\run-test-selenium\\Source\\Test-suits-ubuntu", "*", SearchOption.AllDirectories).ToList();
                     for (int j = 0; j < builtSuits.Count; j++)
                         builtSuits[j] = FindBetween(builtSuits[j], "Test-suits-ubuntu\\", "_ubuntu.py");
                     var needsBuild = Suits.Except(builtSuits).ToList();
                     if (needsBuild.Count != 0)
                     {
-                        //BL.BuildFile _buildFile = new BL.BuildFile();
                         notConvertedTest = true;
                         for (int k = 0; k < needsBuild.Count; k++)
                         {
@@ -4141,7 +4144,7 @@ namespace FirstTry_app_1
                             }
                         }
                         notConvertedTest = false;
-                    }
+                    }*/
                     for (int i = 0; i < Suits.Count; i++)
                     {
                         string initJ = null;
@@ -4149,8 +4152,13 @@ namespace FirstTry_app_1
                         string temp2 = "C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i] + "\\suit";
                         Directory.CreateDirectory("C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i]);
                         string Suit = File.ReadAllText(@temp1);
+
+                        //notConvertedTest = true;
+
                         List<string> TestCaseDR = TestCase(Suit, true);
                         List<string> TestCaseNames = TestCase(Suit, false);
+
+                        //notConvertedTest = false;
 
                         string StaticCodeNew = File.ReadAllText(@"StaticCode.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
                         int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
@@ -4170,6 +4178,13 @@ namespace FirstTry_app_1
                             tempSuit += "\n";
                             tempSuit_ubuntu += "\n";
                             string testCaseName = TestCaseDR[j].Split(new[] { "\\" }, StringSplitOptions.None)[1].Replace("-", "_").Replace(".", "_").Replace(" ", "_").Replace("&", "_");
+                            if (!File.Exists(@temp3))
+                            {
+                                Application.Current.Dispatcher.Invoke(new Action(() => {
+                                    BL.OldIDEConverter.openOldTestCase("C:\\seleniums\\" + TestCaseDR[j].ToString() + ".html");
+                                    TestMethod("C:\\run-test-selenium\\Source\\" + TestCaseDR[j].ToString() + ".py");
+                                }));
+                            }
                             string tempSuit2 = File.ReadAllText(@temp3);
                             int classStartLine = tempSuit2.IndexOf(":\r\n\t#");
                             if (classStartLine == -1)
@@ -4256,17 +4271,17 @@ namespace FirstTry_app_1
                                     writer.WriteLine(fixDates[currentLine]);
                                 }
 
-                                if (fixDates[currentLine + 4].Contains(".send_keys(") && fixDates[currentLine + 4].Contains("/"))
+                                if (fixDates[currentLine].Contains("| type") && fixDates[currentLine + 4].Contains("/"))
                                 {
                                     string element = FindBetween(fixDates[currentLine + 1], " = ", ")") + ")";
                                     string elementValue;
                                     if (fixDates[currentLine + 4].Contains("'"))
                                     {
-                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys('", "')");
+                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys('", "')").Replace("\"", "\\\"");
                                     }
                                     else
                                     {
-                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys(\"", "\")");
+                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys(\"", "\")").Replace("\"", "\\\"");
                                     }
                                     writer.WriteLine("\t\t# 5 | runScript");
                                     writer.WriteLine("\t\tdriver.execute_script('arguments[0].focus();', " + element + ")");
@@ -4281,7 +4296,7 @@ namespace FirstTry_app_1
                                     writer.WriteLine("\t\ttime.sleep(3)");
                                     writer.WriteLine("\t\t# Description: None");
                                     writer.WriteLine("\t\t# 5 | runScript");
-                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].setAttribute(\"value\", \"" + elementValue + "\");', " + element + ")");
+                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].setAttribute(\"value\", \"" + elementValue.Replace("[\\\"", "[\"").Replace("\\\"])", "\"])") + "\");', " + element + ")");
                                     writer.WriteLine("\t\t# Description: None");
                                     writer.WriteLine("\t\t# 2 | pause");
                                     writer.WriteLine("\t\ttime.sleep(2)");
@@ -4403,5 +4418,14 @@ namespace FirstTry_app_1
         }
         #endregion
 
+        private void OpenNewTestCaseClick_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenNewTestSuitClick_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

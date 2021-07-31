@@ -309,7 +309,7 @@
                                     <Border Grid.Column="1" Margin="0,0,986.2,0" HorizontalAlignment="Left" VerticalAlignment="Stretch">
                                         <TextBox TabIndex="4" x:Name="ProjectNameText" FontFamily="Roboto Medium" FontSize="16" Margin="4,7,-204,3.8" Foreground="#FF323232" TextWrapping="NoWrap" BorderBrush="{x:Null}" Background="{x:Null}" materialDesign:HintAssist.Hint="*" CaretBrush="#FF73CFFF"/>
                                     </Border>
-                                    <Border Grid.Column="2" Margin="0.2,0,0,-0.2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="33">
+                                    <Border Grid.Column="3" Margin="0.2,0,0,-0.2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="33">
                                         <Button x:Name="Update" Click="Update_Click" Margin="5,9,4.6,4.8" BorderBrush="{x:Null}" Foreground="{x:Null}" Cursor="Hand" Opacity="0.8">
                                             <Button.Style>
                                                 <Style TargetType="{x:Type Button}">
@@ -353,7 +353,7 @@
                                             </Button.ToolTip>
                                         </Button>
                                     </Border>
-                                    <Border Grid.Column="3" Margin="0,0,986.2,0" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                                    <Border Grid.Column="4" Margin="0,0,986.2,0" HorizontalAlignment="Left" VerticalAlignment="Stretch">
                                         <Button x:Name="Create" Click="Create_Click" Margin="8,10,-32,7.8" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="20" Cursor="Hand" Opacity="0.8" Height="19">
                                             <Button.Style>
                                                 <Style TargetType="{x:Type Button}">
@@ -397,27 +397,6 @@
                                             </Button.ToolTip>
                                         </Button>
                                     </Border>
-                                    <Border Grid.Column="4" Margin="0.2,0,0,-0.2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="33">
-                                        <materialDesign:PopupBox Name="OpenOldFile" MouseEnter="OpenOldFile_MouseEnter" Cursor="Hand" BorderThickness="0" Margin="7,9,0,0" Grid.Column="4"
-                                                                 PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="23" MouseLeave="OpenOldFile_MouseLeave" Foreground="#FF1C1C1C">
-                                            <materialDesign:PopupBox.ToggleContent>
-                                                <materialDesign:PackIcon Name="OpenOldFileIcon" Kind="FolderOpenoutline" Foreground="#FF1C1C1C" Width="20" Height="20" Opacity="0.8"/>
-                                            </materialDesign:PopupBox.ToggleContent>
-                                            <materialDesign:PopupBox.ToolTip>
-                                                <ToolTip>
-                                                    Open old file
-                                                </ToolTip>
-                                            </materialDesign:PopupBox.ToolTip>
-                                            <StackPanel Width="150" Margin="5">
-                                                <Button Name="OpenOldTestCaseClick" Click="OpenOldTestCaseClick_Click"  Content="Old Test Case" Cursor="Hand">
-                                                    <Button.ToolTip>
-                                                        Ctrl + Alt + O
-                                                    </Button.ToolTip>
-                                                </Button>
-                                                <Button Name="OpenOldTestSuitClick" Click="OpenOldTestSuitClick_Click" Content="Old Test Suit" Cursor="Hand"/>
-                                            </StackPanel>
-                                        </materialDesign:PopupBox>
-                                    </Border>
                                     <Border Grid.Column="5" Margin="0.2,0,0,-0.2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="33">
                                         <materialDesign:PopupBox Name="OpenFile" MouseEnter="OpenFile_MouseEnter" Cursor="Hand" BorderThickness="0" Margin="7,9,0,0" Grid.Column="4" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="23" MouseLeave="OpenFile_MouseLeave" Foreground="#FF1C1C1C">
                                             <materialDesign:PopupBox.ToggleContent>
@@ -429,12 +408,36 @@
                                                 </ToolTip>
                                             </materialDesign:PopupBox.ToolTip>
                                             <StackPanel Width="150" Margin="5">
-                                                <Button Name="OpenTestCaseClick" Click="OpenTestCase_Click"  Content="Test Case" Cursor="Hand">
+                                                <Button Name="OpenTestCaseClick" Click="OpenTestCase_Click"  Content="Case form WebDriver IDE" Cursor="Hand">
                                                     <Button.ToolTip>
                                                         Ctrl + O
                                                     </Button.ToolTip>
                                                 </Button>
-                                                <Button Name="OpenTestSuitClick" Click="OpenTestSuit_Click" Content="Test Suit" Cursor="Hand"/>
+                                                <Button Name="OpenTestSuitClick" Click="OpenTestSuit_Click" Content="Suit form WebDriver IDE" Cursor="Hand">
+                                                    <Button.ToolTip>
+                                                        Ctrl + Alt + O
+                                                    </Button.ToolTip>
+                                                </Button>
+                                                <Button Name="OpenOldTestCaseClick" Click="OpenOldTestCaseClick_Click"  Content="Case form Selenium IDE (New)" Cursor="Hand">
+                                                    <Button.ToolTip>
+                                                        Ctrl + Alt + O
+                                                    </Button.ToolTip>
+                                                </Button>
+                                                <Button Name="OpenOldTestSuitClick" Click="OpenOldTestSuitClick_Click" Content="Suit form Selenium IDE (New)" Cursor="Hand">
+                                                    <Button.ToolTip>
+                                                        Ctrl + Alt + O
+                                                    </Button.ToolTip>
+                                                </Button>
+                                                <Button Name="OpenNewTestCaseClick" Click="OpenNewTestCaseClick_Click"  Content="Case form Selenium IDE (Old)" Cursor="Hand">
+                                                    <Button.ToolTip>
+                                                        Ctrl + Alt + O
+                                                    </Button.ToolTip>
+                                                </Button>
+                                                <Button Name="OpenNewTestSuitClick" Click="OpenNewTestSuitClick_Click" Content="Suit form Selenium IDE (Old)" Cursor="Hand">
+                                                    <Button.ToolTip>
+                                                        Ctrl + Alt + O
+                                                    </Button.ToolTip>
+                                                </Button>
                                             </StackPanel>
                                         </materialDesign:PopupBox>
                                     </Border>
