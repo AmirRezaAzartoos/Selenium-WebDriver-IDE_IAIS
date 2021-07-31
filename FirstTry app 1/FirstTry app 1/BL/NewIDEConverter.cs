@@ -1,26 +1,21 @@
-﻿using System;
+﻿using Microsoft.Analytics.Interfaces;
+using Microsoft.Analytics.Types.Sql;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace FirstTry_app_1.BL
 {
-    class OldIDEConverter
+    class NewIDEConverter
     {
         MainWindow _mainWindow = new MainWindow();
+        List<NewIDEType> tempList = new List<NewIDEType>();
+        List<NewIDEType> mainList = new List<NewIDEType>();
         public static void openOldTestCase(string caseAddress)
         {
             List<string> oldCase = File.ReadLines(@caseAddress).ToList();
@@ -54,17 +49,6 @@ namespace FirstTry_app_1.BL
                 {
                     CommandCounter++;
                     MainWindow.CommandCounter++;
-                    /*string tempTarget = "";
-                    if (!_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("css=") &&
-                        !_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("id=") &&
-                        !_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("name=") &&
-                        !_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("//") &&
-                        !_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("wicketpath"))
-                    {
-                        tempTarget = _mainWindow.ConvertTextToIdeFormat(_mainWindow.FindBetween(input[i + 2], "<td>", "</td>"));
-                    }
-                    else
-                        tempTarget = _mainWindow.FindBetween(input[i + 2], "<td>", "</td>");*/
                     string tempCommand = _mainWindow.FindBetween(input[i + 1], "<td>", "</td>");
                     if (tempCommand == "open2" || tempCommand == "open2AndWait")
                         tempCommand = "open";

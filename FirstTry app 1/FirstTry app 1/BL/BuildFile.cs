@@ -33,7 +33,7 @@ namespace FirstTry_app_1.BL
         MainWindow _mainWindow = new MainWindow();
         ///////BUILD
         #region Save
-        public void TestMethod(string A)
+        /*public void TestMethod(string A)
         {
             if (A != null)
             {
@@ -1067,7 +1067,7 @@ namespace FirstTry_app_1.BL
 
                 MainWindow.TestSuitSaved = true;
             }
-        }
+        }*/
         #endregion
     }
 }

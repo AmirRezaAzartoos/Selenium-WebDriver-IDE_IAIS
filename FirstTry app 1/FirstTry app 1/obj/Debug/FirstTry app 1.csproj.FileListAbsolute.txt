@@ -257,7 +257,6 @@ C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\MaterialDesignTh
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Dynamic.xml
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Scripting.xml
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Scripting.Metadata.xml
-C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.AssemblyReference.cache
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\AddTestFirst.baml
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\App.baml
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\AddTestCase.g.cs
@@ -291,3 +290,52 @@ C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.c
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.CopyComplete
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.exe
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.pdb
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\WebDriverIDE.exe.config
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\WebDriverIDE.exe
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\WebDriverIDE.pdb
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\CommonServiceLocator.dll
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\MaterialDesignColors.dll
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\MaterialDesignThemes.Wpf.dll
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Dynamic.dll
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Scripting.dll
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Scripting.Metadata.dll
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\MaterialDesignColors.pdb
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\MaterialDesignThemes.Wpf.pdb
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\MaterialDesignThemes.Wpf.xml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Dynamic.xml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Scripting.xml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Scripting.Metadata.xml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.AssemblyReference.cache
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\AddTestFirst.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\App.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\AddTestCase.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\CreateNewProject.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MainWindow.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\AddTestFirst.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\TestSuitNameWarn.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\UnsavedContent.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\UnvalidCommand.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\EmptyField.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\UpdateAck.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\RenameTestCase.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\StartUpMessage.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\App.g.cs
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE_MarkupCompile.cache
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE_MarkupCompile.lref
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\AddTestCase.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\CreateNewProject.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MainWindow.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\TestSuitNameWarn.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\UnsavedContent.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\UnvalidCommand.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\EmptyField.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\UpdateAck.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\RenameTestCase.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\StartUpMessage.baml
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.g.resources
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry_app_1.Properties.Resources.resources
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.GenerateResource.cache
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.CoreCompileInputs.cache
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.CopyComplete
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.exe
+D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.pdb
