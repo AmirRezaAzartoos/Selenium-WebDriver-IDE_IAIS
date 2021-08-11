@@ -407,7 +407,7 @@
                                                     Open file
                                                 </ToolTip>
                                             </materialDesign:PopupBox.ToolTip>
-                                            <StackPanel Width="150" Margin="5">
+                                            <StackPanel Width="250" Margin="1">
                                                 <Button Name="OpenTestCaseClick" Click="OpenTestCase_Click"  Content="Case form WebDriver IDE" Cursor="Hand">
                                                     <Button.ToolTip>
                                                         Ctrl + O
@@ -418,22 +418,17 @@
                                                         Ctrl + Alt + O
                                                     </Button.ToolTip>
                                                 </Button>
-                                                <Button Name="OpenOldTestCaseClick" Click="OpenOldTestCaseClick_Click"  Content="Case form Selenium IDE (New)" Cursor="Hand">
+                                                <Button Name="OpenOldTestCaseClick" Click="OpenOldTestCaseClick_Click"  Content="Case form Selenium IDE (Old)" Cursor="Hand">
                                                     <Button.ToolTip>
                                                         Ctrl + Alt + O
                                                     </Button.ToolTip>
                                                 </Button>
-                                                <Button Name="OpenOldTestSuitClick" Click="OpenOldTestSuitClick_Click" Content="Suit form Selenium IDE (New)" Cursor="Hand">
+                                                <Button Name="OpenOldTestSuitClick" Click="OpenOldTestSuitClick_Click" Content="Suit form Selenium IDE (Old)" Cursor="Hand">
                                                     <Button.ToolTip>
                                                         Ctrl + Alt + O
                                                     </Button.ToolTip>
                                                 </Button>
-                                                <Button Name="OpenNewTestCaseClick" Click="OpenNewTestCaseClick_Click"  Content="Case form Selenium IDE (Old)" Cursor="Hand">
-                                                    <Button.ToolTip>
-                                                        Ctrl + Alt + O
-                                                    </Button.ToolTip>
-                                                </Button>
-                                                <Button Name="OpenNewTestSuitClick" Click="OpenNewTestSuitClick_Click" Content="Suit form Selenium IDE (Old)" Cursor="Hand">
+                                                <Button Name="OpenNewTestSuitClick" Click="OpenNewTestSuitClick_Click" Content="Suit form Selenium IDE (New)" Cursor="Hand">
                                                     <Button.ToolTip>
                                                         Ctrl + Alt + O
                                                     </Button.ToolTip>
@@ -865,6 +860,12 @@
                                                     </ListView.View>
                                                 </ListView>
                                             </Border>
+                                            <ProgressBar
+                                                x:Name="loadTestProgress"
+                                                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                                Value="50"
+                                                IsIndeterminate="True"
+                                                Visibility="Hidden"/>
                                         </Grid>
                                     </Border>
                                     <Border VerticalAlignment="Bottom" Grid.Row="2" BorderBrush="#FFE5E5E5" BorderThickness="0 1 0 0" Height="139" Margin="0,0,0,0">

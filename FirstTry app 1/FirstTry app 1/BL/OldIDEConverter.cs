@@ -20,8 +20,7 @@ namespace FirstTry_app_1.BL
 {
     class OldIDEConverter
     {
-        MainWindow _mainWindow = new MainWindow();
-        public static void openOldTestCase(string caseAddress)
+        public void openOldTestCase(string caseAddress)
         {
             List<string> oldCase = File.ReadLines(@caseAddress).ToList();
             string[] address = caseAddress.Split(new[] { "\\" }, StringSplitOptions.None);
@@ -30,17 +29,19 @@ namespace FirstTry_app_1.BL
             oldCase.RemoveRange(0, oldCase.IndexOf("</thead><tbody>") + 1);
             oldCase.Insert(0, caseFolderName);
             oldCase.Insert(0, caseName);
-            OldIDEConverter oldIDE = new OldIDEConverter();
-            oldIDE.TestCaseConverter(oldCase);
+            //OldIDEConverter oldIDE = new OldIDEConverter();
+            TestCaseConverter(oldCase);
         }
-        public static void openOldTestSuit(string suitAddress)
+        public async void openOldTestSuit(string suitAddress)
         {
             List<string> oldSuit = File.ReadLines(suitAddress).ToList();
             string[] address = suitAddress.Split(new[] { "\\" }, StringSplitOptions.None);
             MainWindow.ProjectName = address[address.Length - 2];
             oldSuit.RemoveRange(0, oldSuit.IndexOf("<tr><td><b>Test Suite</b></td></tr>") + 1);
-            OldIDEConverter oldIDE = new OldIDEConverter();
-            oldIDE.TestSuitConverter(oldSuit);
+            //OldIDEConverter oldIDE = new OldIDEConverter();
+            //_mainWindow.loadTestProgress.Visibility = Visibility.Visible;
+            await Task.Run(() => TestSuitConverter(oldSuit));
+            //_mainWindow.loadTestProgress.Visibility = Visibility.Hidden;
         }
 
         public void TestCaseConverter(List<string> input)
@@ -54,44 +55,42 @@ namespace FirstTry_app_1.BL
                 {
                     CommandCounter++;
                     MainWindow.CommandCounter++;
-                    /*string tempTarget = "";
-                    if (!_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("css=") &&
-                        !_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("id=") &&
-                        !_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("name=") &&
-                        !_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("//") &&
-                        !_mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Contains("wicketpath"))
-                    {
-                        tempTarget = _mainWindow.ConvertTextToIdeFormat(_mainWindow.FindBetween(input[i + 2], "<td>", "</td>"));
-                    }
-                    else
-                        tempTarget = _mainWindow.FindBetween(input[i + 2], "<td>", "</td>");*/
-                    string tempCommand = _mainWindow.FindBetween(input[i + 1], "<td>", "</td>");
-                    if (tempCommand == "open2" || tempCommand == "open2AndWait")
-                        tempCommand = "open";
-                    if (tempCommand == "clickAndWait")
-                        tempCommand = "click";
-                    MainWindow.ListDB.Add(new Commands(CommandCounter, tempCommand, _mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter + 1), "None"));
-                    i += 4;
+                    Application.Current.Dispatcher.Invoke(new Action(() => {
+                        MainWindow _mainWindow = new MainWindow();
+                        string tempCommand = _mainWindow.FindBetween(input[i + 1], "<td>", "</td>");
+                        if (tempCommand == "open2" || tempCommand == "open2AndWait")
+                            tempCommand = "open";
+                        if (tempCommand == "clickAndWait")
+                            tempCommand = "click";
+                        MainWindow.ListDB.Add(new Commands(CommandCounter, tempCommand, _mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter + 1), "None"));
+                    }));
+                i += 4;
                 }
             }
             MainWindow.testCaseCounter++;
             MainWindow._testCaseCounter++;
             MainWindow.TestList.Add(new TestSuit() { TestNumber = MainWindow.testCaseCounter, TestName = input[0], TestValue = new ObservableCollection<Commands>(MainWindow.ListDB), TestFolder = input[1], SavedPath = null, IsSaved = false });
-            _mainWindow.TestCaseListView.ItemsSource = MainWindow.TestList;
-            _mainWindow.listView.ItemsSource = MainWindow.ListDB;
-            ICollectionView view = CollectionViewSource.GetDefaultView(MainWindow.ListDB);
-            view.Refresh();
-            ICollectionView view2 = CollectionViewSource.GetDefaultView(MainWindow.TestList);
-            view2.Refresh();
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                MainWindow _mainWindow = new MainWindow();
+                _mainWindow.TestCaseListView.ItemsSource = MainWindow.TestList;
+                _mainWindow.listView.ItemsSource = MainWindow.ListDB;
+                ICollectionView view = CollectionViewSource.GetDefaultView(MainWindow.ListDB);
+                view.Refresh();
+                ICollectionView view2 = CollectionViewSource.GetDefaultView(MainWindow.TestList);
+                view2.Refresh();
+            }));
         }
-        public void TestSuitConverter(List<string> input)
+    public async Task TestSuitConverter(List<string> input)
         {
             for (int i = 0; i < input.Count; i++)
             {
                 if (input[i].Contains("href="))
                 {
-                    string temp = "C:\\seleniums" + _mainWindow.FindBetween(input[i], "../..", "\">").Replace("/", "\\");
-                    openOldTestCase(temp);
+                    Application.Current.Dispatcher.Invoke(new Action(() => {
+                        MainWindow _mainWindow = new MainWindow();
+                        string temp = "C:\\seleniums" + _mainWindow.FindBetween(input[i], "../..", "\">").Replace("/", "\\");
+                        openOldTestCase(temp);
+                    }));
                 }
             }
         }

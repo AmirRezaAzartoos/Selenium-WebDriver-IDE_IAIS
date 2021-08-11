@@ -210,6 +210,10 @@ namespace FirstTry_app_1
                             targetType = "link text";
                             tempTarget = ListDB.ElementAt(_counter).Target.Replace("link=", "");
                             break;
+                        case "linkText":
+                            targetType = "link text";
+                            tempTarget = ListDB.ElementAt(_counter).Target.Replace("link=", "");
+                            break;
                         case "name":
                             tempTarget = ListDB.ElementAt(_counter).Target.Replace("name=", "");
                             break;
@@ -705,7 +709,6 @@ namespace FirstTry_app_1
 
                 while (testCaseCounter > _counter1)
                 {
-                    needCotBefore = needCotAfter = true;
 
                     var obj = TestList.FirstOrDefault(x => x.TestNumber == _counter1 + 1);
                     if (obj != null)
@@ -716,6 +719,8 @@ namespace FirstTry_app_1
                     mainString += "\n\tclass " + TestList.ElementAt(_counter1).TestName + ":\n";
                     while (CommandCounter > _counter)
                     {
+                        needCotBefore = needCotAfter = true;
+
                         ///////specifyTarget
                         string targetType = "";
                         if (ListDB.ElementAt(_counter).Target.Contains('=') && !ListDB.ElementAt(_counter).Target.Contains("//"))
@@ -738,7 +743,11 @@ namespace FirstTry_app_1
                                 break;
                             case "link":
                                 targetType = "link text";
-                                tempTarget = ListDB.ElementAt(_counter).Target.Replace("class=", "");
+                                tempTarget = ListDB.ElementAt(_counter).Target.Replace("link=", "");
+                                break;
+                            case "linkText":
+                                targetType = "link text";
+                                tempTarget = ListDB.ElementAt(_counter).Target.Replace("link=", "");
                                 break;
                             case "name":
                                 tempTarget = ListDB.ElementAt(_counter).Target.Replace("name=", "");
@@ -752,7 +761,7 @@ namespace FirstTry_app_1
                                 tempTarget = ListDB.ElementAt(_counter).Target.Replace("tag=", "");
                                 break;
                             case "xpath":
-                                tempTarget = ListDB.ElementAt(_counter).Target;
+                                tempTarget = ListDB.ElementAt(_counter).Target.Replace("xpath=", "");
                                 break;
                             default:
                                 tempTarget = ListDB.ElementAt(_counter).Target;
@@ -914,11 +923,14 @@ namespace FirstTry_app_1
                             #endregion
 
                             #region ===> select
-                            case "select":
+                            case "select1":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | select\n";
+                                string tempLabel = ListDB.ElementAt(_counter).Value;
+                                if (tempLabel.Contains("label="))
+                                    tempLabel = tempLabel.Replace("label=", "");
                                 string _select = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _select += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
-                                _select += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + "_2 = " + ListDB.ElementAt(_counter).VariableName + ".find_element_by_" + targetType.Replace(" ", "_") + "(\"option[. = '" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + "']\")\n";
+                                _select += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + "_2 = " + ListDB.ElementAt(_counter).VariableName + ".find_element_by_" + targetType.Replace(" ", "_") + "(\"option[. = '" + ConvertTextToIdeFormat(tempLabel, false, true) + "']\")\n";
                                 _select += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + "_2)\n";
                                 _select += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + "_2.click()\n";
                                 _select += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -927,11 +939,14 @@ namespace FirstTry_app_1
                             #endregion
 
                             #region ===> selectByVisibleText
-                            case "selectByVisibleText":
+                            case "select":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | selectByVisibleText\n";
+                                string tempLabel1 = ListDB.ElementAt(_counter).Value;
+                                if (tempLabel1.Contains("label="))
+                                    tempLabel1 = tempLabel1.Replace("label=", "");
                                 string _selectByVisibleText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByVisibleText += tabNeededTemp + "\t\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
-                                _selectByVisibleText += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_visible_text(\"" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + "\")\n";
+                                _selectByVisibleText += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_visible_text(" + ConvertTextToIdeFormat(tempLabel1, false, true) + ")\n";
                                 _selectByVisibleText += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _selectByVisibleText;
                                 break;
@@ -940,9 +955,12 @@ namespace FirstTry_app_1
                             #region ===> selectByValue
                             case "selectByValue":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | selectByValue\n";
+                                string tempLabel2 = ListDB.ElementAt(_counter).Value;
+                                if (tempLabel2.Contains("label="))
+                                    tempLabel2 = tempLabel2.Replace("label=", "");
                                 string _selectByValue = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByValue += tabNeededTemp + "\t\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
-                                _selectByValue += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_value(\"" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + "\")\n";
+                                _selectByValue += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_value(" + ConvertTextToIdeFormat(tempLabel2, false, true) + ")\n";
                                 _selectByValue += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _selectByValue;
                                 break;
@@ -953,7 +971,7 @@ namespace FirstTry_app_1
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | selectByIndex\n";
                                 string _selectByIndex = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByIndex += tabNeededTemp + "\t\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
-                                _selectByIndex += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_index(\"" + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, false, true) + "\")\n";
+                                _selectByIndex += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_index(" + ListDB.ElementAt(_counter).Value + ")\n";
                                 _selectByIndex += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _selectByIndex;
                                 break;
@@ -1131,7 +1149,7 @@ namespace FirstTry_app_1
                             case "while":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | while\n";
                                 string _while = tabNeededTemp + "\t\twhile " + ListDB.ElementAt(_counter).Target + ":\n";
-                                _while += tabNeededTemp + "\t\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
+                                _while += tabNeededTemp + "\t\t\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _while;
                                 break;
                             #endregion
@@ -1149,7 +1167,7 @@ namespace FirstTry_app_1
                             case "if":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | if\n";
                                 string _if = tabNeededTemp + "\t\tif " + ListDB.ElementAt(_counter).Target + ":\n";
-                                _if += tabNeededTemp + "\t\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
+                                _if += tabNeededTemp + "\t\t\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _if;
                                 break;
                             #endregion
@@ -2792,7 +2810,6 @@ namespace FirstTry_app_1
             bool c = false;
             try
             {
-                //BL.BuildFile _buildFile = new BL.BuildFile();
                 if (_testCaseCounter == 0)
                 {
                     a = true;
@@ -3019,6 +3036,8 @@ namespace FirstTry_app_1
         {
             try
             {
+                if (IN == "None") return IN;
+                if (IN == "") return IN;
                 string OUT = "";
                 if (IN.Contains("Math.floor"))
                 {
@@ -3252,8 +3271,8 @@ namespace FirstTry_app_1
 
         private void OpenTestCase_Click(object sender, RoutedEventArgs e)
         {
-            /*try
-            {*/
+            try
+            {
                 openFileDialog.Multiselect = true;
                 openFileDialog.Filter = "Python file (*.py)|*.py";
                 OpenDialog();
@@ -3280,11 +3299,11 @@ namespace FirstTry_app_1
                             OpenTestCase(_openFileAddress);
                     }
                 }
-            /*}
+            }
             catch (Exception ex)
             {
                 Log.Items.Add("OpenTestCase_Click ---> Failed Because of error : " + ex.ToString());
-            }*/
+            }
         }
 
         private void OpenTestSuit_Click(object sender, RoutedEventArgs e)
@@ -3349,15 +3368,14 @@ namespace FirstTry_app_1
                         view2.Refresh();
                         if (_openFileAddress != null)
                         {
-                            /*var _oldIDEConverter = new OldIDEConverter();
-                            _oldIDEConverter.openOldTestCase(_openFileAddress);*/
+                            openOldTestCase(_openFileAddress);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Log.Items.Add("OpenTestCase_Click ---> Failed Because of error : " + ex.ToString());
+                Log.Items.Add("OpenOldTestCaseClick_Click ---> Failed Because of error : " + ex.ToString());
             }
         }
 
@@ -3385,14 +3403,46 @@ namespace FirstTry_app_1
                     view.Refresh();
                     ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
                     view2.Refresh();
-                    /*var _oldIDEConverter = new BL.C
-                    _oldIDEConverter.openOldTestSuit(_openFileAddress);
-                    TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);*/
+                    openOldTestSuit(_openFileAddress);
+                    TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
                 }
             }
             catch (Exception ex)
             {
-                Log.Items.Add("OpenTestSuit_Click ---> Failed Because of error : " + ex.ToString());
+                Log.Items.Add("OpenOldTestSuitClick_Click ---> Failed Because of error : " + ex.ToString());
+            }
+        }
+        private void OpenNewTestSuitClick_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                openFileDialog.Multiselect = false;
+                openFileDialog.Filter = "Selenium IDE output (*.side)|*.side";
+                OpenDialog();
+                if (ok)
+                {
+                    testCaseCounter = 0;
+                    _openFileAddress = _openFileAddressArray[0];
+                    _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                    _openFileName = _openFileNameArray[0];
+                    _openFileName = _openFileName.Replace(".side", "");
+                    string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
+                    for (int j = mystring.Length; j > 0; j--)
+                        mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                    FolderName = mystring;
+                    TestCaseListView.ItemsSource = TestList;
+                    listView.ItemsSource = ListDB;
+                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
+                    view.Refresh();
+                    ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
+                    view2.Refresh();
+                    openNewTestSuit(_openFileAddress);
+                    TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("OpenNewTestSuitClick_Click ---> Failed Because of error : " + ex.ToString());
             }
         }
 
@@ -4181,7 +4231,7 @@ namespace FirstTry_app_1
                             if (!File.Exists(@temp3))
                             {
                                 Application.Current.Dispatcher.Invoke(new Action(() => {
-                                    BL.OldIDEConverter.openOldTestCase("C:\\seleniums\\" + TestCaseDR[j].ToString() + ".html");
+                                    openOldTestCase("C:\\seleniums\\" + TestCaseDR[j].ToString() + ".html");
                                     TestMethod("C:\\run-test-selenium\\Source\\" + TestCaseDR[j].ToString() + ".py");
                                 }));
                             }
@@ -4418,14 +4468,209 @@ namespace FirstTry_app_1
         }
         #endregion
 
-        private void OpenNewTestCaseClick_Click(object sender, RoutedEventArgs e)
-        {
 
+        /////////OldIDEConverter///////
+        #region OldIDEConverter
+        bool isSuit = false;
+        public async void openOldTestCase(string caseAddress)
+        {
+            try
+            {
+                List<string> oldCase = File.ReadLines(@caseAddress).ToList();
+                string[] address = caseAddress.Split(new[] { "\\" }, StringSplitOptions.None);
+                string caseName = address[address.Length - 1].Remove(address[address.Length - 1].IndexOf('.'), address[address.Length - 1].Length - address[address.Length - 1].IndexOf('.'));
+                string caseFolderName = address[address.Length - 2];
+                oldCase.RemoveRange(0, oldCase.IndexOf("</thead><tbody>") + 1);
+                oldCase.Insert(0, caseFolderName);
+                oldCase.Insert(0, caseName);
+                await Task.Run(() => TestCaseConverter(oldCase));
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("openOldTestCase ---> Failed Because of error : " + ex.ToString());
+            }
+        }
+        public async void openOldTestSuit(string suitAddress)
+        {
+            try
+            {
+                isSuit = true;
+                List<string> oldSuit = File.ReadLines(suitAddress).ToList();
+                string[] address = suitAddress.Split(new[] { "\\" }, StringSplitOptions.None);
+                MainWindow.ProjectName = address[address.Length - 2];
+                oldSuit.RemoveRange(0, oldSuit.IndexOf("<tr><td><b>Test Suite</b></td></tr>") + 1);
+                loadTestProgress.Visibility = Visibility.Visible;
+                await Task.Run(() => TestSuitConverter(oldSuit));
+                loadTestProgress.Visibility = Visibility.Hidden;
+                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
+                view.Refresh();
+                ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
+                view2.Refresh();
+                isSuit = false;
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("openOldTestSuit ---> Failed Because of error : " + ex.ToString());
+            }
         }
 
-        private void OpenNewTestSuitClick_Click(object sender, RoutedEventArgs e)
+        public async Task TestCaseConverter(List<string> input)
         {
-
+            CommandCounter = 0;
+            int CommandCounter1 = 0;
+            App.Current.Dispatcher.Invoke(delegate{
+                ListDB.Clear();
+            });
+            for (int i = 0; i < input.Count; i++)
+            {
+                if (input[i] == "<tr>")
+                {
+                    CommandCounter++;
+                    CommandCounter1++;
+                    string tempCommand = FindBetween(input[i + 1], "<td>", "</td>");
+                    if (tempCommand == "open2" || tempCommand == "open2AndWait")
+                        tempCommand = "open";
+                    if (tempCommand == "clickAndWait")
+                        tempCommand = "click";
+                    App.Current.Dispatcher.Invoke(delegate {
+                        ListDB.Add(new Commands(CommandCounter1, tempCommand, FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter1 + 1), "None"));
+                    });
+                    i += 4;
+                }
+            }
+            testCaseCounter++;
+            _testCaseCounter++;
+            App.Current.Dispatcher.Invoke(delegate {
+                TestList.Add(new TestSuit() { TestNumber = testCaseCounter, TestName = input[0], TestValue = new ObservableCollection<Commands>(ListDB), TestFolder = input[1], SavedPath = null, IsSaved = false });
+                TestCaseListView.ItemsSource = TestList;
+                listView.ItemsSource = ListDB;
+            });
         }
+        public async Task TestSuitConverter(List<string> input)
+        {
+            for (int i = 0; i < input.Count; i++)
+            {
+                if (input[i].Contains("href="))
+                {
+                    string temp = "C:\\seleniums" + FindBetween(input[i], "../..", "\">").Replace("/", "\\");
+                    openOldTestCase(temp);
+                }
+            }
+        }
+        #endregion
+
+        /////////NewIDEConverter///////
+        #region NewIDEConverter
+
+        List<NewIDEType> mainList = new List<NewIDEType>();
+        public async void openNewTestSuit(string caseAddress)
+        {
+            try
+            {
+                List<string> oldCase = File.ReadLines(@caseAddress).ToList();
+                string[] address = caseAddress.Split(new[] { "\\" }, StringSplitOptions.None);
+                string caseName = address[address.Length - 1].Remove(address[address.Length - 1].IndexOf('.'), address[address.Length - 1].Length - address[address.Length - 1].IndexOf('.'));
+                string caseFolderName = address[address.Length - 2];
+                oldCase.RemoveRange(0, oldCase.IndexOf("</thead><tbody>") + 1);
+                oldCase.Insert(0, caseFolderName);
+                oldCase.Insert(0, caseName);
+                loadTestProgress.Visibility = Visibility.Visible;
+                await Task.Run(() => NewTestCaseConverter(oldCase));
+                loadTestProgress.Visibility = Visibility.Hidden;
+                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
+                view.Refresh();
+                ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
+                view2.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("openNewTestSuit ---> Failed Because of error : " + ex.ToString());
+            }
+        }
+
+        public async Task NewTestCaseConverter(List<string> input)
+        {
+            App.Current.Dispatcher.Invoke(delegate {
+                ListDB.Clear();
+            });
+
+            //var myTestCases = input.Where(stringToCheck => stringToCheck.Contains("    \"name\": \"")).ToList();
+            var testCaseList = input.Where(stringToCheck => stringToCheck.Contains("  \"tests\": [\"")).ToList();
+            var _testCaseSequence = testCaseList[0].Replace("    \"tests\": [\"", "").Replace("\"]", "");
+            string[] testCaseSequence = _testCaseSequence.Split(new string[] { "\", \"" }, StringSplitOptions.None);
+            var testCaseSequenceORG = input.Where(stringToCheck => stringToCheck.Contains("  \"id\": \"")).ToList();
+            int m = 0;
+            while (m < testCaseSequenceORG.Count)
+            {
+                if (!testCaseSequence.Contains(FindBetween(testCaseSequenceORG[m], " \"id\": \"", "\",")))
+                {
+                    testCaseSequenceORG.RemoveAt(m);
+                    continue;
+                }
+                m++;
+            }
+
+            List<Commands> tempCommands = new List<Commands>();
+            string TestCaseID = "";
+            string TestCaseNAME = "";
+
+            for (int j = 0; j < testCaseSequence.Length; j++)
+            {
+                CommandCounter = 0;
+                int CommandCounter1 = 0;
+                tempCommands.Clear();
+                int firstIndex = input.FindIndex(r => r.Contains(testCaseSequence[j]));
+
+                int secondIndex;
+                int secondIndexTemp = testCaseSequenceORG.FindIndex(stringToCheck => stringToCheck.Contains(testCaseSequence[j])) + 1;
+                if (secondIndexTemp != testCaseSequenceORG.Count)
+                {
+                    string secondIndexID = FindBetween(testCaseSequenceORG[secondIndexTemp], " \"id\": \"", "\",");
+                    secondIndex = input.FindIndex(r => r.Contains(secondIndexID));
+                }
+                else secondIndex = input.Count;
+
+                var result = input.Skip(firstIndex + 1).Take(secondIndex - (firstIndex));
+
+                var myCommands = result.Where(stringToCheck => stringToCheck.Contains("\"command\"")).ToList();
+                var myTargets = result.Where(stringToCheck => stringToCheck.Contains("\"target\"")).ToList();
+                var myValues = result.Where(stringToCheck => stringToCheck.Contains("\"value\"")).ToList();
+
+                for (int i = 0; i < myCommands.Count; i++)
+                {
+                    TestCaseID = FindBetween(input[firstIndex], " \"id\": \"", "\",");
+                    TestCaseNAME = FindBetween(input[firstIndex + 1], " \"name\": \"", "\",");
+
+                    CommandCounter++;
+                    CommandCounter1++;
+
+                    var myCurrentCommand = FindBetween(myCommands[i], " \"command\": \"", "\",");
+                    if (myCurrentCommand == "store") myCurrentCommand = "storeEval";
+
+                    var myCurrentTarget = FindBetween(myTargets[i], " \"target\": \"", "\",");
+                    if (myCurrentCommand == "storeEval")
+                        myCurrentTarget = ConvertTextToIdeFormat(myCurrentTarget, false, false);
+
+                    var myCurrentValue = FindBetween(myValues[i], " \"value\": \"", "\"");
+                    if (myCurrentCommand == "empty") 
+                        myCurrentValue = ConvertTextToIdeFormat(myCurrentValue, false, false);
+
+                    App.Current.Dispatcher.Invoke(delegate {
+                        tempCommands.Add(new Commands(CommandCounter1, myCurrentCommand, myCurrentTarget, myCurrentValue, myCurrentCommand + Convert.ToString(CommandCounter1 + 1), "None"));
+                    });
+                }
+                mainList.Add(new NewIDEType(TestCaseID, TestCaseNAME, tempCommands));
+                testCaseCounter++;
+                _testCaseCounter++;
+                App.Current.Dispatcher.Invoke(delegate {
+                    ProjectName = input[0];
+                    TestList.Add(new TestSuit() { TestNumber = testCaseCounter, TestName = TestCaseNAME, TestValue = new ObservableCollection<Commands>(tempCommands), TestFolder = null, SavedPath = null, IsSaved = false });
+                    TestCaseListView.ItemsSource = TestList;
+                    listView.ItemsSource = ListDB;
+                });
+            }
+        }
+        #endregion
+
     }
 }

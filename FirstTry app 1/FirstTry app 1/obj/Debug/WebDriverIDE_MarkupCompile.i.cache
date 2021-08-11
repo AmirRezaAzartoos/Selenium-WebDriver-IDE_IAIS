@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Debug\
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\
 FirstTry_app_1
 none
 false
 DEBUG;TRACE
-C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\App.xaml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\App.xaml
 11-1950749296
 
-24-1541578774
-22341360424
+26413632493
+241943311572
 AddTestCase.xaml;CreateNewProject.xaml;MainWindow.xaml;MessageBox\AddTestFirst.xaml;MessageBox\TestSuitNameWarn.xaml;MessageBox\UnsavedContent.xaml;MessageBox\UnvalidCommand.xaml;MessageBox\EmptyField.xaml;MessageBox\UpdateAck.xaml;RenameTestCase.xaml;StartUpMessage.xaml;
 
-False
+True
 

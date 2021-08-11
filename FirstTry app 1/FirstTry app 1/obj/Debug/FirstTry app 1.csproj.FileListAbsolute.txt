@@ -339,3 +339,5 @@ D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.c
 D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.CopyComplete
 D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.exe
 D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.pdb
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Analytics.Interfaces.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Analytics.Types.dll

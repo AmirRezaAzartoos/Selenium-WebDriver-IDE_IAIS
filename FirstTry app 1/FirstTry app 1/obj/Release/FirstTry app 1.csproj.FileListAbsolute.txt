@@ -191,4 +191,3 @@ C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.e
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.pdb
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Analytics.Interfaces.dll
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Analytics.Types.dll
-C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.AssemblyReference.cache

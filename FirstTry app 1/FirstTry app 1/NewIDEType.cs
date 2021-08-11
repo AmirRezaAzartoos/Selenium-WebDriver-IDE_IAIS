@@ -12,7 +12,15 @@ namespace FirstTry_app_1
     {
         private string _id;
         private string _name;
-        private Commands _comands;
+        private List<Commands> _comands;
+
+
+        public NewIDEType(string v1, string v2, object p)
+        {
+            this.Id = v1;
+            this.Name = v2;
+            this.Commands = (List<Commands>)p;
+        }
 
         public string Id
         {
@@ -47,7 +55,7 @@ namespace FirstTry_app_1
             }
         }
 
-        public Commands Commands
+        public List<Commands> Commands
         {
             get
             {
@@ -60,11 +68,5 @@ namespace FirstTry_app_1
             }
         }
 
-
-        private void OnPropertyChanged(string v)
-        {
-            throw new NotImplementedException();
-        }
-
-        }
+    }
 }
