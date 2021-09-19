@@ -19,6 +19,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media.Animation;
 using System.Xml.Linq;
+using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Remote;
 
 namespace FirstTry_app_1
 {
@@ -110,6 +115,11 @@ namespace FirstTry_app_1
             {"while" , "gg" }
         };
 
+        ChromeDriver driver;
+        ChromeDriverService chromeservice;
+        ChromeOptions options;
+        DesiredCapabilities capabilities;
+
         int index;
         bool handleRightClickBugListview = true;
         bool handleRightClickBugTestlist = true;
@@ -162,8 +172,15 @@ namespace FirstTry_app_1
             //listView.DataContext = ListDB;
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(TestCaseListView.ItemsSource);
             view.Filter = UserFilter;
-            Refrence.Text = "  Selenium WebDriver IDE\n  Version : 0.106";
+            Refrence.Text = "  Selenium WebDriver IDE\n  Version : 0.3.8";
 
+            string startupPath = Environment.CurrentDirectory;
+            options = new ChromeOptions();
+            chromeservice = ChromeDriverService.CreateDefaultService();
+            chromeservice.HideCommandPromptWindow = true; //hide console window
+            options.AddArguments("start-maximized");
+            options.AddExtension(startupPath + "\\data\\extention-test.crx");
+            options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
         }
 
         ///////BUILD
@@ -176,7 +193,7 @@ namespace FirstTry_app_1
                 //FileInfo file = new FileInfo(@A);
                 //file.Create();
                 //StreamWriter TestFile = file.CreateText();
-                string mainString_testCase = File.ReadAllText(@"StaticCode.py");
+                string mainString_testCase = File.ReadAllText(@"data\StaticCode.py");
                 int mainStringSplitterIndex = mainString_testCase.IndexOf("durationError");
                 string mainString = mainString_testCase.Substring(0, mainStringSplitterIndex);
                 mainString += "\r\n\r\nclass StoreEvalDB:\r\n\tvars = {}\r\n";
@@ -701,7 +718,7 @@ namespace FirstTry_app_1
                 int _counter = 0;
                 //FileInfo file = new FileInfo(@B);
                 //StreamWriter TestFile = file.CreateText();
-                string StaticCodeNew = File.ReadAllText(@"StaticCode.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString());
+                string StaticCodeNew = File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString());
                 int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
                 string mainString = StaticCodeNew.Substring(0, splitterIndex);
                 string mainString_Last = StaticCodeNew.Remove(0, splitterIndex + 11);
@@ -3171,10 +3188,24 @@ namespace FirstTry_app_1
             {
                 UnsavedContentDialog();
                 if (Continue)
+                {
                     Application.Current.Shutdown();
+                    try
+                    {
+                        driver.Quit();
+                    }
+                    catch { }
+                }
             }
             else
+            {
                 Application.Current.Shutdown();
+                try
+                {
+                    driver.Quit();
+                }
+                catch { }
+            }
         }
 
         private void Maximize_Click(object sender, RoutedEventArgs e)
@@ -3457,12 +3488,13 @@ namespace FirstTry_app_1
                 Log.Items.Add("RunCurrent_Click ---> Failed Because of error : " + ex.ToString());
             }
         }
-
+ 
         private void RunCurrent_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                Process.Start("C:\\Users\\AmirReza\\PycharmProjects\\FirstTry\\LoginEpl.py");
+                driver.Navigate().GoToUrl("https://www.google.com/");
+                //Process.Start("C:\\Users\\AmirReza\\PycharmProjects\\FirstTry\\LoginEpl.py");
             }
             catch (Exception ex)
             {
@@ -3472,10 +3504,12 @@ namespace FirstTry_app_1
 
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
+            driver.FindElement(By.LinkText("Gmail")).Click();
         }
 
         private void Speed_Click(object sender, RoutedEventArgs e)
         {
+            driver = new ChromeDriver(chromeservice, options);
         }
 
         public void AddTest_Click(object sender, RoutedEventArgs e)
@@ -4210,12 +4244,12 @@ namespace FirstTry_app_1
 
                         //notConvertedTest = false;
 
-                        string StaticCodeNew = File.ReadAllText(@"StaticCode.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
+                        string StaticCodeNew = File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
                         int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
                         string StaticCodeNew_First = StaticCodeNew.Substring(0, splitterIndex);
                         string StaticCodeNew_Last = StaticCodeNew.Remove(0, splitterIndex + 11);
 
-                        string StaticCodeNew_ubuntu = File.ReadAllText(@"StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
+                        string StaticCodeNew_ubuntu = File.ReadAllText(@"data\StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
                         int splitterIndex_ubuntu = StaticCodeNew_ubuntu.IndexOf("#bodyCode#");
                         string StaticCodeNew_First_ubuntu = StaticCodeNew_ubuntu.Substring(0, splitterIndex_ubuntu);
                         string StaticCodeNew_Last_ubuntu = StaticCodeNew_ubuntu.Remove(0, splitterIndex_ubuntu + 11);

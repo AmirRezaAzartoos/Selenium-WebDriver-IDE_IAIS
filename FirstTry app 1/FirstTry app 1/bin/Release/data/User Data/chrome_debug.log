@@ -1,0 +1,6 @@
+[22468:19964:0913/152455.078:WARNING:load_error_reporter.cc(73)] Extension error: Failed to load extension from: C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\data\User Data\Default\Extensions\apdfllckaahabafndbhieahigkjlhalf\14.5_0. Manifest file is missing or unreadable
+[22468:19964:0913/152455.078:WARNING:load_error_reporter.cc(73)] Extension error: Failed to load extension from: C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\data\User Data\Default\Extensions\blpcfgokakmgnkcojhhkbfbldkacnbeo\4.2.8_0. Manifest file is missing or unreadable
+[22468:19964:0913/152455.092:WARNING:load_error_reporter.cc(73)] Extension error: Failed to load extension from: C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\data\User Data\Default\Extensions\pjkljhegncpnkpknbcohdijeoejaedia\8.3_0. Manifest file is missing or unreadable
+[22468:19964:0913/152455.409:INFO:CONSOLE(2)] "installed", source: chrome-extension://bkbmfiodmgfcmphgpahdkjdclhagbanf/background.js (2)
+[22468:19964:0913/152458.299:ERROR:device_event_log_impl.cc(214)] [15:24:58.299] USB: usb_device_handle_win.cc:1048 Failed to read descriptor from node connection: A device attached to the system is not functioning. (0x1F)
+[22468:19964:0913/152502.666:WARNING:pref_notifier_impl.cc(40)] Pref observer for media_router.cast_allow_all_ips found at shutdown.
