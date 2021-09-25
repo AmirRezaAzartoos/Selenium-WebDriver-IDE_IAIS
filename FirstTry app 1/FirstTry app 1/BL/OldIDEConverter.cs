@@ -62,7 +62,7 @@ namespace FirstTry_app_1.BL
                             tempCommand = "open";
                         if (tempCommand == "clickAndWait")
                             tempCommand = "click";
-                        MainWindow.ListDB.Add(new Commands(CommandCounter, tempCommand, _mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter + 1), "None"));
+                        MainWindow.ListDB.Add(new Commands(CommandCounter, tempCommand, _mainWindow.FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), _mainWindow.FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter + 1), "None", false));
                     }));
                 i += 4;
                 }

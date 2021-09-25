@@ -460,13 +460,13 @@ namespace FirstTry_app_1.BL
                                 #endregion
                         }
                         _commandCounter++;
-                        MainWindow.ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription));
+                        MainWindow.ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                     }
 
                     else if (lines.ElementAt(_counter).Contains("# end"))
                     {
                         _commandCounter++;
-                        MainWindow.ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription));
+                        MainWindow.ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                         if (MainWindow.sumTrue == 0)
                             throw new Exception("Unvalid Command : No operations exist");
                         else
@@ -941,13 +941,13 @@ namespace FirstTry_app_1.BL
                                     #endregion
                             }
                             _commandCounter++;
-                            MainWindow.ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription));
+                            MainWindow.ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                         }
 
                         else if (lines.ElementAt(_counter).Contains("# end"))
                         {
                             _commandCounter++;
-                            MainWindow.ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription));
+                            MainWindow.ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                             if (MainWindow.sumTrue == 0)
                                 throw new Exception("Unvalid Command : No operations exist");
                             else

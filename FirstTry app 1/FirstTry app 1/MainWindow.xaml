@@ -567,7 +567,7 @@
                                                   FontSize="14" FontFamily="Roboto" MouseDoubleClick="TestCaseListView_MouseDoubleClick" Margin="0,0,-0.4,5.2" SizeChanged="TestCaseListView_SizeChanged"
                                                   KeyDown="TestCaseListView_KeyDown" PreviewMouseLeftButtonDown="TestCaseListView_PreviewMouseLeftButtonDown" AllowDrop="True"
                                                   MouseMove="TestCaseListView_MouseMove" DragEnter="TestCaseListView_DragEnter" Drop="TestCaseListView_Drop" VirtualizingPanel.IsVirtualizing="False"
-                                                  ScrollViewer.CanContentScroll="False" VirtualizingPanel.ScrollUnit="Pixel" SelectionMode="Single" Foreground="#FF1C1C1C">
+                                                  ScrollViewer.CanContentScroll="False" VirtualizingPanel.ScrollUnit="Pixel" SelectionMode="Single" Foreground="#FF1C1C1C" PreviewMouseUp="TestCaseListView_PreviewMouseUp">
                                             <ListView.ContextMenu>
                                                 <ContextMenu Name="TestCaseContextMenu" Opened="TestCaseContextMenu_Opened" Closed="TestCaseContextMenu_Closed">
                                                     <MenuItem Name="CopyTestCM" Header="Copy" Click="CopyItemTestCaseList_Click"/>
@@ -808,8 +808,8 @@
                                                 <ListView SelectionMode="Single" MouseRightButtonDown="ListView_MouseRightButtonDown" HorizontalAlignment="Stretch" x:Name="listView" FontSize="12" FontFamily="Roboto"
                                                           PreviewMouseLeftButtonDown="ListView_PreviewMouseLeftButtonDown" MouseMove="ListView_MouseMove" DragEnter="ListView_DragEnter" Drop="ListView_Drop" AllowDrop="True"
                                                           MouseDoubleClick="ListView_MouseDoubleClick" Margin="0,0,0.2,0.2" SizeChanged="listView_SizeChanged" KeyDown="ListView_KeyDown" IsSynchronizedWithCurrentItem="True"
-                                                          SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                           VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.CanContentScroll="False" Foreground="#FF1C1C1C">
+                                                          SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}" ScrollViewer.VerticalScrollBarVisibility="Auto" PreviewMouseUp="listView_PreviewMouseUp" PreviewMouseDown="listView_PreviewMouseDown"
+                                                          VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.CanContentScroll="False" Foreground="#FF1C1C1C">
                                                     <ListView.ContextMenu>
                                                         <ContextMenu Name="listViewContextMenu" Opened="ListViewContextMenu_Opened" Closed="ListViewContextMenu_Closed">
                                                             <MenuItem Name="CopyItemCM" Header="Copy" Click="CopyItem_Click"/>

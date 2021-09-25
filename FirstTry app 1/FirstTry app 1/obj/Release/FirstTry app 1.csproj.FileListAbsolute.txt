@@ -196,3 +196,5 @@ C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\nunit.framewor
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.dll
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\nunit.framework.xml
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.xml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.Support.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.Support.xml

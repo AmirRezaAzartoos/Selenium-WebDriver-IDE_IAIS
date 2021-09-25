@@ -24,6 +24,9 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Remote;
+using System.Threading;
+using OpenQA.Selenium.Interactions;
+using System.Drawing;
 
 namespace FirstTry_app_1
 {
@@ -115,6 +118,12 @@ namespace FirstTry_app_1
             {"while" , "gg" }
         };
 
+        //runner
+        IDictionary<string, dynamic> StoreEvalDB = new Dictionary<string, dynamic>();
+        enum WaitType {_single, _case};
+        WaitType waitType;
+
+
         ChromeDriver driver;
         ChromeDriverService chromeservice;
         ChromeOptions options;
@@ -123,7 +132,7 @@ namespace FirstTry_app_1
         int index;
         bool handleRightClickBugListview = true;
         bool handleRightClickBugTestlist = true;
-        enum Multiplication { copy,cut };
+        enum Multiplication { copy, cut };
         Multiplication multiplication;
 
 
@@ -1677,13 +1686,13 @@ namespace FirstTry_app_1
                                 #endregion
                         }
                         _commandCounter++;
-                        ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription));
+                        ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                     }
 
                     else if (lines.ElementAt(_counter).Contains("# end"))
                     {
                         _commandCounter++;
-                        ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription));
+                        ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                         if (sumTrue == 0)
                             throw new Exception("Unvalid Command : No operations exist");
                         else
@@ -2158,13 +2167,13 @@ namespace FirstTry_app_1
                                     #endregion
                             }
                             _commandCounter++;
-                            ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription));
+                            ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                         }
 
                         else if (lines.ElementAt(_counter).Contains("# end"))
                         {
                             _commandCounter++;
-                            ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription));
+                            ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                             if (sumTrue == 0)
                                 throw new Exception("Unvalid Command : No operations exist");
                             else
@@ -2284,25 +2293,25 @@ namespace FirstTry_app_1
         private void OpenFile_MouseEnter(object sender, MouseEventArgs e)
         {
             var bc = new BrushConverter();
-            OpenFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF00C6FF");
+            OpenFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF00C6FF");
         }
 
         private void OpenFile_MouseLeave(object sender, MouseEventArgs e)
         {
             var bc = new BrushConverter();
-            OpenFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
+            OpenFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
         }
 
         private void SaveAsFile_MouseEnter(object sender, MouseEventArgs e)
         {
             var bc = new BrushConverter();
-            SaveAsFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF00C6FF");
+            SaveAsFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF00C6FF");
         }
 
         private void SaveAsFile_MouseLeave(object sender, MouseEventArgs e)
         {
             var bc = new BrushConverter();
-            SaveAsFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
+            SaveAsFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
         }
 
         ListViewItem GetListViewItem(int index)
@@ -2342,21 +2351,21 @@ namespace FirstTry_app_1
                     if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
                     {
                         var bc = new BrushConverter();
-                        SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF00C6FF");
+                        SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF00C6FF");
                     }
                     else
                     {
                         var bc = new BrushConverter();
-                        SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FFFF3B3B");
+                        SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF3B3B");
                     }
                 }
                 else
                 {
                     var bc = new BrushConverter();
-                    SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF00C6FF");
+                    SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF00C6FF");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Items.Add("SaveFile_MouseEnter ---> Failed Because of error : " + ex.ToString());
             }
@@ -2371,21 +2380,21 @@ namespace FirstTry_app_1
                     if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
                     {
                         var bc = new BrushConverter();
-                        SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
+                        SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                     }
                     else
                     {
                         var bc = new BrushConverter();
-                        SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FFFF6565");
+                        SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                     }
                 }
                 else
                 {
                     var bc = new BrushConverter();
-                    SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
+                    SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Items.Add("SaveFile_MouseLeave ---> Failed Because of error : " + ex.ToString());
             }
@@ -2566,7 +2575,7 @@ namespace FirstTry_app_1
                     return result;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Items.Add("FindBetween ---> Failed Because of error : " + ex.ToString());
                 return "null(Exception happened)";
@@ -2632,7 +2641,7 @@ namespace FirstTry_app_1
                     bool unvalidCommand = true;
                     for (int i = 0; i < CommandsList.Length / 2; i++)
                     {
-                        if (CommandsList[i,0] == CommandsComboBox.Text)
+                        if (CommandsList[i, 0] == CommandsComboBox.Text)
                         {
                             unvalidCommand = false;
                             break;
@@ -2680,7 +2689,7 @@ namespace FirstTry_app_1
                                     }
 
                                 CommandCounterTB.Text = Convert.ToString(CommandCounter);
-                                ListDB.Add(new Commands(CommandCounter, tabNeeded + CommandsComboBox.Text, TargetTB.Text, ValueTB.Text, CommandsComboBox.Text + Convert.ToString(CommandCounter + 1), DescriptionTB.Text));
+                                ListDB.Add(new Commands(CommandCounter, tabNeeded + CommandsComboBox.Text, TargetTB.Text, ValueTB.Text, CommandsComboBox.Text + Convert.ToString(CommandCounter + 1), DescriptionTB.Text, false));
                                 var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                                 if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
                                 CommandsComboBox.Focus();
@@ -2696,7 +2705,7 @@ namespace FirstTry_app_1
                             var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                             if (obj1 != null) obj1.IsSaved = false;
                             var bc = new BrushConverter();
-                            SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FFFF6565");
+                            SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                             HandleTestList();
                             edit = false;
                             CommandsComboBox.Text = "";
@@ -2729,12 +2738,12 @@ namespace FirstTry_app_1
             try
             {
                 string tempDiscription = "";
-                for (int i = 0; i < CommandsList.Length/2; i++)
+                for (int i = 0; i < CommandsList.Length / 2; i++)
                 {
                     if (CommandsList[i, 0] == CommandsComboBox.Text)
                     {
                         tempDiscription = CommandsList[i, 1];
-                        for(int j = 0; j < CommandsList.Length/2; j++)
+                        for (int j = 0; j < CommandsList.Length / 2; j++)
                             if (DescriptionTB.Text == "" || DescriptionTB.Text == "None" || CommandsList[j, 1] == DescriptionTB.Text)
                             {
                                 DescriptionTB.Text = tempDiscription;
@@ -2747,14 +2756,33 @@ namespace FirstTry_app_1
 
                 switch (CommandsComboBox.Text)
                 {
-                    case "runScript": case "select": case "selectByIndex": case "selectByValue": case "selectByVisibleText": case "sendKeys": case "storeElementPresent": 
-                    case "storeEval": case "storeHref": case "storeId": case "storeInnerHTML": case "storeName": case "storeText": case "storeValue": case "storeWicketPath":
-                    case "switch": case "type": case "waitForAttribute": case "waitForNotText": case "waitForNumberOfWindowPresent": case "waitForText": case "waitForValue":
+                    case "runScript":
+                    case "select":
+                    case "selectByIndex":
+                    case "selectByValue":
+                    case "selectByVisibleText":
+                    case "sendKeys":
+                    case "storeElementPresent":
+                    case "storeEval":
+                    case "storeHref":
+                    case "storeId":
+                    case "storeInnerHTML":
+                    case "storeName":
+                    case "storeText":
+                    case "storeValue":
+                    case "storeWicketPath":
+                    case "switch":
+                    case "type":
+                    case "waitForAttribute":
+                    case "waitForNotText":
+                    case "waitForNumberOfWindowPresent":
+                    case "waitForText":
+                    case "waitForValue":
                         ValueTB.IsEnabled = true;
-                        ValueTBBorder.Background = (Brush)bc.ConvertFrom("#FFFFFFFF");
+                        ValueTBBorder.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFFFFFF");
 
                         TargetTB.IsEnabled = true;
-                        TargetTBBorder.Background = (Brush)bc.ConvertFrom("#FFFFFFFF");
+                        TargetTBBorder.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFFFFFF");
 
                         if (TargetTB.Text == "None")
                             TargetTB.Text = "";
@@ -2763,28 +2791,44 @@ namespace FirstTry_app_1
 
                         break;
 
-                    case "clearText": case "click": case "if": case "open": case "pause": case "replace": case "scrollInto": case "waitForElementNotPresent":
-                    case "waitForElementPresent": case "waitForElementVisible": case "waitForWindowPresent": case "while":
+                    case "clearText":
+                    case "click":
+                    case "if":
+                    case "open":
+                    case "pause":
+                    case "replace":
+                    case "scrollInto":
+                    case "waitForElementNotPresent":
+                    case "waitForElementPresent":
+                    case "waitForElementVisible":
+                    case "waitForWindowPresent":
+                    case "while":
                         ValueTB.Text = "None";
                         ValueTB.IsEnabled = false;
-                        ValueTBBorder.Background = (Brush)bc.ConvertFrom("#FFEBE7EE");
+                        ValueTBBorder.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFEBE7EE");
 
                         TargetTB.IsEnabled = true;
-                        TargetTBBorder.Background = (Brush)bc.ConvertFrom("#FFFFFFFF");
+                        TargetTBBorder.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFFFFFF");
 
                         if (TargetTB.Text == "None")
                             TargetTB.Text = "";
 
                         break;
 
-                    case "alert": case "break": case "close": case "end": case "failTest": case "refresh": case "switchToDefault":
+                    case "alert":
+                    case "break":
+                    case "close":
+                    case "end":
+                    case "failTest":
+                    case "refresh":
+                    case "switchToDefault":
                         TargetTB.Text = "None";
                         TargetTB.IsEnabled = false;
-                        TargetTBBorder.Background = (Brush)bc.ConvertFrom("#FFEBE7EE");
+                        TargetTBBorder.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFEBE7EE");
 
                         ValueTB.Text = "None";
                         ValueTB.IsEnabled = false;
-                        ValueTBBorder.Background = (Brush)bc.ConvertFrom("#FFEBE7EE");
+                        ValueTBBorder.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFEBE7EE");
 
                         break;
                 }
@@ -2800,7 +2844,7 @@ namespace FirstTry_app_1
         {
             try
             {
-                for(int i = 0; i < testCaseCounter; i++)
+                for (int i = 0; i < testCaseCounter; i++)
                 {
                     if (!TestList.ElementAt(i).IsSaved)
                     {
@@ -2808,7 +2852,7 @@ namespace FirstTry_app_1
                         if (item != null)
                         {
                             var bc = new BrushConverter();
-                            item.Foreground = (Brush)bc.ConvertFrom("#FFFF6565");
+                            item.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                         }
                     }
                 }
@@ -2840,7 +2884,7 @@ namespace FirstTry_app_1
                     var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     if (obj1 != null) obj1.IsSaved = true;
                     var bc = new BrushConverter();
-                    SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
+                    SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                 }
                 else if (TestList.ElementAt(_testCaseCounter - 1).SavedPath == null)
                 {
@@ -2853,7 +2897,7 @@ namespace FirstTry_app_1
                         var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                         if (obj1 != null) obj1.IsSaved = true;
                         var bc = new BrushConverter();
-                        SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
+                        SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                     }
                 }
                 HandleTestList();
@@ -2901,7 +2945,7 @@ namespace FirstTry_app_1
                 Log.Items.Add("CopyItem ---> Failed Because of error : " + ex.ToString());
             }
         }
-        
+
         public void CutItem()
         {
             try
@@ -2919,17 +2963,17 @@ namespace FirstTry_app_1
         {
             try
             {
-                if(multiplication == Multiplication.copy)
+                if (multiplication == Multiplication.copy)
                 {
                     CommandCounter++;
                     CommandCounterTB.Text = Convert.ToString(CommandCounter);
-                    ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description));
+                    ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description, false));
                     var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
                     HandleComboBox();
                     _commandCounter = CommandCounter;
                 }
-                else if(multiplication == Multiplication.cut)
+                else if (multiplication == Multiplication.cut)
                 {
                     Commands removed = CopiedItem;
                     ListDB.RemoveAt(CopiedItem.Number - 1);
@@ -2945,7 +2989,7 @@ namespace FirstTry_app_1
                     CommandCounter--;
 
                     CommandCounterTB.Text = Convert.ToString(CommandCounter);
-                    ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description));
+                    ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description, false));
                     var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
                     CommandsComboBox.Focus();
@@ -2964,7 +3008,7 @@ namespace FirstTry_app_1
                 var obj3 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                 if (obj3 != null) obj3.IsSaved = false;
                 var bc = new BrushConverter();
-                SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FFFF6565");
+                SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
             }
             catch (Exception ex)
             {
@@ -2992,7 +3036,7 @@ namespace FirstTry_app_1
                 var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                 if (obj1 != null) obj1.IsSaved = false;
                 var bc = new BrushConverter();
-                SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FFFF6565");
+                SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
             }
             catch (Exception ex)
             {
@@ -3150,13 +3194,15 @@ namespace FirstTry_app_1
         public string ConvertTextFromIdeFormat(string IN)
         {
             string OUT = "";
-            if (IN.Substring(0, 1) == "'")
+            if (IN.Substring(0, 1) == "'" && IN.Substring(IN.Length - 1, 1) == "'")
             {
                 IN = IN.Remove(0, 1);
+                IN = IN.Remove(IN.Length - 1, 1);
                 OUT = IN;
             }
-            if (IN.Substring(IN.Length - 1, 1) == "'")
+            if (IN.Substring(0, 1) == "\"" && IN.Substring(IN.Length - 1, 1) == "\"")
             {
+                IN = IN.Remove(0, 1);
                 IN = IN.Remove(IN.Length - 1, 1);
                 OUT = IN;
             }
@@ -3171,6 +3217,18 @@ namespace FirstTry_app_1
             }
         }
 
+        private bool IsElementPresent(By by)
+        {
+            try
+            {
+                driver.FindElement(by);
+                return true;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
+        }
         #endregion
 
         ///////BUTTON///////
@@ -3192,7 +3250,7 @@ namespace FirstTry_app_1
                     Application.Current.Shutdown();
                     try
                     {
-                        driver.Quit();
+                        if (driver != null) driver.Quit();
                     }
                     catch { }
                 }
@@ -3202,7 +3260,7 @@ namespace FirstTry_app_1
                 Application.Current.Shutdown();
                 try
                 {
-                    driver.Quit();
+                    if (driver != null) driver.Quit();
                 }
                 catch { }
             }
@@ -3214,7 +3272,7 @@ namespace FirstTry_app_1
             {
                 if (WindowState == WindowState.Normal)
                 {
-                   WindowState = WindowState.Maximized;
+                    WindowState = WindowState.Maximized;
                 }
                 else
                     this.WindowState = WindowState.Normal;
@@ -3488,17 +3546,20 @@ namespace FirstTry_app_1
                 Log.Items.Add("RunCurrent_Click ---> Failed Because of error : " + ex.ToString());
             }
         }
- 
-        private void RunCurrent_Click(object sender, RoutedEventArgs e)
+
+        private async void RunCurrent_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                driver.Navigate().GoToUrl("https://www.google.com/");
-                //Process.Start("C:\\Users\\AmirReza\\PycharmProjects\\FirstTry\\LoginEpl.py");
+                await Task.Run(() => runCase(_testCaseCounter));
             }
             catch (Exception ex)
             {
-                Log.Items.Add("RunCurrent_Click ---> Failed Because of error : " + ex.ToString());
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("RunCurrent_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
 
@@ -3509,7 +3570,6 @@ namespace FirstTry_app_1
 
         private void Speed_Click(object sender, RoutedEventArgs e)
         {
-            driver = new ChromeDriver(chromeservice, options);
         }
 
         public void AddTest_Click(object sender, RoutedEventArgs e)
@@ -3669,26 +3729,43 @@ namespace FirstTry_app_1
 
         /////////LISTEVENTS///////
         #region LISTEVENTS
-        private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
             {
                 if (listView.SelectedItems.Count != 0)
                 {
                     CurrentCommand = (Commands)listView.SelectedItems[0];
-                    _commandCounter = CurrentCommand.Number;
-                    CommandsComboBox.Text = CurrentCommand.Command.Replace("\t", "");
-                    tabInCommandForEdit = CurrentCommand.Command.Replace(CommandsComboBox.Text, "");
-                    TargetTB.Text = CurrentCommand.Target;
-                    ValueTB.Text = CurrentCommand.Value;
-                    DescriptionTB.Text = CurrentCommand.Description;
-                    HandleComboBox();
-                    edit = true;
+                    waitType = WaitType._single;
+                    await Task.Run(() =>
+                    {
+                        bool passed = true; ;
+                        runCommand(CurrentCommand);
+                        lvitem = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter) as ListViewItem;
+                        for (int i = 0; TestList.ElementAt(_testCaseCounter - 1).TestValue.Count > i; i++)
+                        {
+                            if (TestList.ElementAt(_testCaseCounter - 1).TestValue.ElementAt(i).Pass == false)
+                                passed = false;
+                            break;
+                        }
+                        if (passed)
+                        {
+                            lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                        }
+                        else
+                        {
+                            lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                        }
+                    });
                 }
             }
             catch (Exception ex)
             {
-                Log.Items.Add("ListView_MouseDoubleClick ---> Failed Because of error : " + ex.ToString());
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("ListView_MouseDoubleClick ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
 
@@ -3729,18 +3806,18 @@ namespace FirstTry_app_1
                         if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
                         {
                             var bc = new BrushConverter();
-                            SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
+                            SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                         }
                         else
                         {
                             var bc = new BrushConverter();
-                            SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FFFF6565");
+                            SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                         }
                     }
                     else
                     {
                         var bc = new BrushConverter();
-                        SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FF1C1C1C");
+                        SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                     }
                 }
             }
@@ -3822,7 +3899,7 @@ namespace FirstTry_app_1
             {
                 Log.Items.Add("TestCaseListView_MouseRightButtonDown ---> Failed Because of error : " + ex.ToString());
             }
-}
+        }
 
         private void ListView_KeyDown(object sender, KeyEventArgs e)
         {
@@ -3898,7 +3975,7 @@ namespace FirstTry_app_1
             }
         }
 
-        public Point startPoint = new Point();
+        public System.Windows.Point startPoint = new System.Windows.Point();
         public int startIndex = -1;
 
         public static T FindAnchestor<T>(DependencyObject current)
@@ -3929,7 +4006,7 @@ namespace FirstTry_app_1
                 HandleTestList();
 
                 // Get the current mouse position
-                Point mousePos = e.GetPosition(null);
+                System.Windows.Point mousePos = e.GetPosition(null);
                 Vector diff = startPoint - mousePos;
 
                 if ((e.LeftButton == MouseButtonState.Pressed && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
@@ -4022,7 +4099,7 @@ namespace FirstTry_app_1
             }
         }
 
-        public Point startPoint1 = new Point();
+        public System.Windows.Point startPoint1 = new System.Windows.Point();
         public int startIndex1 = -1;
 
         public static T FindAnchestor1<T>(DependencyObject current)
@@ -4052,7 +4129,7 @@ namespace FirstTry_app_1
             {
                 HandleTestList();
                 // Get the current mouse position
-                Point mousePos = e.GetPosition(null);
+                System.Windows.Point mousePos = e.GetPosition(null);
                 Vector diff = startPoint1 - mousePos;
 
                 if ((e.LeftButton == MouseButtonState.Pressed && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
@@ -4128,7 +4205,7 @@ namespace FirstTry_app_1
                     var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     if (obj1 != null) obj1.IsSaved = false;
                     var bc = new BrushConverter();
-                    SaveFileIcon.Foreground = (Brush)bc.ConvertFrom("#FFFF6565");
+                    SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                     HandleTestList();
                     edit = false;
                     listView.ItemsSource = ListDB;
@@ -4199,7 +4276,8 @@ namespace FirstTry_app_1
         {
             try
             {
-                Application.Current.Dispatcher.Invoke(new Action(() => {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
                     BL.BuildFile _buildFile = new BL.BuildFile();
                 }));
                 if (updateAck)
@@ -4264,7 +4342,8 @@ namespace FirstTry_app_1
                             string testCaseName = TestCaseDR[j].Split(new[] { "\\" }, StringSplitOptions.None)[1].Replace("-", "_").Replace(".", "_").Replace(" ", "_").Replace("&", "_");
                             if (!File.Exists(@temp3))
                             {
-                                Application.Current.Dispatcher.Invoke(new Action(() => {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
                                     openOldTestCase("C:\\seleniums\\" + TestCaseDR[j].ToString() + ".html");
                                     TestMethod("C:\\run-test-selenium\\Source\\" + TestCaseDR[j].ToString() + ".py");
                                 }));
@@ -4413,7 +4492,8 @@ namespace FirstTry_app_1
                         indexError = i;
                         Application.Current.Dispatcher.Invoke(new Action(() => { PBar.Value += step; }));
                     }
-                    Application.Current.Dispatcher.Invoke(new Action(() => {
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
                         Log.Items.Add("Successfully updated");
                     }));
                     updateAck = false;
@@ -4552,7 +4632,8 @@ namespace FirstTry_app_1
         {
             CommandCounter = 0;
             int CommandCounter1 = 0;
-            App.Current.Dispatcher.Invoke(delegate{
+            App.Current.Dispatcher.Invoke(delegate
+            {
                 ListDB.Clear();
             });
             for (int i = 0; i < input.Count; i++)
@@ -4566,15 +4647,17 @@ namespace FirstTry_app_1
                         tempCommand = "open";
                     if (tempCommand == "clickAndWait")
                         tempCommand = "click";
-                    App.Current.Dispatcher.Invoke(delegate {
-                        ListDB.Add(new Commands(CommandCounter1, tempCommand, FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter1 + 1), "None"));
+                    App.Current.Dispatcher.Invoke(delegate
+                    {
+                        ListDB.Add(new Commands(CommandCounter1, tempCommand, FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter1 + 1), "None", false));
                     });
                     i += 4;
                 }
             }
             testCaseCounter++;
             _testCaseCounter++;
-            App.Current.Dispatcher.Invoke(delegate {
+            App.Current.Dispatcher.Invoke(delegate
+            {
                 TestList.Add(new TestSuit() { TestNumber = testCaseCounter, TestName = input[0], TestValue = new ObservableCollection<Commands>(ListDB), TestFolder = input[1], SavedPath = null, IsSaved = false });
                 TestCaseListView.ItemsSource = TestList;
                 listView.ItemsSource = ListDB;
@@ -4624,7 +4707,8 @@ namespace FirstTry_app_1
 
         public async Task NewTestCaseConverter(List<string> input)
         {
-            App.Current.Dispatcher.Invoke(delegate {
+            App.Current.Dispatcher.Invoke(delegate
+            {
                 ListDB.Clear();
             });
 
@@ -4686,17 +4770,19 @@ namespace FirstTry_app_1
                         myCurrentTarget = ConvertTextToIdeFormat(myCurrentTarget, false, false);
 
                     var myCurrentValue = FindBetween(myValues[i], " \"value\": \"", "\"");
-                    if (myCurrentCommand == "empty") 
+                    if (myCurrentCommand == "empty")
                         myCurrentValue = ConvertTextToIdeFormat(myCurrentValue, false, false);
 
-                    App.Current.Dispatcher.Invoke(delegate {
-                        tempCommands.Add(new Commands(CommandCounter1, myCurrentCommand, myCurrentTarget, myCurrentValue, myCurrentCommand + Convert.ToString(CommandCounter1 + 1), "None"));
+                    App.Current.Dispatcher.Invoke(delegate
+                    {
+                        tempCommands.Add(new Commands(CommandCounter1, myCurrentCommand, myCurrentTarget, myCurrentValue, myCurrentCommand + Convert.ToString(CommandCounter1 + 1), "None", false));
                     });
                 }
                 mainList.Add(new NewIDEType(TestCaseID, TestCaseNAME, tempCommands));
                 testCaseCounter++;
                 _testCaseCounter++;
-                App.Current.Dispatcher.Invoke(delegate {
+                App.Current.Dispatcher.Invoke(delegate
+                {
                     ProjectName = input[0];
                     TestList.Add(new TestSuit() { TestNumber = testCaseCounter, TestName = TestCaseNAME, TestValue = new ObservableCollection<Commands>(tempCommands), TestFolder = null, SavedPath = null, IsSaved = false });
                     TestCaseListView.ItemsSource = TestList;
@@ -4706,5 +4792,2773 @@ namespace FirstTry_app_1
         }
         #endregion
 
+
+        private void listView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released)
+            {
+                if (listView.SelectedItems.Count != 0)
+                {
+                    CurrentCommand = (Commands)listView.SelectedItems[0];
+                    _commandCounter = CurrentCommand.Number;
+                    CommandsComboBox.Text = CurrentCommand.Command.Replace("\t", "");
+                    tabInCommandForEdit = CurrentCommand.Command.Replace(CommandsComboBox.Text, "");
+                    TargetTB.Text = CurrentCommand.Target;
+                    ValueTB.Text = CurrentCommand.Value;
+                    DescriptionTB.Text = CurrentCommand.Description;
+                    HandleComboBox();
+                    edit = true;
+                }
+            }
+        }
+        private void listView_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            /*if (e.LeftButton == MouseButtonState.Released)
+            {
+                if (listView.SelectedItems.Count != 0)
+                {
+                    CurrentCommand = (Commands)listView.SelectedItems[0];
+                    lvitem = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
+                    string itemBackGround = lvitem.Background.ToString();
+                    var bc = new BrushConverter();
+                    if (itemBackGround != "#FFDEDEDE")
+                        lvitem.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFDEDEDE");
+                }
+            }*/
+        }
+
+        private void TestCaseListView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+        /////////Runner///////
+        ListViewItem lvitem;
+        #region Runner
+
+        public async Task runCommand(Commands thisCommand)
+        {
+            try
+            {
+                if (driver == null)
+                    driver = new ChromeDriver(chromeservice, options);
+             
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                IJavaScriptExecutor jsExecutor = driver;
+                //highligh css class
+                jsExecutor.ExecuteScript("var styleContainer = document.createElement(\"style\"); styleContainer.innerHTML = \".myHighlight {background-color: rgba(255,255,0,0.9) !important;}\"; document.body.appendChild(styleContainer); ");
+
+                Actions actions = new Actions(driver);
+
+                if(lvitem != null && waitType == WaitType._single)
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        string itemBackGround = lvitem.Background.ToString();
+                        var bc = new BrushConverter();
+                        if (itemBackGround != "#00FFFFFF")
+                            lvitem.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#00FFFFFF");
+                    }));
+                }
+
+
+                ///////specifyTarget
+                string targetType = "";
+                if (thisCommand.Target.Contains('=') && !thisCommand.Target.Contains("//"))
+                    targetType = thisCommand.Target.Split('=')[0];
+                else if (!thisCommand.Target.Contains('=') || thisCommand.Target.Contains("//"))
+                    targetType = "xpath";
+                string tempTarget = "";
+                switch (targetType)
+                {
+                    case "class":
+                        targetType = "class name";
+                        tempTarget = thisCommand.Target.Replace("class=", "");
+                        break;
+                    case "css":
+                        targetType = "css selector";
+                        tempTarget = thisCommand.Target.Replace("css=", "");
+                        break;
+                    case "id":
+                        tempTarget = thisCommand.Target.Replace("id=", "");
+                        break;
+                    case "link":
+                        targetType = "link text";
+                        tempTarget = thisCommand.Target.Replace("link=", "");
+                        break;
+                    case "linkText":
+                        targetType = "link text";
+                        tempTarget = thisCommand.Target.Replace("link=", "");
+                        break;
+                    case "name":
+                        tempTarget = thisCommand.Target.Replace("name=", "");
+                        break;
+                    case "partial":
+                        targetType = "partial link text";
+                        tempTarget = thisCommand.Target.Replace("partial=", "");
+                        break;
+                    case "tag":
+                        targetType = "tag name";
+                        tempTarget = thisCommand.Target.Replace("tag=", "");
+                        break;
+                    case "xpath":
+                        tempTarget = thisCommand.Target.Replace("xpath=", "");
+                        break;
+                    default:
+                        tempTarget = thisCommand.Target;
+                        break;
+                }
+
+                switch (thisCommand.Command)
+                {
+                    #region ===> open
+                    case "open":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            driver.Navigate().GoToUrl(thisCommand.Target);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+                        break;
+                    #endregion
+
+                    #region ===> waitForElementPresent
+                    case "waitForElementPresent":
+
+                        try
+                        {
+                            IWebElement el_waitForElementPresent;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.ClassName(tempTarget)));
+                                    el_waitForElementPresent = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.CssSelector(tempTarget)));
+                                    el_waitForElementPresent = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.Id(tempTarget)));
+                                    el_waitForElementPresent = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.LinkText(tempTarget)));
+                                    el_waitForElementPresent = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.Name(tempTarget)));
+                                    el_waitForElementPresent = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.PartialLinkText(tempTarget)));
+                                    el_waitForElementPresent = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.TagName(tempTarget)));
+                                    el_waitForElementPresent = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath(tempTarget)));
+                                    el_waitForElementPresent = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath(tempTarget)));
+                                    el_waitForElementPresent = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            //highlight
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_waitForElementPresent);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForElementPresent);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                            }));
+
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("waitForElementPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> waitForElementVisible
+                    case "waitForElementVisible":
+
+                        try
+                        {
+                            IWebElement el_waitForElementVisible;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.ClassName(tempTarget)));
+                                    el_waitForElementVisible = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector(tempTarget)));
+                                    el_waitForElementVisible = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.Id(tempTarget)));
+                                    el_waitForElementVisible = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.LinkText(tempTarget)));
+                                    el_waitForElementVisible = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.Name(tempTarget)));
+                                    el_waitForElementVisible = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.PartialLinkText(tempTarget)));
+                                    el_waitForElementVisible = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.TagName(tempTarget)));
+                                    el_waitForElementVisible = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath(tempTarget)));
+                                    el_waitForElementVisible = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath(tempTarget)));
+                                    el_waitForElementVisible = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_waitForElementVisible);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForElementVisible);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("waitForElementVisible " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> waitForElementNotPresent
+                    case "waitForElementNotPresent":
+                        try
+                        {
+                            IWebElement el_waitForElementNotPresent;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName(tempTarget)));
+                                    el_waitForElementNotPresent = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector(tempTarget)));
+                                    el_waitForElementNotPresent = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.Id(tempTarget)));
+                                    el_waitForElementNotPresent = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.LinkText(tempTarget)));
+                                    el_waitForElementNotPresent = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.Name(tempTarget)));
+                                    el_waitForElementNotPresent = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.PartialLinkText(tempTarget)));
+                                    el_waitForElementNotPresent = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.TagName(tempTarget)));
+                                    el_waitForElementNotPresent = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(tempTarget)));
+                                    el_waitForElementNotPresent = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(tempTarget)));
+                                    el_waitForElementNotPresent = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("waitForElementNotPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> waitForNotText
+                    case "waitForNotText":
+                        try
+                        {
+                            IWebElement el_waitForNotText;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementWithText(By.ClassName(tempTarget), thisCommand.Value));
+                                    el_waitForNotText = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementWithText(By.CssSelector(tempTarget), thisCommand.Value));
+                                    el_waitForNotText = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementWithText(By.Id(tempTarget), thisCommand.Value));
+                                    el_waitForNotText = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementWithText(By.LinkText(tempTarget), thisCommand.Value));
+                                    el_waitForNotText = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementWithText(By.Name(tempTarget), thisCommand.Value));
+                                    el_waitForNotText = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementWithText(By.PartialLinkText(tempTarget), thisCommand.Value));
+                                    el_waitForNotText = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementWithText(By.TagName(tempTarget), thisCommand.Value));
+                                    el_waitForNotText = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementWithText(By.XPath(tempTarget), thisCommand.Value));
+                                    el_waitForNotText = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    wait.Until(ExpectedConditions.InvisibilityOfElementWithText(By.XPath(tempTarget), thisCommand.Value));
+                                    el_waitForNotText = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("waitForNotText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> waitForText
+                    case "waitForText":
+                        try
+                        {
+                            IWebElement el_waitForText;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.ClassName(tempTarget), thisCommand.Value));
+                                    el_waitForText = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(tempTarget), thisCommand.Value));
+                                    el_waitForText = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.Id(tempTarget), thisCommand.Value));
+                                    el_waitForText = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.LinkText(tempTarget), thisCommand.Value));
+                                    el_waitForText = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.Name(tempTarget), thisCommand.Value));
+                                    el_waitForText = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.PartialLinkText(tempTarget), thisCommand.Value));
+                                    el_waitForText = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.TagName(tempTarget), thisCommand.Value));
+                                    el_waitForText = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.XPath(tempTarget), thisCommand.Value));
+                                    el_waitForText = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.XPath(tempTarget), thisCommand.Value));
+                                    el_waitForText = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_waitForText);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForText);
+
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("waitForText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> waitForValue
+                    case "waitForValue":
+                        try
+                        {
+                            IWebElement el_waitForValue;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.ClassName(tempTarget), thisCommand.Value));
+                                    el_waitForValue = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.CssSelector(tempTarget), thisCommand.Value));
+                                    el_waitForValue = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.Id(tempTarget), thisCommand.Value));
+                                    el_waitForValue = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.LinkText(tempTarget), thisCommand.Value));
+                                    el_waitForValue = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.Name(tempTarget), thisCommand.Value));
+                                    el_waitForValue = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.PartialLinkText(tempTarget), thisCommand.Value));
+                                    el_waitForValue = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.TagName(tempTarget), thisCommand.Value));
+                                    el_waitForValue = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.XPath(tempTarget), thisCommand.Value));
+                                    el_waitForValue = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.XPath(tempTarget), thisCommand.Value));
+                                    el_waitForValue = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_waitForValue);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForValue);
+
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("waitForValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> waitForAttribute
+                    case "waitForAttribute":
+                        try
+                        {
+                            IWebElement el_waitForAttribute;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_waitForAttribute = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_waitForAttribute = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_waitForAttribute = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_waitForAttribute = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_waitForAttribute = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_waitForAttribute = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_waitForAttribute = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_waitForAttribute = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_waitForAttribute = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            if (!el_waitForAttribute.GetAttribute("class").Contains("active"))
+                                throw new Exception("Element is not active");
+
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_waitForAttribute);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForAttribute);
+
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("waitForAttribute " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> waitForWindowPresent
+                    case "waitForWindowPresent":
+                        try
+                        {
+                            IWebElement el_waitForWindowPresent;
+
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("waitForWindowPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> waitForNumberOfWindowPresent
+                    case "waitForNumberOfWindowPresent":
+                        try
+                        {
+                            IWebElement el_waitForNumberOfWindowPresent;
+
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("waitForNumberOfWindowPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> type
+                    case "type":
+                        try
+                        {
+                            IWebElement el_type;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_type = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_type = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_type = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_type = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_type = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_type = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_type = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_type = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_type = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_type);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_type);
+                            el_type.Clear();
+                            el_type.SendKeys(thisCommand.Value);
+                            el_type.Submit();
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("type " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> sendKeys
+                    case "sendKeys":
+                        try
+                        {
+                            IWebElement el_sendKeys;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_sendKeys = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_sendKeys = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_sendKeys = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_sendKeys = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_sendKeys = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_sendKeys = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_sendKeys = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_sendKeys = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_sendKeys = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_sendKeys);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_sendKeys);
+                            el_sendKeys.SendKeys(thisCommand.Value);
+                            el_sendKeys.Submit();
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("sendKeys " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> clearText
+                    case "clearText":
+                        try
+                        {
+                            IWebElement el_clearText;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_clearText = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_clearText = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_clearText = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_clearText = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_clearText = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_clearText = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_clearText = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_clearText = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_clearText = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_clearText);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_clearText);
+                            el_clearText.Clear();
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("clearText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> click
+                    case "click":
+                        try
+                        {
+                            IWebElement el_click;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_click = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_click = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_click = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_click = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_click = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_click = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_click = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_click = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_click = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_click);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_click);
+                            el_click.Click();
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("click " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> select
+                    case "select1":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+                        break;
+                    #endregion
+
+                    #region ===> selectByVisibleText
+                    case "select":
+                        try
+                        {
+                            IWebElement el_select;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_select = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_select = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_select = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_select = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_select = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_select = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_select = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_select = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_select = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_select);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_select);
+                            SelectElement select = new SelectElement(el_select);
+                            select.SelectByText(thisCommand.Value);
+
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("select " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> selectByValue
+                    case "selectByValue":
+                        try
+                        {
+                            IWebElement el_selectByValue;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_selectByValue = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_selectByValue = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_selectByValue = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_selectByValue = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_selectByValue = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_selectByValue = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_selectByValue = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_selectByValue = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_selectByValue = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_selectByValue);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_selectByValue);
+                            SelectElement select2 = new SelectElement(el_selectByValue);
+                            select2.SelectByValue(thisCommand.Value);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("selectByValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+
+                        break;
+                    #endregion
+
+                    #region ===> selectByIndex
+                    case "selectByIndex":
+                        try
+                        {
+                            IWebElement el_selectByIndex;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_selectByIndex = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_selectByIndex = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_selectByIndex = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_selectByIndex = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_selectByIndex = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_selectByIndex = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_selectByIndex = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_selectByIndex = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_selectByIndex = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_selectByIndex);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_selectByIndex);
+                            SelectElement select3 = new SelectElement(el_selectByIndex);
+                            select3.SelectByIndex(Convert.ToInt32(thisCommand.Value));
+
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("selectByIndex " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> storeText
+                    case "storeText":
+                        try
+                        {
+                            IWebElement el_storeText;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_storeText = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_storeText = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_storeText = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_storeText = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_storeText = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_storeText = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_storeText = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_storeText = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_storeText = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+                            StoreEvalDB.Add(thisCommand.Value, el_storeText.Text);
+                            Stored.Items.Add(thisCommand.Value + " = " + el_storeText.Text);
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeText);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeText);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("storeText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> storeValue
+                    case "storeValue":
+                        try
+                        {
+                            IWebElement el_storeValue;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_storeValue = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_storeValue = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_storeValue = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_storeValue = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_storeValue = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_storeValue = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_storeValue = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_storeValue = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_storeValue = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+                            StoreEvalDB.Add(thisCommand.Value, el_storeValue.GetAttribute("value"));
+                            Stored.Items.Add(thisCommand.Value + " = " + el_storeValue.GetAttribute("value"));
+
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeValue);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeValue);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("storeValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> storeWicketPath
+                    case "storeWicketPath":
+                        try
+                        {
+                            IWebElement el_storeWicketPath;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_storeWicketPath = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_storeWicketPath = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_storeWicketPath = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_storeWicketPath = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_storeWicketPath = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_storeWicketPath = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_storeWicketPath = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_storeWicketPath = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_storeWicketPath = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+                            StoreEvalDB.Add(thisCommand.Value, el_storeWicketPath.GetAttribute("wicketPath"));
+                            Stored.Items.Add(thisCommand.Value + " = " + el_storeWicketPath.GetAttribute("wicketPath"));
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeWicketPath);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeWicketPath);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("storeWicketPath " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> storeInnerHTML
+                    case "storeInnerHTML":
+                        try
+                        {
+                            IWebElement el_storeInnerHTML;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_storeInnerHTML = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_storeInnerHTML = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_storeInnerHTML = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_storeInnerHTML = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_storeInnerHTML = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_storeInnerHTML = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_storeInnerHTML = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_storeInnerHTML = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_storeInnerHTML = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+                            StoreEvalDB.Add(thisCommand.Value, el_storeInnerHTML.GetAttribute("innerHTML"));
+                            Stored.Items.Add(thisCommand.Value + " = " + el_storeInnerHTML.GetAttribute("innerHTML"));
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeInnerHTML);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeInnerHTML);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("storeInnerHTML " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> storeName
+                    case "storeName":
+                        try
+                        {
+                            IWebElement el_storeName;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_storeName = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_storeName = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_storeName = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_storeName = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_storeName = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_storeName = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_storeName = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_storeName = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_storeName = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+                            StoreEvalDB.Add(thisCommand.Value, el_storeName.GetAttribute("name"));
+                            Stored.Items.Add(thisCommand.Value + " = " + el_storeName.GetAttribute("name"));
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeName);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeName);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("storeName " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> storeId
+                    case "storeId":
+                        try
+                        {
+                            IWebElement el_storeId;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_storeId = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_storeId = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_storeId = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_storeId = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_storeId = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_storeId = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_storeId = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_storeId = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_storeId = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+                            StoreEvalDB.Add(thisCommand.Value, el_storeId.GetAttribute("id"));
+                            Stored.Items.Add(thisCommand.Value + " = " + el_storeId.GetAttribute("id"));
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeId);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeId);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("storeId " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> storeHref
+                    case "storeHref":
+                        try
+                        {
+                            IWebElement el_storeHref;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_storeHref = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_storeHref = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_storeHref = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_storeHref = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_storeHref = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_storeHref = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_storeHref = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_storeHref = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_storeHref = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+                            StoreEvalDB.Add(thisCommand.Value, el_storeHref.GetAttribute("href"));
+                            Stored.Items.Add(thisCommand.Value + " = " + el_storeHref.GetAttribute("href"));
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeHref);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeHref);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("storeHref " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> storeEval
+                    case "storeEval":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+
+                            StoreEvalDB.Add(thisCommand.Value, thisCommand.Target);
+                            Stored.Items.Add(thisCommand.Value + " = " + thisCommand.Target);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("storeEval " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+                        break;
+                    #endregion
+
+                    #region ===> storeElementPresent
+                    case "storeElementPresent":
+                        try
+                        {
+                            IWebElement el_storeElementPresent;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    if (IsElementPresent(By.ClassName(tempTarget)))
+                                    {
+                                        el_storeElementPresent = driver.FindElement(By.ClassName(tempTarget));
+                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.ClassName(tempTarget)));
+                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+
+                                        jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
+                                        Thread.Sleep(150);
+                                        jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
+                                    }
+                                    else
+                                        throw new Exception("Element is not active");
+
+                                    break;
+                                case "css selector":
+                                    if (IsElementPresent(By.CssSelector(tempTarget)))
+                                    {
+                                        el_storeElementPresent = driver.FindElement(By.CssSelector(tempTarget));
+                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.CssSelector(tempTarget)));
+                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+
+                                        jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
+                                        Thread.Sleep(150);
+                                        jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
+                                    }
+                                    else
+                                        throw new Exception("Element is not active");
+                                    break;
+                                case "id":
+                                    if (IsElementPresent(By.Id(tempTarget)))
+                                    {
+                                        el_storeElementPresent = driver.FindElement(By.Id(tempTarget));
+                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.Id(tempTarget)));
+                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+
+                                        jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
+                                        Thread.Sleep(150);
+                                        jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
+                                    }
+                                    else
+                                        throw new Exception("Element is not active");
+                                    break;
+                                case "link text":
+                                    if (IsElementPresent(By.LinkText(tempTarget)))
+                                    {
+                                        el_storeElementPresent = driver.FindElement(By.LinkText(tempTarget));
+                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.LinkText(tempTarget)));
+                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+
+                                        jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
+                                        Thread.Sleep(150);
+                                        jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
+                                    }
+                                    else
+                                        throw new Exception("Element is not active"); break;
+                                case "name":
+                                    if (IsElementPresent(By.Name(tempTarget)))
+                                    {
+                                        el_storeElementPresent = driver.FindElement(By.Name(tempTarget));
+                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.Name(tempTarget)));
+                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+
+                                        jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
+                                        Thread.Sleep(150);
+                                        jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
+                                    }
+                                    else
+                                        throw new Exception("Element is not active"); break;
+                                case "partial link text":
+                                    if (IsElementPresent(By.PartialLinkText(tempTarget)))
+                                    {
+                                        el_storeElementPresent = driver.FindElement(By.PartialLinkText(tempTarget));
+                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.PartialLinkText(tempTarget)));
+                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+
+                                        jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
+                                        Thread.Sleep(150);
+                                        jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
+                                    }
+                                    else
+                                        throw new Exception("Element is not active"); break;
+                                case "tag name":
+                                    if (IsElementPresent(By.TagName(tempTarget)))
+                                    {
+                                        el_storeElementPresent = driver.FindElement(By.TagName(tempTarget));
+                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.TagName(tempTarget)));
+                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+
+                                        jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
+                                        Thread.Sleep(150);
+                                        jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
+                                    }
+                                    else
+                                        throw new Exception("Element is not active"); break;
+                                case "xpath":
+                                    if (IsElementPresent(By.XPath(tempTarget)))
+                                    {
+                                        el_storeElementPresent = driver.FindElement(By.XPath(tempTarget));
+                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.XPath(tempTarget)));
+                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+
+                                        jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
+                                        Thread.Sleep(150);
+                                        jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
+                                    }
+                                    else
+                                        throw new Exception("Element is not active"); break;
+                                default:
+                                    if (IsElementPresent(By.XPath(tempTarget)))
+                                    {
+                                        el_storeElementPresent = driver.FindElement(By.XPath(tempTarget));
+                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.XPath(tempTarget)));
+                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+
+                                        jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
+                                        Thread.Sleep(150);
+                                        jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
+                                    }
+                                    else
+                                        throw new Exception("Element is not active"); break;
+                            }
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("storeElementPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> alert
+                    case "alert":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            IAlert a = driver.SwitchTo().Alert();
+                            a.Accept();
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("alert " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> replace
+                    case "replace":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            StoreEvalDB.Add(thisCommand.Value, thisCommand.Target);
+                            Stored.Items.Add(thisCommand.Value + " = " + thisCommand.Target);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+                        break;
+                    #endregion
+
+                    #region ===> runScript
+                    case "runScript":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            if (tempTarget == "" || tempTarget == "None")
+                            {
+                                jsExecutor.ExecuteScript(thisCommand.Value);
+                            }
+                            else
+                            {
+                                jsExecutor.ExecuteScript(thisCommand.Value, thisCommand.Target);
+                            }
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> switch
+                    case "switch":
+                        try
+                        {
+                            IWebElement el_switch;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_switch = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_switch = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_switch = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_switch = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_switch = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_switch = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_switch = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_switch = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_switch = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+
+                            StoreEvalDB.Add(thisCommand.Value, el_switch.GetAttribute("href"));
+                            Stored.Items.Add(thisCommand.Value + " = " + el_switch.GetAttribute("href"));
+
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_switch);
+                            driver.SwitchTo().Frame(el_switch);
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_switch);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> switchToDefault
+                    case "switchToDefault":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            driver.SwitchTo().DefaultContent();
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+                        break;
+                    #endregion
+
+                    #region ===> scrollInto
+                    case "scrollInto":
+                        try
+                        {
+                            IWebElement el_scrollInto;
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            switch (targetType)
+                            {
+                                case "class name":
+                                    el_scrollInto = driver.FindElement(By.ClassName(tempTarget));
+                                    break;
+                                case "css selector":
+                                    el_scrollInto = driver.FindElement(By.CssSelector(tempTarget));
+                                    break;
+                                case "id":
+                                    el_scrollInto = driver.FindElement(By.Id(tempTarget));
+                                    break;
+                                case "link text":
+                                    el_scrollInto = driver.FindElement(By.LinkText(tempTarget));
+                                    break;
+                                case "name":
+                                    el_scrollInto = driver.FindElement(By.Name(tempTarget));
+                                    break;
+                                case "partial link text":
+                                    el_scrollInto = driver.FindElement(By.PartialLinkText(tempTarget));
+                                    break;
+                                case "tag name":
+                                    el_scrollInto = driver.FindElement(By.TagName(tempTarget));
+                                    break;
+                                case "xpath":
+                                    el_scrollInto = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                                default:
+                                    el_scrollInto = driver.FindElement(By.XPath(tempTarget));
+                                    break;
+                            }
+                            jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_scrollInto);
+                            actions.MoveToElement(el_scrollInto);
+                            actions.Perform();
+                            Thread.Sleep(150);
+                            jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_scrollInto);
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+
+                        break;
+                    #endregion
+
+                    #region ===> while
+                    case "while":
+
+                        break;
+                    #endregion
+
+                    #region ===> break
+                    case "break":
+
+                        break;
+                    #endregion
+
+                    #region ===> if
+                    case "if":
+
+                        break;
+                    #endregion
+
+                    #region ===> end
+                    case "end":
+
+                        break;
+                    #endregion
+
+                    #region ===> refresh
+                    case "refresh":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            driver.Navigate().Refresh();
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+                        break;
+                    #endregion
+
+                    #region ===> close
+                    case "close":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            driver.Quit();
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+                        break;
+                    #endregion
+
+                    #region ===> failTest
+                    case "failTest":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+                        break;
+                    #endregion
+
+                    #region ===> pause
+                    case "pause":
+                        try
+                        {
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                            }));
+                            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Convert.ToInt32(thisCommand.Value));
+
+                            thisCommand.Pass = true;
+
+                            //change command color in listveiw
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                
+                            }));
+                        }
+                        catch (Exception ex)
+                        {
+                            thisCommand.Pass = false;
+
+                            //change command color in listveiw
+                            lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                
+                            }));
+
+                            // Get the line number from the stack frame
+                            var st = new StackTrace(ex, true);
+                            var frame = st.GetFrame(st.FrameCount - 1);
+                            var line = frame.GetFileLineNumber();
+                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                        }
+                        break;
+                        #endregion
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("runCommand ---> Failed in line " + line + " Because of error : " + ex.ToString());
+            }
+        }
+
+        public async Task runCase(int testCaseNumber)
+        {
+            try
+            {
+
+                for (int i = 0; TestList.ElementAt(testCaseNumber - 1).TestValue.Count > i; i++)
+                {
+                    waitType = WaitType._case;
+                    await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i)));
+                }
+            }
+            catch (Exception ex)
+            {
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("runCase_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
+            }
+        }
+
+        #endregion
+
+ 
     }
 }

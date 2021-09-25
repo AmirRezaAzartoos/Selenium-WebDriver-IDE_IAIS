@@ -23,6 +23,7 @@ namespace FirstTry_app_1
         private string _value;
         private string _variableName;
         private string _description;
+        private bool _pass;
 
         public int Number
         {
@@ -115,6 +116,20 @@ namespace FirstTry_app_1
                 OnPropertyChanged("Description");
             }
         }
+
+        public bool Pass
+        {
+            get
+            {
+                return _pass;
+            }
+            set
+            {
+                _pass = value;
+                OnPropertyChanged("Pass");
+            }
+        }
+
         public override string ToString()
         {
             return this.Number + this.Command + this.Target + this.Value + this.VariableName + this.Description;
@@ -125,14 +140,14 @@ namespace FirstTry_app_1
             throw new NotImplementedException();
         }
 
-        public Commands(int number, string command, string target, string value, string variableName, string description)
+        public Commands(int number, string command, string target, string value, string variableName, string description, bool pass)
         {
             this.Number = number;
             this.Command = command;
             this.Target = target;
             this.Value = value;
             this.VariableName = variableName;
-            this.Description = description;
+            this.Pass = pass;
         }
     }
 }
