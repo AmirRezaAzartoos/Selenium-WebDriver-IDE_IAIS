@@ -1234,7 +1234,26 @@
                                     </ListBox>
                                 </TabItem>
                                 <TabItem HorizontalAlignment="Left" Header="Stored" Background="White" Width="70" BorderThickness="0" Margin="0,0,0,-1" BorderBrush="{x:Null}" Cursor="Hand">
-                                    <ListBox Name="Stored" Foreground="Black" Background="White" Margin="0" Grid.ColumnSpan="2" Cursor="Arrow">
+                                    <ListBox Name="Stored" Foreground="Black" Background="White" Margin="0" Grid.ColumnSpan="2" Cursor="Arrow" ItemsSource="{DynamicResource StoreEvalDB}">
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Name="CopyStoredItem" Header="Copy" Click="CopyStoredItem_Click"/>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition SharedSizeGroup="Key" />
+                                                        <ColumnDefinition SharedSizeGroup="Value" />
+                                                        <ColumnDefinition SharedSizeGroup="Value" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Margin="0" Text="{Binding Key}" Grid.Column="0"/>
+                                                    <TextBlock Margin="2 0 2 0" Text="=" Grid.Column="1"/>
+                                                    <TextBlock Margin="0" Text="{Binding Value}" Grid.Column="2"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
                                         <ListBox.ItemContainerStyle>
                                             <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
                                                 <Setter Property="Background" Value="White"/>

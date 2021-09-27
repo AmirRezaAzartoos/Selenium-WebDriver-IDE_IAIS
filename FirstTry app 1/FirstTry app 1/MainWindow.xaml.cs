@@ -120,6 +120,7 @@ namespace FirstTry_app_1
 
         //runner
         IDictionary<string, dynamic> StoreEvalDB = new Dictionary<string, dynamic>();
+
         enum WaitType {_single, _case};
         WaitType waitType;
 
@@ -179,6 +180,7 @@ namespace FirstTry_app_1
             TestCaseListView.ItemsSource = TestList;
             listView.ItemsSource = ListDB;
             //listView.DataContext = ListDB;
+            Resources["StoreEvalDB"] = StoreEvalDB;
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(TestCaseListView.ItemsSource);
             view.Filter = UserFilter;
             Refrence.Text = "  Selenium WebDriver IDE\n  Version : 0.3.8";
@@ -191,7 +193,6 @@ namespace FirstTry_app_1
             options.AddExtension(startupPath + "\\data\\extention-test.crx");
             options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
         }
-
         ///////BUILD
         #region Save
         public void TestMethod(string A)
@@ -476,7 +477,7 @@ namespace FirstTry_app_1
                             _storeText += tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).Value + ".text\n";
                             _storeText += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeText;
-                            Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).Value + ".text");
+                            //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value, ListDB.ElementAt(_counter).Value + ".text");
                             break;
                         #endregion
 
@@ -488,7 +489,7 @@ namespace FirstTry_app_1
                             _storeValue += tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                             _storeValue += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeValue;
-                            Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")");
+                            //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value, ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")");
                             break;
                         #endregion
 
@@ -500,7 +501,7 @@ namespace FirstTry_app_1
                             _storeWicketPath += tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                             _storeWicketPath += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeWicketPath;
-                            Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"wicketpath\")");
+                            //Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"wicketpath\")");
                             break;
                         #endregion
 
@@ -512,7 +513,7 @@ namespace FirstTry_app_1
                             _storeInnerHTML += tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                             _storeInnerHTML += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeInnerHTML;
-                            Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"innerHTML\")");
+                            //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value, ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"innerHTML\")");
                             break;
                         #endregion
 
@@ -524,7 +525,7 @@ namespace FirstTry_app_1
                             _storeName += tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                             _storeName += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeName;
-                            Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"name\")");
+                            //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value, ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"name\")");
                             break;
                         #endregion
 
@@ -536,7 +537,7 @@ namespace FirstTry_app_1
                             _storeId += tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                             _storeId += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeId;
-                            Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"id\")");
+                            //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value, ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"id\")");
                             break;
                         #endregion
 
@@ -548,7 +549,7 @@ namespace FirstTry_app_1
                             _storeHref += tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                             _storeHref += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeHref;
-                            Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"href\")");
+                            //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value, ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"href\")");
                             break;
                         #endregion
 
@@ -559,7 +560,7 @@ namespace FirstTry_app_1
                             string _storeEval = tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ConvertTextToIdeFormat(tempTarget, false, true) + "\n";
                             _storeEval += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeEval;
-                            Stored.Items.Add(_storeEval);
+                            //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value, ConvertTextToIdeFormat(tempTarget, false, true));
                             break;
                         #endregion
 
@@ -567,13 +568,14 @@ namespace FirstTry_app_1
                         case "storeElementPresent":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | storeElementPresent\n";
                             string _storeElementPresent = tabNeededTemp + "\ttry:\n";
+                            string exist;
                             _storeElementPresent += tabNeededTemp + "\t\tWebDriverWait(driver, 10).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                             _storeElementPresent += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = True\n";
                             _storeElementPresent += tabNeededTemp + "\texcept TimeoutException:\n";
                             _storeElementPresent += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = False\n";
                             _storeElementPresent += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _storeElementPresent;
-                            Stored.Items.Add(_storeElementPresent);
+                            //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value);
                             break;
                         #endregion
 
@@ -594,7 +596,7 @@ namespace FirstTry_app_1
                             string _replace = tabNeededTemp + "\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).VariableName + "\"] = " + ConvertTextToIdeFormat(tempTarget, false, true) + "\n";
                             _replace += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _replace;
-                            Stored.Items.Add(_replace);
+                            //StoreEvalDB.Add(_replace);
                             break;
                         #endregion
 
@@ -1011,7 +1013,7 @@ namespace FirstTry_app_1
                                 _storeText += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).Value + ".text\n";
                                 _storeText += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeText;
-                                Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).Value + ".text");
+                                //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).Value + ".text");
                                 break;
                             #endregion
 
@@ -1023,7 +1025,7 @@ namespace FirstTry_app_1
                                 _storeValue += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                                 _storeValue += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeValue;
-                                Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")");
+                                //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")");
                                 break;
                             #endregion
 
@@ -1035,7 +1037,7 @@ namespace FirstTry_app_1
                                 _storeWicketPath += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                                 _storeWicketPath += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeWicketPath;
-                                Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"wicketpath\")");
+                                //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"wicketpath\")");
                                 break;
                             #endregion
 
@@ -1047,7 +1049,7 @@ namespace FirstTry_app_1
                                 _storeInnerHTML += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                                 _storeInnerHTML += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeInnerHTML;
-                                Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"innerHTML\")");
+                                //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"innerHTML\")");
                                 break;
                             #endregion
 
@@ -1059,7 +1061,7 @@ namespace FirstTry_app_1
                                 _storeName += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                                 _storeName += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeName;
-                                Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"name\")");
+                                //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"name\")");
                                 break;
                             #endregion
 
@@ -1071,7 +1073,7 @@ namespace FirstTry_app_1
                                 _storeId += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                                 _storeId += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeId;
-                                Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"id\")");
+                                //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"id\")");
                                 break;
                             #endregion
 
@@ -1083,7 +1085,7 @@ namespace FirstTry_app_1
                                 _storeHref += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"value\")\n";
                                 _storeHref += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeHref;
-                                Stored.Items.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"href\")");
+                                //StoreEvalDB.Add(ListDB.ElementAt(_counter).Value + " = " + ListDB.ElementAt(_counter).VariableName + ".get_attribute(\"href\")");
                                 break;
                             #endregion
 
@@ -1094,7 +1096,7 @@ namespace FirstTry_app_1
                                 string _storeEval = tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = " + ConvertTextToIdeFormat(tempTarget, false, true) + "\n";
                                 _storeEval += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeEval;
-                                Stored.Items.Add(_storeEval);
+                                //StoreEvalDB.Add(_storeEval);
                                 break;
                             #endregion
 
@@ -1108,7 +1110,7 @@ namespace FirstTry_app_1
                                 _storeElementPresent += tabNeededTemp + "\t\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = False\n";
                                 _storeElementPresent += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _storeElementPresent;
-                                Stored.Items.Add(_storeElementPresent);
+                                //StoreEvalDB.Add(_storeElementPresent);
                                 break;
                             #endregion
 
@@ -1129,7 +1131,7 @@ namespace FirstTry_app_1
                                 string _replace = tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).VariableName + "\"] = " + ConvertTextToIdeFormat(tempTarget, false, true) + "\n";
                                 _replace += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _replace;
-                                Stored.Items.Add(_replace);
+                                //StoreEvalDB.Add(_replace);
                                 break;
                             #endregion
 
@@ -3551,10 +3553,13 @@ namespace FirstTry_app_1
         {
             try
             {
-                await Task.Run(() => runCase(_testCaseCounter));
+                await Task.Run(() => {
+                    runCase(_testCaseCounter);
+                });
             }
             catch (Exception ex)
             {
+
                 // Get the line number from the stack frame
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrame(st.FrameCount - 1);
@@ -3735,27 +3740,15 @@ namespace FirstTry_app_1
             {
                 if (listView.SelectedItems.Count != 0)
                 {
+                    if(waitType == WaitType._case)
+                    {
+                        bool passed = false;
+                    }
                     CurrentCommand = (Commands)listView.SelectedItems[0];
                     waitType = WaitType._single;
                     await Task.Run(() =>
                     {
-                        bool passed = true; ;
                         runCommand(CurrentCommand);
-                        lvitem = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter) as ListViewItem;
-                        for (int i = 0; TestList.ElementAt(_testCaseCounter - 1).TestValue.Count > i; i++)
-                        {
-                            if (TestList.ElementAt(_testCaseCounter - 1).TestValue.ElementAt(i).Pass == false)
-                                passed = false;
-                            break;
-                        }
-                        if (passed)
-                        {
-                            lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                        }
-                        else
-                        {
-                            lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                        }
                     });
                 }
             }
@@ -4580,6 +4573,20 @@ namespace FirstTry_app_1
                 Log.Items.Add("CopiedLogItem ---> Failed Because of error : " + ex.ToString());
             }
         }
+
+        private void CopyStoredItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                multiplication = Multiplication.copy;
+                CopiedLogItem = Stored.SelectedItems[0].ToString();
+                Clipboard.SetText(CopiedLogItem);
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("CopyStoredItem ---> Failed Because of error : " + ex.ToString());
+            }
+        }
         #endregion
 
 
@@ -4932,6 +4939,8 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5018,6 +5027,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5104,6 +5114,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5186,6 +5197,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5268,6 +5280,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5355,6 +5368,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5442,6 +5456,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5524,6 +5539,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5567,6 +5583,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5611,6 +5628,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5691,6 +5709,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5770,6 +5789,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5848,6 +5868,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5926,6 +5947,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -5968,6 +5990,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6048,6 +6071,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6127,6 +6151,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6208,6 +6233,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6269,8 +6295,7 @@ namespace FirstTry_app_1
                                     el_storeText = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            StoreEvalDB.Add(thisCommand.Value, el_storeText.Text);
-                            Stored.Items.Add(thisCommand.Value + " = " + el_storeText.Text);
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeText.Text;
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeText);
                             Thread.Sleep(150);
@@ -6287,6 +6312,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6348,8 +6374,7 @@ namespace FirstTry_app_1
                                     el_storeValue = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            StoreEvalDB.Add(thisCommand.Value, el_storeValue.GetAttribute("value"));
-                            Stored.Items.Add(thisCommand.Value + " = " + el_storeValue.GetAttribute("value"));
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeValue.GetAttribute("value");
 
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeValue);
@@ -6367,6 +6392,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6428,8 +6454,7 @@ namespace FirstTry_app_1
                                     el_storeWicketPath = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            StoreEvalDB.Add(thisCommand.Value, el_storeWicketPath.GetAttribute("wicketPath"));
-                            Stored.Items.Add(thisCommand.Value + " = " + el_storeWicketPath.GetAttribute("wicketPath"));
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeWicketPath.GetAttribute("wicketPath");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeWicketPath);
                             Thread.Sleep(150);
@@ -6446,6 +6471,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6507,8 +6533,7 @@ namespace FirstTry_app_1
                                     el_storeInnerHTML = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            StoreEvalDB.Add(thisCommand.Value, el_storeInnerHTML.GetAttribute("innerHTML"));
-                            Stored.Items.Add(thisCommand.Value + " = " + el_storeInnerHTML.GetAttribute("innerHTML"));
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeInnerHTML.GetAttribute("innerHTML");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeInnerHTML);
                             Thread.Sleep(150);
@@ -6525,6 +6550,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6586,8 +6612,7 @@ namespace FirstTry_app_1
                                     el_storeName = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            StoreEvalDB.Add(thisCommand.Value, el_storeName.GetAttribute("name"));
-                            Stored.Items.Add(thisCommand.Value + " = " + el_storeName.GetAttribute("name"));
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeName.GetAttribute("name");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeName);
                             Thread.Sleep(150);
@@ -6604,6 +6629,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6665,8 +6691,7 @@ namespace FirstTry_app_1
                                     el_storeId = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            StoreEvalDB.Add(thisCommand.Value, el_storeId.GetAttribute("id"));
-                            Stored.Items.Add(thisCommand.Value + " = " + el_storeId.GetAttribute("id"));
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeId.GetAttribute("id");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeId);
                             Thread.Sleep(150);
@@ -6683,6 +6708,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6744,8 +6770,7 @@ namespace FirstTry_app_1
                                     el_storeHref = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            StoreEvalDB.Add(thisCommand.Value, el_storeHref.GetAttribute("href"));
-                            Stored.Items.Add(thisCommand.Value + " = " + el_storeHref.GetAttribute("href"));
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeHref.GetAttribute("href");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeHref);
                             Thread.Sleep(150);
@@ -6762,6 +6787,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6793,21 +6819,20 @@ namespace FirstTry_app_1
 
                             }));
 
-                            StoreEvalDB.Add(thisCommand.Value, thisCommand.Target);
-                            Stored.Items.Add(thisCommand.Value + " = " + thisCommand.Target);
-
                             thisCommand.Pass = true;
+
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = thisCommand.Target;
 
                             //change command color in listveiw
                             lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
                             }));
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -6844,8 +6869,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.ClassName(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.ClassName(tempTarget));
-                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.ClassName(tempTarget)));
-                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.ClassName(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6859,8 +6883,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.CssSelector(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.CssSelector(tempTarget));
-                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.CssSelector(tempTarget)));
-                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.CssSelector(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6873,8 +6896,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.Id(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.Id(tempTarget));
-                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.Id(tempTarget)));
-                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Id(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6887,8 +6909,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.LinkText(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.LinkText(tempTarget));
-                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.LinkText(tempTarget)));
-                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.LinkText(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6900,8 +6921,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.Name(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.Name(tempTarget));
-                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.Name(tempTarget)));
-                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Name(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6913,8 +6933,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.PartialLinkText(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.PartialLinkText(tempTarget));
-                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.PartialLinkText(tempTarget)));
-                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.PartialLinkText(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6926,8 +6945,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.TagName(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.TagName(tempTarget));
-                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.TagName(tempTarget)));
-                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.TagName(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6939,8 +6957,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.XPath(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.XPath(tempTarget));
-                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.XPath(tempTarget)));
-                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6952,8 +6969,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.XPath(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.XPath(tempTarget));
-                                        StoreEvalDB.Add(thisCommand.Value, IsElementPresent(By.XPath(tempTarget)));
-                                        Stored.Items.Add(thisCommand.Value + " = " + IsElementPresent(By.ClassName(tempTarget)));
+                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6974,6 +6990,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7018,6 +7035,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7048,8 +7066,7 @@ namespace FirstTry_app_1
                                 lvitem.Background = System.Windows.Media.Brushes.Yellow;
 
                             }));
-                            StoreEvalDB.Add(thisCommand.Value, thisCommand.Target);
-                            Stored.Items.Add(thisCommand.Value + " = " + thisCommand.Target);
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = thisCommand.Target;
 
                             thisCommand.Pass = true;
 
@@ -7062,6 +7079,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7111,6 +7129,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7173,8 +7192,7 @@ namespace FirstTry_app_1
                                     break;
                             }
 
-                            StoreEvalDB.Add(thisCommand.Value, el_switch.GetAttribute("href"));
-                            Stored.Items.Add(thisCommand.Value + " = " + el_switch.GetAttribute("href"));
+                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_switch.GetAttribute("href");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_switch);
                             driver.SwitchTo().Frame(el_switch);
@@ -7192,6 +7210,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7236,6 +7255,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7313,6 +7333,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7380,6 +7401,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7422,6 +7444,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7462,6 +7485,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7504,6 +7528,7 @@ namespace FirstTry_app_1
                         }
                         catch (Exception ex)
                         {
+
                             thisCommand.Pass = false;
 
                             //change command color in listveiw
@@ -7523,9 +7548,8 @@ namespace FirstTry_app_1
                         break;
                         #endregion
                 }
-
+                //if(Stored.Items.is) Stored.Items.Refresh();
             }
-
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
@@ -7540,12 +7564,18 @@ namespace FirstTry_app_1
         {
             try
             {
-
                 for (int i = 0; TestList.ElementAt(testCaseNumber - 1).TestValue.Count > i; i++)
                 {
                     waitType = WaitType._case;
                     await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i)));
                 }
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    ListViewItem lvitem1 = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
+                    lvitem1.Background = System.Windows.Media.Brushes.LightGreen;
+                }));
+
+
             }
             catch (Exception ex)
             {
@@ -7557,8 +7587,9 @@ namespace FirstTry_app_1
             }
         }
 
+
         #endregion
 
- 
+
     }
 }

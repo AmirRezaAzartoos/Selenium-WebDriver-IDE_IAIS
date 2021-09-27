@@ -341,3 +341,22 @@ D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.exe
 D:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.pdb
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Analytics.Interfaces.dll
 C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\Microsoft.Analytics.Types.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.AssemblyReference.cache
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\AddTestFirst.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\App.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\AddTestCase.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\CreateNewProject.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MainWindow.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\AddTestFirst.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\TestSuitNameWarn.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\UnsavedContent.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\UnvalidCommand.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\EmptyField.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\MessageBox\UpdateAck.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\RenameTestCase.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\StartUpMessage.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\App.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE_MarkupCompile.cache
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE_MarkupCompile.lref
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.exe
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\WebDriverIDE.pdb
