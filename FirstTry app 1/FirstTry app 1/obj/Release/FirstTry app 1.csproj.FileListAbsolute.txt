@@ -221,8 +221,6 @@ C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\CommonServiceLocator.dll
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.dll
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.dll
-C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Analytics.Interfaces.dll
-C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Analytics.Types.dll
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Dynamic.dll
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.dll
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.dll
@@ -252,6 +250,6 @@ C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry_app_1.Properties.Resources.resources
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.GenerateResource.cache
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CoreCompileInputs.cache
-C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CopyComplete
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.exe
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.pdb
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.SuggestedBindingRedirects.cache

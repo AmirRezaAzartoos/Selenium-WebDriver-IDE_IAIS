@@ -4009,6 +4009,7 @@ namespace FirstTry_app_1
                     // Get the dragged ListViewItem
                     ListView listView = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
+                    listViewItem.Background = System.Windows.Media.Brushes.Lavender;
                     if (listViewItem == null) return;            // Abort
                                                                  // Find the data behind the ListViewItem
                     Commands item = (Commands)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
@@ -4051,6 +4052,7 @@ namespace FirstTry_app_1
                     // Get the drop ListViewItem destination
                     ListView listView1 = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
+                    listViewItem.Background = System.Windows.Media.Brushes.White;
                     if (listViewItem == null)
                     {
                         // Abort
@@ -4132,6 +4134,7 @@ namespace FirstTry_app_1
                     // Get the dragged ListViewItem
                     ListView listView = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
+                    listViewItem.Background = System.Windows.Media.Brushes.Lavender;
                     if (listViewItem == null) return;            //Abort
                                                                  //Find the data behind the ListViewItem
                     TestSuit item = (TestSuit)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
@@ -4174,6 +4177,7 @@ namespace FirstTry_app_1
                     // Get the drop ListViewItem destination
                     ListView listView1 = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
+                    listViewItem.Background = System.Windows.Media.Brushes.White;
                     if (listViewItem == null)
                     {
                         // Abort
@@ -4588,7 +4592,6 @@ namespace FirstTry_app_1
             }
         }
         #endregion
-
 
         /////////OldIDEConverter///////
         #region OldIDEConverter
@@ -7589,7 +7592,6 @@ namespace FirstTry_app_1
 
 
         #endregion
-
 
     }
 }
