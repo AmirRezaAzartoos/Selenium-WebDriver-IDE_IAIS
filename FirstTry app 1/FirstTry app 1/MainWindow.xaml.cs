@@ -120,8 +120,9 @@ namespace FirstTry_app_1
 
         //runner
         IDictionary<string, dynamic> StoreEvalDB = new Dictionary<string, dynamic>();
+        ObservableCollection<string> Logger = new ObservableCollection<string>();
 
-        enum WaitType {_single, _case};
+        enum WaitType { _single, _case };
         WaitType waitType;
 
 
@@ -181,6 +182,9 @@ namespace FirstTry_app_1
             listView.ItemsSource = ListDB;
             //listView.DataContext = ListDB;
             Resources["StoreEvalDB"] = StoreEvalDB;
+            //Resources["Logger"] = Logger;
+            //Log.DataContext = Logger;
+
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(TestCaseListView.ItemsSource);
             view.Filter = UserFilter;
             Refrence.Text = "  Selenium WebDriver IDE\n  Version : 0.3.8";
@@ -3558,7 +3562,8 @@ namespace FirstTry_app_1
         {
             try
             {
-                await Task.Run(() => {
+                await Task.Run(() =>
+                {
                     runCase(_testCaseCounter);
                 });
             }
@@ -3745,7 +3750,7 @@ namespace FirstTry_app_1
             {
                 if (listView.SelectedItems.Count != 0)
                 {
-                    if(waitType == WaitType._case)
+                    if (waitType == WaitType._case)
                     {
                         bool passed = false;
                     }
@@ -3771,6 +3776,7 @@ namespace FirstTry_app_1
         {
             try
             {
+                Log.Items.Add("test");
                 HandleTestList();
                 if (TestCaseListView.SelectedItems.Count != 0)
                 {
@@ -4857,7 +4863,7 @@ namespace FirstTry_app_1
             {
                 if (driver == null)
                     driver = new ChromeDriver(chromeservice, options);
-             
+
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
                 IJavaScriptExecutor jsExecutor = driver;
                 //highligh css class
@@ -4865,7 +4871,7 @@ namespace FirstTry_app_1
 
                 Actions actions = new Actions(driver);
 
-                if(lvitem != null && waitType == WaitType._single)
+                if (lvitem != null && waitType == WaitType._single)
                 {
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
@@ -4957,13 +4963,12 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
-
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
                         break;
                     #endregion
@@ -5044,13 +5049,13 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("waitForElementPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("waitForElementPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5118,7 +5123,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5131,14 +5136,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("waitForElementVisible " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("waitForElementVisible " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5201,7 +5206,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5214,14 +5219,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("waitForElementNotPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("waitForElementNotPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5284,7 +5289,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5297,14 +5302,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("waitForNotText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("waitForNotText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5372,7 +5377,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5385,14 +5390,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("waitForText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("waitForText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5460,7 +5465,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5473,14 +5478,13 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
-                            }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("waitForValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("waitForValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                            }));
                         }
 
                         break;
@@ -5543,7 +5547,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5556,14 +5560,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("waitForAttribute " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("waitForAttribute " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5587,7 +5591,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5600,14 +5604,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("waitForWindowPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("waitForWindowPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5632,7 +5636,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5645,14 +5649,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
-                            }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("waitForNumberOfWindowPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("waitForNumberOfWindowPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                            }));
                         }
 
                         break;
@@ -5713,7 +5717,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5726,14 +5730,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("type " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("type " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5793,7 +5797,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5806,14 +5810,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("sendKeys " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("sendKeys " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5872,7 +5876,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5885,14 +5889,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("clearText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("clearText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5951,7 +5955,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -5964,14 +5968,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("click " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("click " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -5994,7 +5998,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6007,14 +6011,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
                         break;
                     #endregion
@@ -6075,7 +6079,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6088,14 +6092,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("select " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("select " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -6155,7 +6159,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6168,14 +6172,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("selectByValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("selectByValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
 
@@ -6237,7 +6241,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6250,14 +6254,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("selectByIndex " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("selectByIndex " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -6316,7 +6320,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6329,14 +6333,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("storeText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("storeText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -6396,7 +6400,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6409,14 +6413,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("storeValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("storeValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -6475,7 +6479,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6488,14 +6492,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("storeWicketPath " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("storeWicketPath " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -6554,7 +6558,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6567,14 +6571,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
-                            }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("storeInnerHTML " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("storeInnerHTML " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
+                            }));
                         }
 
                         break;
@@ -6633,7 +6637,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6646,14 +6650,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("storeName " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("storeName " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -6712,7 +6716,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6725,14 +6729,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("storeId " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("storeId " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -6791,7 +6795,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -6804,14 +6808,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("storeHref " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("storeHref " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -6830,12 +6834,13 @@ namespace FirstTry_app_1
 
                             thisCommand.Pass = true;
 
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = thisCommand.Target;
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = thisCommand.Target;
 
                             //change command color in listveiw
                             lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
                             }));
                         }
@@ -6849,14 +6854,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("storeEval " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("storeEval " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
                         break;
                     #endregion
@@ -6994,7 +6999,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7007,14 +7012,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("storeElementPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("storeElementPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -7039,7 +7044,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7052,14 +7057,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
-                            }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("alert " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("alert " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
+                            }));
                         }
 
                         break;
@@ -7083,7 +7088,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7096,14 +7101,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
                         break;
                     #endregion
@@ -7133,7 +7138,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7146,14 +7151,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -7214,7 +7219,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7227,14 +7232,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
 
                         break;
@@ -7259,7 +7264,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7272,14 +7277,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
                         break;
                     #endregion
@@ -7337,7 +7342,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7350,7 +7355,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+
                             }));
 
                             // Get the line number from the stack frame
@@ -7405,7 +7410,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7418,14 +7423,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
                         break;
                     #endregion
@@ -7448,7 +7453,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7461,14 +7466,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
                         break;
                     #endregion
@@ -7489,7 +7494,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7502,14 +7507,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
                         break;
                     #endregion
@@ -7532,7 +7537,7 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                
+
                             }));
                         }
                         catch (Exception ex)
@@ -7545,14 +7550,14 @@ namespace FirstTry_app_1
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 lvitem.Background = System.Windows.Media.Brushes.LightPink;
-                                
+                                // Get the line number from the stack frame
+                                var st = new StackTrace(ex, true);
+                                var frame = st.GetFrame(st.FrameCount - 1);
+                                var line = frame.GetFileLineNumber();
+                                Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
                             }));
 
-                            // Get the line number from the stack frame
-                            var st = new StackTrace(ex, true);
-                            var frame = st.GetFrame(st.FrameCount - 1);
-                            var line = frame.GetFileLineNumber();
-                            Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                         }
                         break;
                         #endregion
@@ -7597,6 +7602,5 @@ namespace FirstTry_app_1
         }
 
         #endregion
-
     }
 }
