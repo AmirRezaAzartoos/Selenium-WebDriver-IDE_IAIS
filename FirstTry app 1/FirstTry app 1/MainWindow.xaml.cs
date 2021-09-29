@@ -6308,7 +6308,7 @@ namespace FirstTry_app_1
                                     el_storeText = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeText.Text;
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeText.Text;
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeText);
                             Thread.Sleep(150);
@@ -6319,6 +6319,7 @@ namespace FirstTry_app_1
                             //change command color in listveiw
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
 
                             }));
@@ -6387,7 +6388,7 @@ namespace FirstTry_app_1
                                     el_storeValue = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeValue.GetAttribute("value");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeValue.GetAttribute("value");
 
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeValue);
@@ -6399,6 +6400,7 @@ namespace FirstTry_app_1
                             //change command color in listveiw
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
 
                             }));
@@ -6467,7 +6469,7 @@ namespace FirstTry_app_1
                                     el_storeWicketPath = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeWicketPath.GetAttribute("wicketPath");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeWicketPath.GetAttribute("wicketPath");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeWicketPath);
                             Thread.Sleep(150);
@@ -6478,6 +6480,7 @@ namespace FirstTry_app_1
                             //change command color in listveiw
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
 
                             }));
@@ -6546,7 +6549,7 @@ namespace FirstTry_app_1
                                     el_storeInnerHTML = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeInnerHTML.GetAttribute("innerHTML");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeInnerHTML.GetAttribute("innerHTML");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeInnerHTML);
                             Thread.Sleep(150);
@@ -6557,6 +6560,7 @@ namespace FirstTry_app_1
                             //change command color in listveiw
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
 
                             }));
@@ -6625,7 +6629,7 @@ namespace FirstTry_app_1
                                     el_storeName = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeName.GetAttribute("name");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeName.GetAttribute("name");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeName);
                             Thread.Sleep(150);
@@ -6636,6 +6640,7 @@ namespace FirstTry_app_1
                             //change command color in listveiw
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
 
                             }));
@@ -6704,7 +6709,7 @@ namespace FirstTry_app_1
                                     el_storeId = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeId.GetAttribute("id");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeId.GetAttribute("id");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeId);
                             Thread.Sleep(150);
@@ -6715,6 +6720,7 @@ namespace FirstTry_app_1
                             //change command color in listveiw
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
 
                             }));
@@ -6783,7 +6789,7 @@ namespace FirstTry_app_1
                                     el_storeHref = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_storeHref.GetAttribute("href");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeHref.GetAttribute("href");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeHref);
                             Thread.Sleep(150);
@@ -6794,6 +6800,7 @@ namespace FirstTry_app_1
                             //change command color in listveiw
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
 
                             }));
@@ -6883,7 +6890,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.ClassName(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.ClassName(tempTarget));
-                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.ClassName(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.ClassName(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6897,7 +6904,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.CssSelector(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.CssSelector(tempTarget));
-                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.CssSelector(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.CssSelector(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6910,7 +6917,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.Id(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.Id(tempTarget));
-                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Id(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Id(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6923,7 +6930,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.LinkText(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.LinkText(tempTarget));
-                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.LinkText(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.LinkText(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6935,7 +6942,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.Name(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.Name(tempTarget));
-                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Name(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Name(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6947,7 +6954,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.PartialLinkText(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.PartialLinkText(tempTarget));
-                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.PartialLinkText(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.PartialLinkText(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6959,7 +6966,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.TagName(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.TagName(tempTarget));
-                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.TagName(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.TagName(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6971,7 +6978,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.XPath(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.XPath(tempTarget));
-                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6983,7 +6990,7 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.XPath(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.XPath(tempTarget));
-                                        if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6998,6 +7005,7 @@ namespace FirstTry_app_1
                             //change command color in listveiw
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
 
                             }));
@@ -7080,13 +7088,14 @@ namespace FirstTry_app_1
                                 lvitem.Background = System.Windows.Media.Brushes.Yellow;
 
                             }));
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = thisCommand.Target;
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = thisCommand.Target;
 
                             thisCommand.Pass = true;
 
                             //change command color in listveiw
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+                                Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
 
                             }));
@@ -7205,8 +7214,6 @@ namespace FirstTry_app_1
                                     el_switch = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-
-                            if (!StoreEvalDB.ContainsKey(thisCommand.Value)) StoreEvalDB[thisCommand.Value] = el_switch.GetAttribute("href");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_switch);
                             driver.SwitchTo().Frame(el_switch);
