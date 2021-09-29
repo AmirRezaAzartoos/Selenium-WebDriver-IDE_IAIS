@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\FirstTry app 1",
+    "\\FirstTry app 1\\FirstTry app 1"
   ],
-  "SelectedNode": "\\FirstTry app 1.sln",
+  "SelectedNode": "\\FirstTry app 1\\FirstTry app 1\\MainWindow.xaml",
   "PreviewInSolutionExplorer": false
 }

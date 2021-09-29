@@ -2857,6 +2857,11 @@ namespace FirstTry_app_1
                             item.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                         }
                     }
+                    if (0 != _testCaseCounter)
+                    {
+                        ListViewItem CurrentTestCaseitem = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
+                        CurrentTestCaseitem.Background = System.Windows.Media.Brushes.Lavender;
+                    }
                 }
             }
             catch (Exception ex)
@@ -3766,6 +3771,7 @@ namespace FirstTry_app_1
         {
             try
             {
+                HandleTestList();
                 if (TestCaseListView.SelectedItems.Count != 0)
                 {
                     CurrentTestCase = (TestSuit)TestCaseListView.SelectedItems[0];
@@ -3812,6 +3818,7 @@ namespace FirstTry_app_1
                         var bc = new BrushConverter();
                         SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                     }
+
                 }
             }
             catch (Exception ex)
@@ -4844,7 +4851,6 @@ namespace FirstTry_app_1
         /////////Runner///////
         ListViewItem lvitem;
         #region Runner
-
         public async Task runCommand(Commands thisCommand)
         {
             try
@@ -7589,7 +7595,6 @@ namespace FirstTry_app_1
                 Log.Items.Add("runCase_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
-
 
         #endregion
 

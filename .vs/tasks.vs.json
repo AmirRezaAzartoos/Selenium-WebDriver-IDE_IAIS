@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-FirstTry app 1",
+      "appliesTo": "FirstTry app 1/FirstTry app 1.sln",
+      "type": "launch"
+    }
+  ]
+}
