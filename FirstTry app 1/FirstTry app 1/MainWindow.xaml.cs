@@ -64,6 +64,7 @@ namespace FirstTry_app_1
         public static TestSuit SelectedTest = new TestSuit() { };
         bool edit;
         bool ok = false;
+        bool saveUbuntu = false;
         public static bool TestSuitSaved = false;
         public static bool Continue = false;
         public static bool updateAck = false;
@@ -120,7 +121,9 @@ namespace FirstTry_app_1
 
         //runner
         IDictionary<string, dynamic> StoreEvalDB = new Dictionary<string, dynamic>();
-        ObservableCollection<string> Logger = new ObservableCollection<string>();
+        int[] storedCounter;
+        int[] logCounter;
+        BindingList<string> LoggerList = new BindingList<string>();
 
         enum WaitType { _single, _case };
         WaitType waitType;
@@ -182,8 +185,9 @@ namespace FirstTry_app_1
             listView.ItemsSource = ListDB;
             //listView.DataContext = ListDB;
             Resources["StoreEvalDB"] = StoreEvalDB;
+            Resources["storedCounter"] = storedCounter;
+            Resources["LoggerList"] = LoggerList;
             //Resources["Logger"] = Logger;
-            //Log.DataContext = Logger;
 
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(TestCaseListView.ItemsSource);
             view.Filter = UserFilter;
@@ -196,10 +200,12 @@ namespace FirstTry_app_1
             options.AddArguments("start-maximized");
             options.AddExtension(startupPath + "\\data\\extention-test.crx");
             options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
+
+
         }
         ///////BUILD
         #region Save
-        public void TestMethod(string A)
+        public void TestMethod(string A, bool ubuntuIsEnable)
         {
             if (A != null)
             {
@@ -207,7 +213,7 @@ namespace FirstTry_app_1
                 //FileInfo file = new FileInfo(@A);
                 //file.Create();
                 //StreamWriter TestFile = file.CreateText();
-                string mainString_testCase = File.ReadAllText(@"data\StaticCode.py");
+                string mainString_testCase = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode.py"): File.ReadAllText(@"data\StaticCode_ubuntu.py");
                 int mainStringSplitterIndex = mainString_testCase.IndexOf("durationError");
                 string mainString = mainString_testCase.Substring(0, mainStringSplitterIndex);
                 mainString += "\r\n\r\nclass StoreEvalDB:\r\n\tvars = {}\r\n";
@@ -725,7 +731,7 @@ namespace FirstTry_app_1
 
         ///////
 
-        public void TestSuitMethod(string B)
+        public void TestSuitMethod(string B, bool ubuntuIsEnable)
         {
             if (B != null)
             {
@@ -733,7 +739,8 @@ namespace FirstTry_app_1
                 int _counter = 0;
                 //FileInfo file = new FileInfo(@B);
                 //StreamWriter TestFile = file.CreateText();
-                string StaticCodeNew = File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString());
+                string StaticCodeNew = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString()):
+                     File.ReadAllText(@"data\StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString());
                 int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
                 string mainString = StaticCodeNew.Substring(0, splitterIndex);
                 string mainString_Last = StaticCodeNew.Remove(0, splitterIndex + 11);
@@ -749,6 +756,8 @@ namespace FirstTry_app_1
                         CommandCounter = obj.TestValue.Count;
                     }
                     mainString += "\n\tclass " + TestList.ElementAt(_counter1).TestName + ":\n";
+                    mainString += "\n\t\tlog.debug(\"{:< 8}{:< 50}{:< 18}\".format('|  #" + TestList.ElementAt(_counter1).TestNumber + "', '|  " + TestList.ElementAt(_counter1).TestName + "', '|  is running ...  |'))\n";
+                    mainString += "\n\t\tTestCases.add_row(['" + TestList.ElementAt(_counter1).TestNumber + "', '" + TestList.ElementAt(_counter1).TestName + "', 'Failure'])\n";
                     while (CommandCounter > _counter)
                     {
                         needCotBefore = needCotAfter = true;
@@ -1250,6 +1259,8 @@ namespace FirstTry_app_1
                         }
                         _counter++;
                     }
+                    mainString += "\n\t\tTestCases.del_row(-1)\n";
+                    mainString += "\n\t\tTestCases.add_row(['" + TestList.ElementAt(_counter1).TestNumber + "', '" + TestList.ElementAt(_counter1).TestName + "', 'Success'])\n";
                     _counter1++;
                     _counter = 0;
                 }
@@ -2258,14 +2269,13 @@ namespace FirstTry_app_1
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            //BL.OpenFile _openFile = new BL.OpenFile();
             if (Keyboard.IsKeyDown(Key.S) && Keyboard.IsKeyDown(Key.LeftCtrl))
             {
-                SaveTestCase();
+                SaveTestCase((bool)SaveTestCaseClick_ubuntu.IsChecked);
             }
             else if (Keyboard.IsKeyDown(Key.S) && Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.LeftShift))
             {
-                SaveAsTestCase();
+                SaveAsTestCase((bool)SaveAsFileIcon_ubuntu.IsChecked);
             }
             else if (Keyboard.IsKeyDown(Key.N) && Keyboard.IsKeyDown(Key.LeftCtrl))
             {
@@ -2404,6 +2414,25 @@ namespace FirstTry_app_1
             {
                 Log.Items.Add("SaveFile_MouseLeave ---> Failed Because of error : " + ex.ToString());
             }
+        }
+
+        private void SaveTestCaseClick_ubuntu_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveFile.StaysOpen = true;
+        }
+
+        private void SaveTestCaseClick_ubuntu_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveFile.StaysOpen = false;
+        }
+        private void SaveAsTestCaseClick_ubuntu_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveAsFile.StaysOpen = true;
+        }
+
+        private void SaveAsTestCaseClick_ubuntu_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveAsFile.StaysOpen = false;
         }
         #endregion
 
@@ -2864,7 +2893,7 @@ namespace FirstTry_app_1
                     if (0 != _testCaseCounter)
                     {
                         ListViewItem CurrentTestCaseitem = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
-                        CurrentTestCaseitem.Background = System.Windows.Media.Brushes.Lavender;
+                        if (CurrentTestCaseitem != null) CurrentTestCaseitem.Background = System.Windows.Media.Brushes.Lavender;
                     }
                 }
             }
@@ -2875,7 +2904,7 @@ namespace FirstTry_app_1
 
         }
 
-        public void SaveTestCase()
+        public void SaveTestCase(bool ubuntuIsEnable)
         {
             bool a = false;
             bool b = false;
@@ -2890,7 +2919,7 @@ namespace FirstTry_app_1
                 else if (TestList.ElementAt(_testCaseCounter - 1).SavedPath != null)
                 {
                     b = true;
-                    TestMethod(TestList.ElementAt(_testCaseCounter - 1).SavedPath);
+                    TestMethod(TestList.ElementAt(_testCaseCounter - 1).SavedPath, ubuntuIsEnable);
                     Log.Items.Add(TestList.ElementAt(_testCaseCounter - 1).TestName + " TestCase Saved ---> Successfully");
                     var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     if (obj1 != null) obj1.IsSaved = true;
@@ -2903,7 +2932,7 @@ namespace FirstTry_app_1
                     SaveDialog();
                     if (sPath != null)
                     {
-                        TestMethod(sPath);
+                        TestMethod(sPath, ubuntuIsEnable);
                         Log.Items.Add(TestList.ElementAt(_testCaseCounter - 1).TestName + " TestCase Saved ---> Successfully");
                         var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                         if (obj1 != null) obj1.IsSaved = true;
@@ -2922,7 +2951,7 @@ namespace FirstTry_app_1
             }
         }
 
-        public void SaveAsTestCase()
+        public void SaveAsTestCase(bool ubuntuIsEnable)
         {
             try
             {
@@ -2932,7 +2961,7 @@ namespace FirstTry_app_1
                 {
                     //BL.BuildFile _buildFile = new BL.BuildFile();
                     SaveDialog();
-                    TestMethod(sPath);
+                    TestMethod(sPath, ubuntuIsEnable);
                     Log.Items.Add(TestList.ElementAt(_testCaseCounter - 1).TestName + " Saved ---> Successfully");
                     _testCaseFileName = testCaseFileName;
                 }
@@ -3240,6 +3269,7 @@ namespace FirstTry_app_1
                 return false;
             }
         }
+
         #endregion
 
         ///////BUTTON///////
@@ -3308,17 +3338,19 @@ namespace FirstTry_app_1
 
         private void SaveTestCase_Click(object sender, RoutedEventArgs e)
         {
-            SaveTestCase();
+            SaveTestCase((bool)SaveTestCaseClick_ubuntu.IsChecked);
         }
 
         private void SaveTestSuit_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                SaveFile.StaysOpen = false;
+
                 //BL.BuildFile _buildFile = new BL.BuildFile();
                 if (gPath != null)
                 {
-                    TestSuitMethod(gPath);
+                    TestSuitMethod(gPath, (bool)SaveTestSuitClick_ubuntu.IsChecked);
                     Log.Items.Add(testCaseFileName + " TestSuit Saved ---> Successfully ");
                 }
                 else if (testCaseCounter != 0)
@@ -3326,7 +3358,7 @@ namespace FirstTry_app_1
                     SaveTestSuitDialog();
                     if (gPath != null)
                     {
-                        TestSuitMethod(gPath);
+                        TestSuitMethod(gPath, (bool)SaveTestSuitClick_ubuntu.IsChecked);
                         Log.Items.Add(testCaseFileName + " TestSuit Saved ---> Successfully");
                     }
                 }
@@ -3342,7 +3374,7 @@ namespace FirstTry_app_1
 
         private void SaveAsTestCase_Click(object sender, RoutedEventArgs e)
         {
-            SaveAsTestCase();
+            SaveAsTestCase((bool)SaveAsFileIcon_ubuntu.IsChecked);
         }
 
         private void SaveAsTestSuit_Click(object sender, RoutedEventArgs e)
@@ -3355,7 +3387,7 @@ namespace FirstTry_app_1
                     SaveTestSuitDialog();
                     if (gPath != null)
                     {
-                        TestSuitMethod(gPath);
+                        TestSuitMethod(gPath, (bool)SaveAsTestSuitClick_ubuntu.IsChecked);
                         Log.Items.Add(testCaseFileName + " Saved ---> Successfully");
                     }
                 }
@@ -3374,29 +3406,54 @@ namespace FirstTry_app_1
             try
             {
                 openFileDialog.Multiselect = true;
-                openFileDialog.Filter = "Python file (*.py)|*.py";
+                openFileDialog.Filter = "Python file (*.py)|*.py|HTML file (*.html)|*.html";
                 OpenDialog();
                 if (ok)
                 {
-                    //BL.OpenFile _openFile = new BL.OpenFile();
                     for (int i = 0; i < _openedFiles; i++)
                     {
-                        _openFileAddress = _openFileAddressArray[i];
-                        _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
-                        _openFileName = _openFileNameArray[i];
-                        _openFileName = _openFileName.Replace(".py", "");
-                        string mystring = _openFileAddress.Replace("\\" + _openFileName + ".py", "");
-                        for (int j = mystring.Length; j > 0; j--)
-                            mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
-                        FolderName = mystring;
-                        TestCaseListView.ItemsSource = TestList;
-                        listView.ItemsSource = ListDB;
-                        ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                        view.Refresh();
-                        ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                        view2.Refresh();
-                        if (_openFileAddress != null)
-                            OpenTestCase(_openFileAddress);
+                        switch (_openFileNameArray[i].Split('.')[1])
+                        {
+                            case "py":
+                                _openFileAddress = _openFileAddressArray[i];
+                                _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                                _openFileName = _openFileNameArray[i];
+                                _openFileName = _openFileName.Replace(".py", "");
+                                string mystring = _openFileAddress.Replace("\\" + _openFileName + ".py", "");
+                                for (int j = mystring.Length; j > 0; j--)
+                                    mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                                FolderName = mystring;
+                                TestCaseListView.ItemsSource = TestList;
+                                listView.ItemsSource = ListDB;
+                                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
+                                view.Refresh();
+                                ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
+                                view2.Refresh();
+                                if (_openFileAddress != null)
+                                    OpenTestCase(_openFileAddress);
+                                break;
+                            case "html":
+                                _openFileAddress = _openFileAddressArray[i];
+                                _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                                _openFileName = _openFileNameArray[i];
+                                _openFileName = _openFileName.Remove(_openFileName.IndexOf('.'), _openFileName.Length - _openFileName.IndexOf('.'));
+                                string mystring1 = _openFileAddress.Replace("\\" + _openFileNameArray[i], "");
+                                for (int j = mystring1.Length; j > 0; j--)
+                                    mystring1 = mystring1.Substring(mystring1.IndexOf("\\") + 1);
+                                FolderName = mystring1;
+                                TestCaseListView.ItemsSource = TestList;
+                                listView.ItemsSource = ListDB;
+                                ICollectionView view1 = CollectionViewSource.GetDefaultView(ListDB);
+                                view1.Refresh();
+                                ICollectionView view21 = CollectionViewSource.GetDefaultView(TestList);
+                                view21.Refresh();
+                                if (_openFileAddress != null)
+                                    openOldTestCase(_openFileAddress);
+                                break;
+                            default:
+                                EmptyFieldtDialog();
+                                break;
+                        }
                     }
                 }
             }
@@ -3411,52 +3468,65 @@ namespace FirstTry_app_1
             try
             {
                 openFileDialog.Multiselect = false;
-                openFileDialog.Filter = "Python file (*.py)|*.py";
+                openFileDialog.Filter = "Python file (*.py)|*.py|Old Selenium IDE output (suit.*)|suit|NewSelenium IDE output (*.side)|*.side";
                 OpenDialog();
                 if (ok)
                 {
-                    //BL.OpenFile _openFile = new BL.OpenFile();
-                    testCaseCounter = 0;
-                    _openFileAddress = _openFileAddressArray[0];
-                    _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
-                    _openFileName = _openFileNameArray[0];
-                    _openFileName = _openFileName.Replace(".py", "");
-                    string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
-                    for (int j = mystring.Length; j > 0; j--)
-                        mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
-                    FolderName = mystring;
-                    TestCaseListView.ItemsSource = TestList;
-                    listView.ItemsSource = ListDB;
-                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                    view.Refresh();
-                    ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                    view2.Refresh();
-                    OpenTestSuit(_openFileAddress);
-                    TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Items.Add("OpenTestSuit_Click ---> Failed Because of error : " + ex.ToString());
-            }
-        }
-
-        private void OpenOldTestCaseClick_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                openFileDialog.Multiselect = true;
-                openFileDialog.Filter = "All files (*.*)|*.*";
-                OpenDialog();
-                if (ok)
-                {
-                    for (int i = 0; i < _openedFiles; i++)
+                    if (_openFileNameArray[0].Contains('.'))
                     {
-                        _openFileAddress = _openFileAddressArray[i];
+                        switch (_openFileNameArray[0].Split('.')[1])
+                        {
+                            case "py":
+                                testCaseCounter = 0;
+                                _openFileAddress = _openFileAddressArray[0];
+                                _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                                _openFileName = _openFileNameArray[0];
+                                _openFileName = _openFileName.Replace(".py", "");
+                                string mystring1 = _openFileAddress.Replace("\\" + _openFileName, "");
+                                for (int j = mystring1.Length; j > 0; j--)
+                                    mystring1 = mystring1.Substring(mystring1.IndexOf("\\") + 1);
+                                FolderName = mystring1;
+                                TestCaseListView.ItemsSource = TestList;
+                                listView.ItemsSource = ListDB;
+                                ICollectionView view1 = CollectionViewSource.GetDefaultView(ListDB);
+                                view1.Refresh();
+                                ICollectionView view21 = CollectionViewSource.GetDefaultView(TestList);
+                                view21.Refresh();
+                                OpenTestSuit(_openFileAddress);
+                                TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
+                                break;
+                            case "side":
+                                testCaseCounter = 0;
+                                _openFileAddress = _openFileAddressArray[0];
+                                _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                                _openFileName = _openFileNameArray[0];
+                                _openFileName = _openFileName.Replace(".side", "");
+                                string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
+                                for (int j = mystring.Length; j > 0; j--)
+                                    mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                                FolderName = mystring;
+                                TestCaseListView.ItemsSource = TestList;
+                                listView.ItemsSource = ListDB;
+                                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
+                                view.Refresh();
+                                ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
+                                view2.Refresh();
+                                openNewTestSuit(_openFileAddress);
+                                TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
+                                break;
+                            default:
+                                EmptyFieldtDialog();
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        testCaseCounter = 0;
+                        _openFileAddress = _openFileAddressArray[0];
                         _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
-                        _openFileName = _openFileNameArray[i];
-                        _openFileName = _openFileName.Remove(_openFileName.IndexOf('.'), _openFileName.Length - _openFileName.IndexOf('.'));
-                        string mystring = _openFileAddress.Replace("\\" + _openFileNameArray[i], "");
+                        _openFileName = _openFileNameArray[0];
+                        _openFileName = _openFileName.Replace(".py", "");
+                        string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
                         for (int j = mystring.Length; j > 0; j--)
                             mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
                         FolderName = mystring;
@@ -3466,83 +3536,19 @@ namespace FirstTry_app_1
                         view.Refresh();
                         ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
                         view2.Refresh();
-                        if (_openFileAddress != null)
-                        {
-                            openOldTestCase(_openFileAddress);
-                        }
+                        openOldTestSuit(_openFileAddress);
+                        TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
                     }
+                    //BL.OpenFile _openFile = new BL.OpenFile();
                 }
             }
             catch (Exception ex)
             {
-                Log.Items.Add("OpenOldTestCaseClick_Click ---> Failed Because of error : " + ex.ToString());
-            }
-        }
-
-        private void OpenOldTestSuitClick_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                openFileDialog.Multiselect = false;
-                openFileDialog.Filter = "All files (*.*)|*.*";
-                OpenDialog();
-                if (ok)
-                {
-                    testCaseCounter = 0;
-                    _openFileAddress = _openFileAddressArray[0];
-                    _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
-                    _openFileName = _openFileNameArray[0];
-                    _openFileName = _openFileName.Replace(".py", "");
-                    string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
-                    for (int j = mystring.Length; j > 0; j--)
-                        mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
-                    FolderName = mystring;
-                    TestCaseListView.ItemsSource = TestList;
-                    listView.ItemsSource = ListDB;
-                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                    view.Refresh();
-                    ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                    view2.Refresh();
-                    openOldTestSuit(_openFileAddress);
-                    TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Items.Add("OpenOldTestSuitClick_Click ---> Failed Because of error : " + ex.ToString());
-            }
-        }
-        private void OpenNewTestSuitClick_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                openFileDialog.Multiselect = false;
-                openFileDialog.Filter = "Selenium IDE output (*.side)|*.side";
-                OpenDialog();
-                if (ok)
-                {
-                    testCaseCounter = 0;
-                    _openFileAddress = _openFileAddressArray[0];
-                    _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
-                    _openFileName = _openFileNameArray[0];
-                    _openFileName = _openFileName.Replace(".side", "");
-                    string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
-                    for (int j = mystring.Length; j > 0; j--)
-                        mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
-                    FolderName = mystring;
-                    TestCaseListView.ItemsSource = TestList;
-                    listView.ItemsSource = ListDB;
-                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                    view.Refresh();
-                    ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                    view2.Refresh();
-                    openNewTestSuit(_openFileAddress);
-                    TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Items.Add("OpenNewTestSuitClick_Click ---> Failed Because of error : " + ex.ToString());
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("OpenTestSuit_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
 
@@ -3591,7 +3597,7 @@ namespace FirstTry_app_1
         {
             try
             {
-                AddTestCaseButton();
+                ; AddTestCaseButton();
             }
             catch (Exception ex)
             {
@@ -4022,7 +4028,7 @@ namespace FirstTry_app_1
                     // Get the dragged ListViewItem
                     ListView listView = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    listViewItem.Background = System.Windows.Media.Brushes.Lavender;
+                    if (listViewItem != null) listViewItem.Background = System.Windows.Media.Brushes.Lavender;
                     if (listViewItem == null) return;            // Abort
                                                                  // Find the data behind the ListViewItem
                     Commands item = (Commands)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
@@ -4147,7 +4153,7 @@ namespace FirstTry_app_1
                     // Get the dragged ListViewItem
                     ListView listView = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    listViewItem.Background = System.Windows.Media.Brushes.Lavender;
+                    if (listViewItem != null) listViewItem.Background = System.Windows.Media.Brushes.Lavender;
                     if (listViewItem == null) return;            //Abort
                                                                  //Find the data behind the ListViewItem
                     TestSuit item = (TestSuit)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
@@ -4355,7 +4361,7 @@ namespace FirstTry_app_1
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
                                     openOldTestCase("C:\\seleniums\\" + TestCaseDR[j].ToString() + ".html");
-                                    TestMethod("C:\\run-test-selenium\\Source\\" + TestCaseDR[j].ToString() + ".py");
+                                    TestMethod("C:\\run-test-selenium\\Source\\" + TestCaseDR[j].ToString() + ".py", false);
                                 }));
                             }
                             string tempSuit2 = File.ReadAllText(@temp3);
@@ -4814,7 +4820,6 @@ namespace FirstTry_app_1
             }
         }
         #endregion
-
 
         private void listView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -6308,7 +6313,8 @@ namespace FirstTry_app_1
                                     el_storeText = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeText.Text;
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                            StoreEvalDB[thisCommand.Value] = el_storeText.Text;
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeText);
                             Thread.Sleep(150);
@@ -6388,7 +6394,8 @@ namespace FirstTry_app_1
                                     el_storeValue = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeValue.GetAttribute("value");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                            StoreEvalDB[thisCommand.Value] = el_storeValue.GetAttribute("value");
 
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeValue);
@@ -6469,7 +6476,8 @@ namespace FirstTry_app_1
                                     el_storeWicketPath = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeWicketPath.GetAttribute("wicketPath");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                            StoreEvalDB[thisCommand.Value] = el_storeWicketPath.GetAttribute("wicketPath");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeWicketPath);
                             Thread.Sleep(150);
@@ -6549,7 +6557,8 @@ namespace FirstTry_app_1
                                     el_storeInnerHTML = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeInnerHTML.GetAttribute("innerHTML");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                            StoreEvalDB[thisCommand.Value] = el_storeInnerHTML.GetAttribute("innerHTML");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeInnerHTML);
                             Thread.Sleep(150);
@@ -6629,7 +6638,8 @@ namespace FirstTry_app_1
                                     el_storeName = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeName.GetAttribute("name");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                            StoreEvalDB[thisCommand.Value] = el_storeName.GetAttribute("name");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeName);
                             Thread.Sleep(150);
@@ -6709,7 +6719,8 @@ namespace FirstTry_app_1
                                     el_storeId = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeId.GetAttribute("id");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                            StoreEvalDB[thisCommand.Value] = el_storeId.GetAttribute("id");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeId);
                             Thread.Sleep(150);
@@ -6789,7 +6800,8 @@ namespace FirstTry_app_1
                                     el_storeHref = driver.FindElement(By.XPath(tempTarget));
                                     break;
                             }
-                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = el_storeHref.GetAttribute("href");
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                            StoreEvalDB[thisCommand.Value] = el_storeHref.GetAttribute("href");
 
                             jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeHref);
                             Thread.Sleep(150);
@@ -6841,7 +6853,8 @@ namespace FirstTry_app_1
 
                             thisCommand.Pass = true;
 
-                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = thisCommand.Target;
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                            StoreEvalDB[thisCommand.Value] = thisCommand.Target;
 
                             //change command color in listveiw
                             lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
@@ -6890,7 +6903,8 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.ClassName(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.ClassName(tempTarget));
-                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.ClassName(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                                        StoreEvalDB[thisCommand.Value] = IsElementPresent(By.ClassName(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6904,7 +6918,8 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.CssSelector(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.CssSelector(tempTarget));
-                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.CssSelector(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                                        StoreEvalDB[thisCommand.Value] = IsElementPresent(By.CssSelector(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6917,7 +6932,8 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.Id(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.Id(tempTarget));
-                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Id(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                                        StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Id(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6930,7 +6946,8 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.LinkText(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.LinkText(tempTarget));
-                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.LinkText(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                                        StoreEvalDB[thisCommand.Value] = IsElementPresent(By.LinkText(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6942,7 +6959,8 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.Name(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.Name(tempTarget));
-                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Name(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                                        StoreEvalDB[thisCommand.Value] = IsElementPresent(By.Name(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6954,7 +6972,8 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.PartialLinkText(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.PartialLinkText(tempTarget));
-                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.PartialLinkText(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                                        StoreEvalDB[thisCommand.Value] = IsElementPresent(By.PartialLinkText(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6966,7 +6985,8 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.TagName(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.TagName(tempTarget));
-                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.TagName(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                                        StoreEvalDB[thisCommand.Value] = IsElementPresent(By.TagName(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6978,7 +6998,8 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.XPath(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.XPath(tempTarget));
-                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                                        StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -6990,7 +7011,8 @@ namespace FirstTry_app_1
                                     if (IsElementPresent(By.XPath(tempTarget)))
                                     {
                                         el_storeElementPresent = driver.FindElement(By.XPath(tempTarget));
-                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
+                                        /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                                        StoreEvalDB[thisCommand.Value] = IsElementPresent(By.XPath(tempTarget));
 
                                         jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_storeElementPresent);
                                         Thread.Sleep(150);
@@ -7088,7 +7110,8 @@ namespace FirstTry_app_1
                                 lvitem.Background = System.Windows.Media.Brushes.Yellow;
 
                             }));
-                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/ StoreEvalDB[thisCommand.Value] = thisCommand.Target;
+                            /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
+                            StoreEvalDB[thisCommand.Value] = thisCommand.Target;
 
                             thisCommand.Pass = true;
 
@@ -7097,7 +7120,6 @@ namespace FirstTry_app_1
                             {
                                 Stored.Items.Refresh();
                                 lvitem.Background = System.Windows.Media.Brushes.LightGreen;
-
                             }));
                         }
                         catch (Exception ex)
@@ -7609,5 +7631,7 @@ namespace FirstTry_app_1
         }
 
         #endregion
+
+
     }
 }

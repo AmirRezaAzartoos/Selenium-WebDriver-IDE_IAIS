@@ -407,28 +407,13 @@
                                                     Open file
                                                 </ToolTip>
                                             </materialDesign:PopupBox.ToolTip>
-                                            <StackPanel Width="250" Margin="1">
-                                                <Button Name="OpenTestCaseClick" Click="OpenTestCase_Click"  Content="Case form WebDriver IDE" Cursor="Hand">
+                                            <StackPanel Width="150" Margin="1">
+                                                <Button Name="OpenTestCaseClick" Click="OpenTestCase_Click"  Content="Test case" Cursor="Hand">
                                                     <Button.ToolTip>
                                                         Ctrl + O
                                                     </Button.ToolTip>
                                                 </Button>
-                                                <Button Name="OpenTestSuitClick" Click="OpenTestSuit_Click" Content="Suit form WebDriver IDE" Cursor="Hand">
-                                                    <Button.ToolTip>
-                                                        Ctrl + Alt + O
-                                                    </Button.ToolTip>
-                                                </Button>
-                                                <Button Name="OpenOldTestCaseClick" Click="OpenOldTestCaseClick_Click"  Content="Case form Selenium IDE (Old)" Cursor="Hand">
-                                                    <Button.ToolTip>
-                                                        Ctrl + Alt + O
-                                                    </Button.ToolTip>
-                                                </Button>
-                                                <Button Name="OpenOldTestSuitClick" Click="OpenOldTestSuitClick_Click" Content="Suit form Selenium IDE (Old)" Cursor="Hand">
-                                                    <Button.ToolTip>
-                                                        Ctrl + Alt + O
-                                                    </Button.ToolTip>
-                                                </Button>
-                                                <Button Name="OpenNewTestSuitClick" Click="OpenNewTestSuitClick_Click" Content="Suit form Selenium IDE (New)" Cursor="Hand">
+                                                <Button Name="OpenTestSuitClick" Click="OpenTestSuit_Click" Content="Test suit" Cursor="Hand">
                                                     <Button.ToolTip>
                                                         Ctrl + Alt + O
                                                     </Button.ToolTip>
@@ -447,17 +432,53 @@
                                                 <materialDesign:PackIcon Name="SaveAsFileIcon" Kind="ContentSaveEditOutline" Foreground="#FF1C1C1C" Width="20" Height="20" Opacity="0.8"/>
                                             </materialDesign:PopupBox.ToggleContent>
                                             <StackPanel Width="150" Margin="5">
-                                                <Button Name="SaveAsTestCaseClick" Click="SaveAsTestCase_Click"  Content="Test Case" Cursor="Hand">
-                                                    <Button.ToolTip>
-                                                        Ctrl + Shift + S
-                                                    </Button.ToolTip>
-                                                </Button>
-                                                <Button Name="SaveAsTestSuitClick" Click="SaveAsTestSuit_Click" Content="Test Suit" Cursor="Hand"/>
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="30"/>
+                                                        <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
+                                                    </Grid.RowDefinitions>
+                                                    <Grid Grid.Row="0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="25"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <materialDesign:PackIcon  Kind="ubuntu" Foreground="#dd4814" Width="20" Height="20" Opacity="0.8" Grid.Column="1">
+                                                            <materialDesign:PackIcon.ToolTip>
+                                                                <ToolTip>
+                                                                    Ubuntu version
+                                                                </ToolTip>
+                                                            </materialDesign:PackIcon.ToolTip>
+                                                        </materialDesign:PackIcon>
+                                                    </Grid>
+                                                    <Grid Grid.Row="1">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="25"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Button Name="SaveAsTestCaseClick" Click="SaveAsTestCase_Click"  Content="Test Case" Cursor="Hand">
+                                                            <Button.ToolTip>
+                                                                Ctrl + Shift + S
+                                                            </Button.ToolTip>
+                                                        </Button>
+                                                        <CheckBox Name="SaveAsFileIcon_ubuntu" Grid.Column="1" MouseEnter="SaveAsTestCaseClick_ubuntu_MouseEnter" MouseLeave="SaveAsTestCaseClick_ubuntu_MouseLeave"/>
+                                                    </Grid>
+                                                    <Grid Grid.Row="2">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="25"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Button Name="SaveAsTestSuitClick" Click="SaveAsTestSuit_Click" Content="Test Suit" Cursor="Hand"/>
+                                                        <CheckBox Name="SaveAsTestSuitClick_ubuntu" Grid.Column="1" MouseEnter="SaveAsTestCaseClick_ubuntu_MouseEnter" MouseLeave="SaveAsTestCaseClick_ubuntu_MouseLeave"/>
+                                                    </Grid>
+                                                </Grid>
                                             </StackPanel>
                                         </materialDesign:PopupBox>
                                     </Border>
                                     <Border Grid.Column="7" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="34">
-                                        <materialDesign:PopupBox Name="SaveFile" MouseEnter="SaveFile_MouseEnter" MouseLeave="SaveFile_MouseLeave" Cursor="Hand" BorderThickness="0" Margin="5,10,0,0" Grid.Column="5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Foreground="#FF1C1C1C">
+                                        <materialDesign:PopupBox Name="SaveFile" MouseEnter="SaveFile_MouseEnter" MouseLeave="SaveFile_MouseLeave" Cursor="Hand" BorderThickness="0"
+                                                                 Margin="5,10,0,0" Grid.Column="5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="23" VerticalAlignment="Top"
+                                                                 HorizontalAlignment="Left" Width="20" Foreground="#FF1C1C1C">
                                             <materialDesign:PopupBox.ToolTip>
                                                 <ToolTip>
                                                     Save
@@ -467,12 +488,47 @@
                                                 <materialDesign:PackIcon Name="SaveFileIcon" Kind="ContentSaveOutline" Foreground="#FF1C1C1C" Width="20" Height="20" Opacity="0.8"/>
                                             </materialDesign:PopupBox.ToggleContent>
                                             <StackPanel Width="150" Margin="5">
-                                                <Button Name="SaveTestCaseClick" Click="SaveTestCase_Click"  Content="Test Case" Cursor="Hand">
-                                                    <Button.ToolTip>
-                                                        Ctrl + S
-                                                    </Button.ToolTip>
-                                                </Button>
-                                                <Button Name="SaveTestSuitClick" Click="SaveTestSuit_Click" Content="Test Suit" Cursor="Hand"/>
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="30"/>
+                                                        <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
+                                                    </Grid.RowDefinitions>
+                                                    <Grid Grid.Row="0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="25"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <materialDesign:PackIcon  Kind="ubuntu" Foreground="#dd4814" Width="20" Height="20" Opacity="0.8" Grid.Column="1">
+                                                            <materialDesign:PackIcon.ToolTip>
+                                                                <ToolTip>
+                                                                    Ubuntu version
+                                                                </ToolTip>
+                                                            </materialDesign:PackIcon.ToolTip>
+                                                        </materialDesign:PackIcon>
+                                                    </Grid>
+                                                    <Grid Grid.Row="1">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="25"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Button Name="SaveTestCaseClick" Click="SaveTestCase_Click"  Content="Test Case" Cursor="Hand" Grid.Column="0">
+                                                            <Button.ToolTip>
+                                                                Ctrl + S
+                                                            </Button.ToolTip>
+                                                        </Button>
+                                                        <CheckBox Name="SaveTestCaseClick_ubuntu" Grid.Column="1" MouseEnter="SaveTestCaseClick_ubuntu_MouseEnter" MouseLeave="SaveTestCaseClick_ubuntu_MouseLeave"/>
+                                                    </Grid>
+                                                    <Grid Grid.Row="2">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="25"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Button Name="SaveTestSuitClick" Click="SaveTestSuit_Click" Content="Test Suit" Cursor="Hand"/>
+                                                        <CheckBox Name="SaveTestSuitClick_ubuntu" Grid.Column="1" MouseEnter="SaveTestCaseClick_ubuntu_MouseEnter" MouseLeave="SaveTestCaseClick_ubuntu_MouseLeave"/>
+                                                    </Grid>
+                                                </Grid>
+
                                             </StackPanel>
                                         </materialDesign:PopupBox>
                                     </Border>
@@ -1214,7 +1270,14 @@
                         <Grid Margin="0,0,0,6">
                             <TabControl BorderThickness="0 0 0 2" BorderBrush="DarkGray" Background="#FFE5E5E5" materialDesign:ThemeAssist.Theme="Inherit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,20.4" Foreground="#FF4E4E4E" >
                                 <TabItem HorizontalAlignment="Left" Header="Log" Background="White" Width="70" BorderThickness="0" Margin="0,0,0,-1" BorderBrush="{x:Null}" Cursor="Hand">
-                                    <ListBox Name="Log" Foreground="Black" Background="White" Margin="0" Grid.ColumnSpan="2" Cursor="Arrow">
+                                    <ListBox Name="Log" Foreground="Black" Background="White" Margin="0" Grid.ColumnSpan="2" Cursor="Arrow" ItemsSource="{Binding LoggerList}">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
                                         <ListBox.ContextMenu>
                                             <ContextMenu>
                                                 <MenuItem Name="CopyLogItem" Header="Copy" Click="CopyLogItem_Click"/>
