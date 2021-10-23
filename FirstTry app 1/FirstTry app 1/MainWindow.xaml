@@ -666,14 +666,14 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
                                             <Border Grid.Column="0" HorizontalAlignment="Left">
-                                                <Button x:Name="RunAllTest" Click="RunAllTest_Click" Margin="8,3,-32,3.6" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="24" Height="23" Cursor="Hand" Opacity="0.8">
+                                                <Button x:Name="RunTestSuit" Click="RunTestSuit_Click" Margin="8,3,-32,3.6" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="24" Height="23" Cursor="Hand" Opacity="0.8">
                                                     <Button.Style>
                                                         <Style TargetType="{x:Type Button}">
                                                             <Setter Property="Background">
                                                                 <Setter.Value>
                                                                     <ImageBrush>
                                                                         <ImageBrush.ImageSource>
-                                                                            <BitmapImage UriSource="Images\RunAllTest.png"/>
+                                                                            <BitmapImage UriSource="Images\RunTestSuit.png"/>
                                                                         </ImageBrush.ImageSource>
                                                                     </ImageBrush>
                                                                 </Setter.Value>
@@ -693,7 +693,7 @@
                                                                         <Setter.Value>
                                                                             <ImageBrush>
                                                                                 <ImageBrush.ImageSource>
-                                                                                    <BitmapImage UriSource="Images\RunAllTest2.png"/>
+                                                                                    <BitmapImage UriSource="Images\RunTestSuit2.png"/>
                                                                                 </ImageBrush.ImageSource>
                                                                             </ImageBrush>
                                                                         </Setter.Value>
@@ -866,6 +866,7 @@
                                                           MouseDoubleClick="ListView_MouseDoubleClick" Margin="0,0,0.2,0.2" SizeChanged="listView_SizeChanged" KeyDown="ListView_KeyDown" IsSynchronizedWithCurrentItem="True"
                                                           SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}" ScrollViewer.VerticalScrollBarVisibility="Auto" PreviewMouseUp="listView_PreviewMouseUp" PreviewMouseDown="listView_PreviewMouseDown"
                                                           VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.CanContentScroll="False" Foreground="#FF1C1C1C">
+
                                                     <ListView.ContextMenu>
                                                         <ContextMenu Name="listViewContextMenu" Opened="ListViewContextMenu_Opened" Closed="ListViewContextMenu_Closed">
                                                             <MenuItem Name="CopyItemCM" Header="Copy" Click="CopyItem_Click"/>

@@ -2893,7 +2893,7 @@ namespace FirstTry_app_1
                     if (0 != _testCaseCounter)
                     {
                         ListViewItem CurrentTestCaseitem = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
-                        if (CurrentTestCaseitem != null) CurrentTestCaseitem.Background = System.Windows.Media.Brushes.Lavender;
+                        if (CurrentTestCaseitem != null && CurrentTestCaseitem.Background != System.Windows.Media.Brushes.LightGreen && CurrentTestCaseitem.Background != System.Windows.Media.Brushes.LightPink) CurrentTestCaseitem.Background = System.Windows.Media.Brushes.Lavender;
                     }
                 }
             }
@@ -3525,7 +3525,7 @@ namespace FirstTry_app_1
                         _openFileAddress = _openFileAddressArray[0];
                         _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
                         _openFileName = _openFileNameArray[0];
-                        _openFileName = _openFileName.Replace(".py", "");
+                        _openFileName = _openFileName;
                         string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
                         for (int j = mystring.Length; j > 0; j--)
                             mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
@@ -3552,15 +3552,22 @@ namespace FirstTry_app_1
             }
         }
 
-        private void RunAllTest_Click(object sender, RoutedEventArgs e)
+        private async void RunTestSuit_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                Process.Start("C:\\Users\\AmirReza\\PycharmProjects\\FirstTry\\LoginEpl.py");
+                await Task.Run(() =>
+                {
+                    runSuit();
+                });
             }
             catch (Exception ex)
             {
-                Log.Items.Add("RunCurrent_Click ---> Failed Because of error : " + ex.ToString());
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("RunTestSuit_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
 
@@ -4028,7 +4035,7 @@ namespace FirstTry_app_1
                     // Get the dragged ListViewItem
                     ListView listView = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    if (listViewItem != null) listViewItem.Background = System.Windows.Media.Brushes.Lavender;
+                    if (listViewItem != null && listViewItem.Background != System.Windows.Media.Brushes.LightGreen && listViewItem.Background != System.Windows.Media.Brushes.LightPink) listViewItem.Background = System.Windows.Media.Brushes.Lavender;
                     if (listViewItem == null) return;            // Abort
                                                                  // Find the data behind the ListViewItem
                     Commands item = (Commands)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
@@ -4071,7 +4078,7 @@ namespace FirstTry_app_1
                     // Get the drop ListViewItem destination
                     ListView listView1 = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    listViewItem.Background = System.Windows.Media.Brushes.White;
+                    if (listViewItem != null) listViewItem.Background = System.Windows.Media.Brushes.White;
                     if (listViewItem == null)
                     {
                         // Abort
@@ -4153,7 +4160,7 @@ namespace FirstTry_app_1
                     // Get the dragged ListViewItem
                     ListView listView = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    if (listViewItem != null) listViewItem.Background = System.Windows.Media.Brushes.Lavender;
+                    if (listViewItem != null && listViewItem.Background != System.Windows.Media.Brushes.LightGreen && listViewItem.Background != System.Windows.Media.Brushes.LightPink) listViewItem.Background = System.Windows.Media.Brushes.Lavender;
                     if (listViewItem == null) return;            //Abort
                                                                  //Find the data behind the ListViewItem
                     TestSuit item = (TestSuit)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
@@ -4196,7 +4203,7 @@ namespace FirstTry_app_1
                     // Get the drop ListViewItem destination
                     ListView listView1 = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    listViewItem.Background = System.Windows.Media.Brushes.White;
+                    if (listViewItem != null) listViewItem.Background = System.Windows.Media.Brushes.White;
                     if (listViewItem == null)
                     {
                         // Abort
@@ -4626,6 +4633,10 @@ namespace FirstTry_app_1
                 oldCase.RemoveRange(0, oldCase.IndexOf("</thead><tbody>") + 1);
                 oldCase.Insert(0, caseFolderName);
                 oldCase.Insert(0, caseName);
+                App.Current.Dispatcher.Invoke(delegate
+                {
+                    ListDB.Clear();
+                });
                 await Task.Run(() => TestCaseConverter(oldCase));
             }
             catch (Exception ex)
@@ -4659,17 +4670,15 @@ namespace FirstTry_app_1
 
         public async Task TestCaseConverter(List<string> input)
         {
-            CommandCounter = 0;
+
+            //CommandCounter = 0;
             int CommandCounter1 = 0;
-            App.Current.Dispatcher.Invoke(delegate
-            {
-                ListDB.Clear();
-            });
+
             for (int i = 0; i < input.Count; i++)
             {
                 if (input[i] == "<tr>")
                 {
-                    CommandCounter++;
+                    //CommandCounter++;
                     CommandCounter1++;
                     string tempCommand = FindBetween(input[i + 1], "<td>", "</td>");
                     if (tempCommand == "open2" || tempCommand == "open2AndWait")
@@ -4828,6 +4837,8 @@ namespace FirstTry_app_1
                 if (listView.SelectedItems.Count != 0)
                 {
                     CurrentCommand = (Commands)listView.SelectedItems[0];
+                    ListViewItem CurrentContainer = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
+                    if (CurrentContainer != null && CurrentContainer.Background != System.Windows.Media.Brushes.LightGreen && CurrentContainer.Background != System.Windows.Media.Brushes.LightPink) CurrentContainer.Background = System.Windows.Media.Brushes.Lavender;
                     _commandCounter = CurrentCommand.Number;
                     CommandsComboBox.Text = CurrentCommand.Command.Replace("\t", "");
                     tabInCommandForEdit = CurrentCommand.Command.Replace(CommandsComboBox.Text, "");
@@ -4841,18 +4852,15 @@ namespace FirstTry_app_1
         }
         private void listView_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            /*if (e.LeftButton == MouseButtonState.Released)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (listView.SelectedItems.Count != 0)
                 {
                     CurrentCommand = (Commands)listView.SelectedItems[0];
-                    lvitem = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
-                    string itemBackGround = lvitem.Background.ToString();
-                    var bc = new BrushConverter();
-                    if (itemBackGround != "#FFDEDEDE")
-                        lvitem.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFDEDEDE");
+                    ListViewItem CurrentContainer = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
+                    if (CurrentContainer != null) CurrentContainer.Background = System.Windows.Media.Brushes.White;
                 }
-            }*/
+            }
         }
 
         private void TestCaseListView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
@@ -4866,8 +4874,16 @@ namespace FirstTry_app_1
         {
             try
             {
-                if (driver == null)
+                try
+                {
+                    if (driver == null)
+                        driver = new ChromeDriver(chromeservice, options);
+                    string temp = driver.Url;
+                }
+                catch
+                {
                     driver = new ChromeDriver(chromeservice, options);
+                }
 
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
                 IJavaScriptExecutor jsExecutor = driver;
@@ -7626,7 +7642,31 @@ namespace FirstTry_app_1
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrame(st.FrameCount - 1);
                 var line = frame.GetFileLineNumber();
-                Log.Items.Add("runCase_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                Log.Items.Add("runCase ---> Failed in line " + line + " Because of error : " + ex.ToString());
+            }
+        }
+        public async Task runSuit()
+        {
+            try
+            {
+                for (int i = 1 /*index nabashe*/; TestList.Count >= i; i++)
+                {
+                    waitType = WaitType._case;
+                    await Task.Run(() => runCase(i));
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ListViewItem lvitem1 = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
+                        lvitem1.Background = System.Windows.Media.Brushes.LightGreen;
+                    }));
+                }
+            }
+            catch (Exception ex)
+            {
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("runSuit ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
 

@@ -404,8 +404,8 @@
     <Resource Include="Images\Record2.png" />
     <Resource Include="Images\Resize-512 2.png" />
     <Resource Include="Images\Resize-512.png" />
-    <Resource Include="Images\RunAllTest.png" />
-    <Resource Include="Images\RunAllTest2.png" />
+    <Resource Include="Images\RunTestSuit.png" />
+    <Resource Include="Images\RunTestSuit2.png" />
     <Resource Include="Images\RunCurrent.png" />
     <Resource Include="Images\RunCurrent2.png" />
     <Resource Include="Images\Search.png" />
