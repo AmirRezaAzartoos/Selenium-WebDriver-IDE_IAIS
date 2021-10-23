@@ -15,6 +15,7 @@ namespace FirstTry_app_1
         private ObservableCollection<Commands> _testValue;
         private string _savedPath;
         private bool _isSaved;
+        private bool _isPassed;
 
         public int TestNumber
         {
@@ -95,6 +96,18 @@ namespace FirstTry_app_1
             {
                 _isSaved = value;
                 OnPropertyChanged("IsSaved");
+            }
+        }
+        public bool IsPassed
+        {
+            get
+            {
+                return _isPassed;
+            }
+            set
+            {
+                _isPassed = value;
+                OnPropertyChanged("IsPassed");
             }
         }
     }

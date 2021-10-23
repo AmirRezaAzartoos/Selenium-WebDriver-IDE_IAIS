@@ -200,8 +200,6 @@ namespace FirstTry_app_1
             options.AddArguments("start-maximized");
             options.AddExtension(startupPath + "\\data\\extention-test.crx");
             options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
-
-
         }
         ///////BUILD
         #region Save
@@ -213,8 +211,8 @@ namespace FirstTry_app_1
                 //FileInfo file = new FileInfo(@A);
                 //file.Create();
                 //StreamWriter TestFile = file.CreateText();
-                string mainString_testCase = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode.py"): File.ReadAllText(@"data\StaticCode_ubuntu.py");
-                int mainStringSplitterIndex = mainString_testCase.IndexOf("durationError");
+                string mainString_testCase = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode.py") : File.ReadAllText(@"data\StaticCode_ubuntu.py");
+                int mainStringSplitterIndex = mainString_testCase.IndexOf("#bodyCode#");
                 string mainString = mainString_testCase.Substring(0, mainStringSplitterIndex);
                 mainString += "\r\n\r\nclass StoreEvalDB:\r\n\tvars = {}\r\n";
                 mainString += "\nclass " + TestList.ElementAt(_testCaseCounter - 1).TestName + ":\n";
@@ -739,7 +737,7 @@ namespace FirstTry_app_1
                 int _counter = 0;
                 //FileInfo file = new FileInfo(@B);
                 //StreamWriter TestFile = file.CreateText();
-                string StaticCodeNew = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString()):
+                string StaticCodeNew = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString()) :
                      File.ReadAllText(@"data\StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString());
                 int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
                 string mainString = StaticCodeNew.Substring(0, splitterIndex);
@@ -1703,13 +1701,13 @@ namespace FirstTry_app_1
                                 #endregion
                         }
                         _commandCounter++;
-                        ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                        ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                     }
 
                     else if (lines.ElementAt(_counter).Contains("# end"))
                     {
                         _commandCounter++;
-                        ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                        ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                         if (sumTrue == 0)
                             throw new Exception("Unvalid Command : No operations exist");
                         else
@@ -2184,13 +2182,13 @@ namespace FirstTry_app_1
                                     #endregion
                             }
                             _commandCounter++;
-                            ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                            ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                         }
 
                         else if (lines.ElementAt(_counter).Contains("# end"))
                         {
                             _commandCounter++;
-                            ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                            ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
                             if (sumTrue == 0)
                                 throw new Exception("Unvalid Command : No operations exist");
                             else
@@ -3248,7 +3246,7 @@ namespace FirstTry_app_1
             }
             if (!IN.Contains("str(StoreEvalDB.vars") && !IN.Contains(" or "))
             {
-                return OUT;
+                return IN;
             }
             else
             {
@@ -3267,6 +3265,64 @@ namespace FirstTry_app_1
             catch (NoSuchElementException)
             {
                 return false;
+            }
+        }
+        public void switchTestCase(int index)
+        {
+            try
+            {
+                HandleTestList();
+                if (TestCaseListView.Items.Count != 0)
+                {
+                    CurrentTestCase = (TestSuit)TestCaseListView.Items[index];
+                    _testCaseCounter = CurrentTestCase.TestNumber;
+                    edit = false;
+                    if (CurrentTestCase.TestValue != null)
+                    {
+                        var obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
+                        if (obj != null) ListDB = new ObservableCollection<Commands>(obj.TestValue);
+                        CommandCounter = _commandCounter = obj.TestValue.Count;
+                        CommandCounterTB.Text = Convert.ToString(CommandCounter);
+                    }
+                    else
+                    {
+                        var obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
+                        CommandCounter = _commandCounter = 0;
+                        CommandCounterTB.Text = Convert.ToString(CommandCounter);
+                        ListDB.Clear();
+                        listView.ItemsSource = ListDB;
+                        ICollectionView view3 = CollectionViewSource.GetDefaultView(ListDB);
+                        view3.Refresh();
+                    }
+                    TestCaseListView.ItemsSource = TestList;
+                    listView.ItemsSource = ListDB;
+                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
+                    view.Refresh();
+                    ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
+                    view2.Refresh();
+                    if (testCaseCounter != 0)
+                    {
+                        if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
+                        {
+                            var bc = new BrushConverter();
+                            SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
+                        }
+                        else
+                        {
+                            var bc = new BrushConverter();
+                            SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
+                        }
+                    }
+                    else
+                    {
+                        var bc = new BrushConverter();
+                        SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("TestCaseListView_MouseDoubleClick ---> Failed Because of error : " + ex.ToString());
             }
         }
 
@@ -3593,7 +3649,7 @@ namespace FirstTry_app_1
 
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
-            driver.FindElement(By.LinkText("Gmail")).Click();
+            switchTestCase(0);
         }
 
         private void Speed_Click(object sender, RoutedEventArgs e)
@@ -3789,7 +3845,6 @@ namespace FirstTry_app_1
         {
             try
             {
-                Log.Items.Add("test");
                 HandleTestList();
                 if (TestCaseListView.SelectedItems.Count != 0)
                 {
@@ -3837,7 +3892,6 @@ namespace FirstTry_app_1
                         var bc = new BrushConverter();
                         SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                     }
-
                 }
             }
             catch (Exception ex)
@@ -5729,8 +5783,26 @@ namespace FirstTry_app_1
                             Thread.Sleep(150);
                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_type);
                             el_type.Clear();
-                            el_type.SendKeys(thisCommand.Value);
-                            el_type.Submit();
+                            if (!thisCommand.Value.Contains("${"))
+                                el_type.SendKeys(thisCommand.Value);
+                            else
+                            {
+                                string final = "";
+                                string[] temp = thisCommand.Value.Split(new[] { "${" }, StringSplitOptions.None);
+                                for (int i = 1; i < temp.Length; i++)
+                                {
+                                    try
+                                    {
+                                        final += StoreEvalDB[temp[i].Substring(0, temp[i].IndexOf('}'))] + temp[i].Remove(0, temp[i].IndexOf('}') + 1);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Items.Add(e.ToString());
+                                    }
+                                }
+                                el_type.SendKeys(final);
+                            }
+                            //el_type.Submit();
 
                             thisCommand.Pass = true;
 
@@ -5810,7 +5882,7 @@ namespace FirstTry_app_1
                             Thread.Sleep(150);
                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_sendKeys);
                             el_sendKeys.SendKeys(thisCommand.Value);
-                            el_sendKeys.Submit();
+                            //el_sendKeys.Submit();
 
                             thisCommand.Pass = true;
 
@@ -7574,7 +7646,7 @@ namespace FirstTry_app_1
                                 lvitem.Background = System.Windows.Media.Brushes.Yellow;
 
                             }));
-                            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Convert.ToInt32(thisCommand.Value));
+                            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Convert.ToInt32(thisCommand.Target));
 
                             thisCommand.Pass = true;
 
@@ -7602,10 +7674,10 @@ namespace FirstTry_app_1
                                 Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                             }));
-
                         }
                         break;
                         #endregion
+
                 }
                 //if(Stored.Items.is) Stored.Items.Refresh();
             }
@@ -7623,17 +7695,45 @@ namespace FirstTry_app_1
         {
             try
             {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    switchTestCase(testCaseNumber - 1);
+                }));
+                bool passed = true;
                 for (int i = 0; TestList.ElementAt(testCaseNumber - 1).TestValue.Count > i; i++)
                 {
                     waitType = WaitType._case;
-                    await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i)));
+                    if (i == 0)
+                        await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i)));
+                    else
+                    {
+                        if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass)
+                            await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i)));
+                        else
+                        {
+                            passed = false;
+                            break;
+                        }
+                    }
                 }
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                if (passed)
                 {
-                    ListViewItem lvitem1 = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
-                    lvitem1.Background = System.Windows.Media.Brushes.LightGreen;
-                }));
-
+                    TestList.ElementAt(testCaseNumber - 1).IsPassed = true;
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ListViewItem lvitem1 = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
+                        lvitem1.Background = System.Windows.Media.Brushes.LightGreen;
+                    }));
+                }
+                else
+                {
+                    TestList.ElementAt(testCaseNumber - 1).IsPassed = false;
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ListViewItem lvitem1 = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
+                        lvitem1.Background = System.Windows.Media.Brushes.LightPink;
+                    }));
+                }
 
             }
             catch (Exception ex)
@@ -7649,15 +7749,27 @@ namespace FirstTry_app_1
         {
             try
             {
+                
                 for (int i = 1 /*index nabashe*/; TestList.Count >= i; i++)
                 {
+                    bool passed = true;
                     waitType = WaitType._case;
-                    await Task.Run(() => runCase(i));
-                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    if (i == 1)
+                        await Task.Run(() => runCase(i));
+                    else
                     {
-                        ListViewItem lvitem1 = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
-                        lvitem1.Background = System.Windows.Media.Brushes.LightGreen;
-                    }));
+                        if (TestList.ElementAt(i - 2).IsPassed)
+                            await Task.Run(() => runCase(i));
+                        else
+                        {
+                            passed = false;
+                            break;
+                        }
+                    }
+                    if (passed)
+                    {
+
+                    }
                 }
             }
             catch (Exception ex)
