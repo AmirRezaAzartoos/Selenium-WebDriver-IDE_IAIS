@@ -1705,7 +1705,7 @@ namespace FirstTry_app_1
                                 break;
                             #endregion
                             default:
-                                _commandCounter++;
+                                //_commandCounter++;
                                 _counter++;
                                 continue;
                         }
@@ -2191,7 +2191,7 @@ namespace FirstTry_app_1
                                 #endregion
 
                                 default:
-                                    _commandCounter++;
+                                    //_commandCounter++;
                                     _counter++;
                                     continue;
                             }
@@ -5042,6 +5042,9 @@ namespace FirstTry_app_1
                         tempTarget = thisCommand.Target;
                         break;
                 }
+
+                Thread.Sleep(700);
+
                 if (!pause)
                     switch (thisCommand.Command)
                     {
@@ -5049,12 +5052,15 @@ namespace FirstTry_app_1
                         case "open":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                })); 
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.Yellow;
-                                    listView.ScrollIntoView(lvitem);
-
                                 }));
                                 driver.Navigate().GoToUrl(thisCommand.Target);
 
@@ -5073,6 +5079,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5093,6 +5104,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_waitForElementPresent;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5159,6 +5175,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5181,6 +5202,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_waitForElementVisible;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5246,6 +5272,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5268,6 +5299,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_waitForElementNotPresent;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5329,6 +5365,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5351,6 +5392,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_waitForNotText;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5412,6 +5458,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5434,6 +5485,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_waitForText;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5500,6 +5556,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5522,6 +5583,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_waitForValue;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5588,6 +5654,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5609,6 +5680,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_waitForAttribute;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5670,6 +5746,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5693,6 +5774,11 @@ namespace FirstTry_app_1
                             {
                                 IWebElement el_waitForWindowPresent;
 
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5714,6 +5800,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5737,6 +5828,11 @@ namespace FirstTry_app_1
                             {
                                 IWebElement el_waitForNumberOfWindowPresent;
 
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5759,6 +5855,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5781,6 +5882,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_type;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5837,6 +5943,7 @@ namespace FirstTry_app_1
                                         catch (Exception e)
                                         {
                                             Log.Items.Add(e.ToString());
+                                            throw new Exception(e.ToString());
                                         }
                                     }
                                     el_type.SendKeys(final);
@@ -5858,6 +5965,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5880,6 +5992,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_sendKeys;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5938,6 +6055,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -5960,6 +6082,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_clearText;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6017,6 +6144,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6039,6 +6171,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_click;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6096,6 +6233,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6117,6 +6259,11 @@ namespace FirstTry_app_1
                         case "select1":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6139,6 +6286,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6160,6 +6312,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_select;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6207,6 +6364,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = true;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6220,6 +6382,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6242,6 +6409,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_selectByValue;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6300,6 +6472,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6323,6 +6500,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_selectByIndex;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6382,6 +6564,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6404,6 +6591,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_storeText;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6463,6 +6655,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6485,6 +6682,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_storeValue;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6545,6 +6747,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6567,6 +6774,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_storeWicketPath;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6626,6 +6838,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6648,6 +6865,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_storeInnerHTML;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6707,6 +6929,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6729,6 +6956,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_storeName;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6788,6 +7020,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6810,6 +7047,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_storeId;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6869,6 +7111,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6891,6 +7138,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_storeHref;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6950,6 +7202,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6971,6 +7228,11 @@ namespace FirstTry_app_1
                         case "storeEval":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -6984,7 +7246,7 @@ namespace FirstTry_app_1
                                 StoreEvalDB[thisCommand.Value] = thisCommand.Target;
 
                                 //change command color in listveiw
-                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                //lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
                                     Stored.Items.Refresh();
@@ -6997,6 +7259,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7018,6 +7285,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_storeElementPresent;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7165,6 +7437,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7186,6 +7463,11 @@ namespace FirstTry_app_1
                         case "alert":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7210,6 +7492,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7231,6 +7518,11 @@ namespace FirstTry_app_1
                         case "replace":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7255,6 +7547,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7275,6 +7572,11 @@ namespace FirstTry_app_1
                         case "runScript":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7305,6 +7607,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7327,6 +7634,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_switch;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7384,6 +7696,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7405,6 +7722,11 @@ namespace FirstTry_app_1
                         case "switchToDefault":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7416,7 +7738,7 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = true;
 
                                 //change command color in listveiw
-                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                //lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightGreen;
@@ -7429,6 +7751,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7450,6 +7777,11 @@ namespace FirstTry_app_1
                             try
                             {
                                 IWebElement el_scrollInto;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7507,6 +7839,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7552,6 +7889,11 @@ namespace FirstTry_app_1
                         case "refresh":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7575,6 +7917,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7595,6 +7942,11 @@ namespace FirstTry_app_1
                         case "close":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7618,6 +7970,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7638,6 +7995,11 @@ namespace FirstTry_app_1
                         case "failTest":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7659,6 +8021,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7679,6 +8046,11 @@ namespace FirstTry_app_1
                         case "pause":
                             try
                             {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -7702,6 +8074,11 @@ namespace FirstTry_app_1
                                 thisCommand.Pass = false;
 
                                 //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
