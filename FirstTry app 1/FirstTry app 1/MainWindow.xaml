@@ -797,50 +797,24 @@
                                                     </Button.ToolTip>
                                                 </Button>
                                             </Border>
-                                            <Border Grid.Column="3" HorizontalAlignment="Left">
-                                                <Button x:Name="Speed" Click="Speed_Click" Margin="8,5,-32,4.6" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="20" Cursor="Hand" Opacity="0.8">
-                                                    <Button.Style>
-                                                        <Style TargetType="{x:Type Button}">
-                                                            <Setter Property="Background">
-                                                                <Setter.Value>
-                                                                    <ImageBrush>
-                                                                        <ImageBrush.ImageSource>
-                                                                            <BitmapImage UriSource="Images\Speed.png"/>
-                                                                        </ImageBrush.ImageSource>
-                                                                    </ImageBrush>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                            <Setter Property="Template">
-                                                                <Setter.Value>
-                                                                    <ControlTemplate TargetType="{x:Type Button}">
-                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
-                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                        </Border>
-                                                                    </ControlTemplate>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                            <Style.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Setter Property="Background">
-                                                                        <Setter.Value>
-                                                                            <ImageBrush>
-                                                                                <ImageBrush.ImageSource>
-                                                                                    <BitmapImage UriSource="Images\Speed2.png"/>
-                                                                                </ImageBrush.ImageSource>
-                                                                            </ImageBrush>
-                                                                        </Setter.Value>
-                                                                    </Setter>
-                                                                </Trigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Button.Style>
-                                                    <Button.ToolTip>
-                                                        <ToolTip>
-                                                            Speed
-                                                        </ToolTip>
-                                                    </Button.ToolTip>
-                                                </Button>
-                                            </Border>
+                                            <materialDesign:PopupBox x:Name="SpeedPopupBox" Grid.Column="3" HorizontalAlignment="Center" Width="40">
+                                                <materialDesign:PopupBox.ToggleContent>
+                                                    <materialDesign:PackIcon Kind="SpeedometerMedium" Foreground="#FF555555" VerticalAlignment="Center" Width="40" Height="21"/>
+                                                </materialDesign:PopupBox.ToggleContent>
+                                                <StackPanel Margin="5" Background="Transparent" Width="120">
+                                                    <Slider
+                                                        x:Name="Speed"
+                                                        Margin="5"
+                                                        Value="0"
+                                                        Minimum="0"
+                                                        Maximum="500"
+                                                        TickFrequency="1"
+                                                        IsSelectionRangeEnabled="True" AutoToolTipPlacement="TopLeft" TickPlacement="None" Cursor="Hand" />
+                                                </StackPanel>
+                                                <materialDesign:PopupBox.ToolTip>
+                                                    Speed
+                                                </materialDesign:PopupBox.ToolTip>
+                                            </materialDesign:PopupBox>
                                             <Border Grid.Column="4">
                                                 <Grid HorizontalAlignment="Right" Margin="0,0,0.2,-0.4" Width="847">
                                                     <Grid.ColumnDefinitions>
@@ -1223,7 +1197,8 @@
                                                                     </Button>
                                                                 </Border> -->
                                                             </Grid>
-                                                        </Border>                                                        <Border Grid.Row="2" HorizontalAlignment="Stretch">
+                                                        </Border>
+                                                        <Border Grid.Row="2" HorizontalAlignment="Stretch">
                                                             <Grid Margin="0,0,5,-0.2">
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="101"/>

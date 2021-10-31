@@ -3686,12 +3686,6 @@ namespace FirstTry_app_1
             }
             else
                 pause = true;
-
-
-        }
-
-        private void Speed_Click(object sender, RoutedEventArgs e)
-        {
         }
 
         public void AddTest_Click(object sender, RoutedEventArgs e)
@@ -5043,7 +5037,7 @@ namespace FirstTry_app_1
                         break;
                 }
 
-                Thread.Sleep(700);
+                Thread.Sleep(Convert.ToInt16(Speed.Value) * 3);
 
                 if (!pause)
                     switch (thisCommand.Command)
