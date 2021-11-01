@@ -803,7 +803,7 @@
                                                 </materialDesign:PopupBox.ToggleContent>
                                                 <StackPanel Margin="5" Background="Transparent" Width="120">
                                                     <Slider
-                                                        x:Name="Speed"
+                                                        Name="Speed"
                                                         Margin="5"
                                                         Value="0"
                                                         Minimum="0"

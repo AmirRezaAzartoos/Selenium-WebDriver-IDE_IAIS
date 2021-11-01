@@ -395,3 +395,4 @@ C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry_app_1.Properties.Resources.resources
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.GenerateResource.cache
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.CoreCompileInputs.cache
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Debug\FirstTry app 1.csproj.AssemblyReference.cache

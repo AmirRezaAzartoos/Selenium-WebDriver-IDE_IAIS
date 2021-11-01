@@ -216,13 +216,13 @@ namespace FirstTry_app_1
                 //FileInfo file = new FileInfo(@A);
                 //file.Create();
                 //StreamWriter TestFile = file.CreateText();
-                string mainString_testCase = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode.py") : File.ReadAllText(@"data\StaticCode_ubuntu.py");
-                int mainStringSplitterIndex = mainString_testCase.IndexOf("#bodyCode#");
-                string mainString = mainString_testCase.Substring(0, mainStringSplitterIndex);
+                string mainString_testCase = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode-Case.py") : File.ReadAllText(@"data\StaticCode_ubuntu-Case.py");
+                //int mainStringSplitterIndex = mainString_testCase.IndexOf("#bodyCode#");
+                string mainString = mainString_testCase;
                 mainString += "\r\n\r\nclass StoreEvalDB:\r\n\tvars = {}\r\n";
                 mainString += "\nclass " + TestList.ElementAt(_testCaseCounter - 1).TestName + ":\n";
                 string tabNeededTemp = "";
-                while (CommandCounter > _counter)
+                while (ListDB.Count > _counter)
                 {
                     needCotBefore = needCotAfter = true;
 
@@ -288,7 +288,7 @@ namespace FirstTry_app_1
                         #region ===> waitForElementPresent
                         case "waitForElementPresent":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForElementPresent\n";
-                            string _wait = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
+                            string _wait = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until(EC.presence_of_all_elements_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                             _wait += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _wait += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                             _wait += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -299,7 +299,7 @@ namespace FirstTry_app_1
                         #region ===> waitForElementVisible
                         case "waitForElementVisible":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForElementVisible\n";
-                            string _wait3 = tabNeededTemp + "\tWebDriverWait(driver, 10).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
+                            string _wait3 = tabNeededTemp + "\tWebDriverWait(driver, 30).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                             _wait3 += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _wait3 += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                             _wait3 += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -310,7 +310,7 @@ namespace FirstTry_app_1
                         #region ===> waitForElementNotPresent
                         case "waitForElementNotPresent":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForElementNotPresent\n";
-                            string _wait2 = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.invisibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
+                            string _wait2 = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until(expected_conditions.invisibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                             _wait2 += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _wait2;
                             break;
@@ -319,7 +319,7 @@ namespace FirstTry_app_1
                         #region ===> waitForNotText
                         case "waitForNotText":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForNotText\n";
-                            string _waitForNotText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until_not(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
+                            string _waitForNotText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until_not(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                             _waitForNotText += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                             mainString += _waitForNotText;
                             break;
@@ -328,7 +328,7 @@ namespace FirstTry_app_1
                         #region ===> waitForText
                         case "waitForText":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForText\n";
-                            string _waitForText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
+                            string _waitForText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                             _waitForText += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _waitForText += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                             _waitForText += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -339,7 +339,7 @@ namespace FirstTry_app_1
                         #region ===> waitForValue
                         case "waitForValue":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForValue\n";
-                            string _waitForValue = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element_value((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
+                            string _waitForValue = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until(expected_conditions.text_to_be_present_in_element_value((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                             _waitForValue += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _waitForValue += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                             _waitForValue += tabNeededTemp + "\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -369,7 +369,7 @@ namespace FirstTry_app_1
                         #region ===> waitForWindowPresent
                         case "waitForWindowPresent":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForWindowPresent\n";
-                            string _waitForWindowPresent = tabNeededTemp + "\twaitForWindowPresent10 = WebDriverWait(driver, 10).until(EC.new_window_is_opened())\n";
+                            string _waitForWindowPresent = tabNeededTemp + "\twaitForWindowPresent10 = WebDriverWait(driver, 30).until(EC.new_window_is_opened())\n";
                             mainString += _waitForWindowPresent;
                             break;
                         #endregion
@@ -377,7 +377,7 @@ namespace FirstTry_app_1
                         #region ===> waitForNumberOfWindowPresent
                         case "waitForNumberOfWindowPresent":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | waitForNumberOfWindowPresent\n";
-                            string _waitForNumberOfWindowPresent = tabNeededTemp + "\tWebDriverWait(driver, 10).until(EC.number_of_windows_to_be(1))\n";
+                            string _waitForNumberOfWindowPresent = tabNeededTemp + "\tWebDriverWait(driver, 30).until(EC.number_of_windows_to_be(1))\n";
                             mainString += _waitForNumberOfWindowPresent;
                             break;
                         #endregion
@@ -582,7 +582,7 @@ namespace FirstTry_app_1
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | storeElementPresent\n";
                             string _storeElementPresent = tabNeededTemp + "\ttry:\n";
                             string exist;
-                            _storeElementPresent += tabNeededTemp + "\t\tWebDriverWait(driver, 10).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
+                            _storeElementPresent += tabNeededTemp + "\t\tWebDriverWait(driver, 30).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                             _storeElementPresent += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = True\n";
                             _storeElementPresent += tabNeededTemp + "\texcept TimeoutException:\n";
                             _storeElementPresent += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = False\n";
@@ -827,7 +827,7 @@ namespace FirstTry_app_1
                             #region ===> waitForElementPresent
                             case "waitForElementPresent":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForElementPresent\n";
-                                string _wait = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
+                                string _wait = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until(EC.presence_of_all_elements_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                                 _wait += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _wait += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                                 _wait += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -838,7 +838,7 @@ namespace FirstTry_app_1
                             #region ===> waitForElementVisible
                             case "waitForElementVisible":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForElementVisible\n";
-                                string _wait3 = tabNeededTemp + "\t\tWebDriverWait(driver, 10).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
+                                string _wait3 = tabNeededTemp + "\t\tWebDriverWait(driver, 30).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                                 _wait3 += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _wait3 += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                                 _wait3 += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -849,7 +849,7 @@ namespace FirstTry_app_1
                             #region ===> waitForElementNotPresent
                             case "waitForElementNotPresent":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForElementNotPresent\n";
-                                string _wait2 = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.invisibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
+                                string _wait2 = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until(expected_conditions.invisibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                                 _wait2 += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _wait2;
                                 break;
@@ -858,7 +858,7 @@ namespace FirstTry_app_1
                             #region ===> waitForNotText
                             case "waitForNotText":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForNotText\n";
-                                string _waitForNotText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until_not(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
+                                string _waitForNotText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until_not(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                                 _waitForNotText += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
                                 mainString += _waitForNotText;
                                 break;
@@ -867,7 +867,7 @@ namespace FirstTry_app_1
                             #region ===> waitForText
                             case "waitForText":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForText\n";
-                                string _waitForText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
+                                string _waitForText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until(expected_conditions.text_to_be_present_in_element((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                                 _waitForText += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _waitForText += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                                 _waitForText += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -878,7 +878,7 @@ namespace FirstTry_app_1
                             #region ===> waitForValue
                             case "waitForValue":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForValue\n";
-                                string _waitForValue = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element_value((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
+                                string _waitForValue = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = WebDriverWait(driver, 30).until(expected_conditions.text_to_be_present_in_element_value((\"" + targetType + "\", \"" + tempTarget + "\"), " + ConvertTextToIdeFormat(ListDB.ElementAt(_counter).Value, true, true) + "))\n";
                                 _waitForValue += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _waitForValue += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                                 _waitForValue += tabNeededTemp + "\t\t# Description: " + ListDB.ElementAt(_counter).Description + "\n";
@@ -908,7 +908,7 @@ namespace FirstTry_app_1
                             #region ===> waitForWindowPresent
                             case "waitForWindowPresent":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForWindowPresent\n";
-                                string _waitForWindowPresent = tabNeededTemp + "\t\twaitForWindowPresent10 = WebDriverWait(driver, 10).until(EC.new_window_is_opened())\n";
+                                string _waitForWindowPresent = tabNeededTemp + "\t\twaitForWindowPresent10 = WebDriverWait(driver, 30).until(EC.new_window_is_opened())\n";
                                 mainString += _waitForWindowPresent;
                                 break;
                             #endregion
@@ -916,7 +916,7 @@ namespace FirstTry_app_1
                             #region ===> waitForNumberOfWindowPresent
                             case "waitForNumberOfWindowPresent":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | waitForNumberOfWindowPresent\n";
-                                string _waitForNumberOfWindowPresent = tabNeededTemp + "\t\tWebDriverWait(driver, 10).until(EC.number_of_windows_to_be(1))\n";
+                                string _waitForNumberOfWindowPresent = tabNeededTemp + "\t\tWebDriverWait(driver, 30).until(EC.number_of_windows_to_be(1))\n";
                                 mainString += _waitForNumberOfWindowPresent;
                                 break;
                             #endregion
@@ -1120,7 +1120,7 @@ namespace FirstTry_app_1
                             case "storeElementPresent":
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | storeElementPresent\n";
                                 string _storeElementPresent = tabNeededTemp + "\t\ttry:\n";
-                                _storeElementPresent += tabNeededTemp + "\t\t\tWebDriverWait(driver, 10).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
+                                _storeElementPresent += tabNeededTemp + "\t\t\tWebDriverWait(driver, 30).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                                 _storeElementPresent += tabNeededTemp + "\t\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = True\n";
                                 _storeElementPresent += tabNeededTemp + "\t\texcept TimeoutException:\n";
                                 _storeElementPresent += tabNeededTemp + "\t\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = False\n";
@@ -3379,7 +3379,11 @@ namespace FirstTry_app_1
 
         private void Maximize_Click(object sender, RoutedEventArgs e)
         {
-            try
+            ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
+            view.Refresh();
+            ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
+            view2.Refresh();
+            /*try
             {
                 if (WindowState == WindowState.Normal)
                 {
@@ -3391,7 +3395,7 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 Log.Items.Add("Maximize_Click ---> Failed Because of error : " + ex.ToString());
-            }
+            }*/
         }
 
         private void Minimize_Click(object sender, RoutedEventArgs e)
@@ -3901,6 +3905,7 @@ namespace FirstTry_app_1
                         view3.Refresh();
                     }
                     TestCaseListView.ItemsSource = TestList;
+
                     listView.ItemsSource = ListDB;
                     ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
                     view.Refresh();
@@ -4451,11 +4456,8 @@ namespace FirstTry_app_1
                             string testCaseName = TestCaseDR[j].Split(new[] { "\\" }, StringSplitOptions.None)[1].Replace("-", "_").Replace(".", "_").Replace(" ", "_").Replace("&", "_");
                             if (!File.Exists(@temp3))
                             {
-                                Application.Current.Dispatcher.Invoke(new Action(() =>
-                                {
-                                    openOldTestCase("C:\\seleniums\\" + TestCaseDR[j].ToString() + ".html");
-                                    TestMethod("C:\\run-test-selenium\\Source\\" + TestCaseDR[j].ToString() + ".py", false);
-                                }));
+                                openOldTestCase("C:\\seleniums\\" + TestCaseDR[j].ToString() + ".html");
+                                TestMethod("C:\\run-test-selenium\\Source\\" + TestCaseDR[j].ToString() + ".py", false);
                             }
                             string tempSuit2 = File.ReadAllText(@temp3);
                             int classStartLine = tempSuit2.IndexOf(":\r\n\t#");
@@ -4723,7 +4725,7 @@ namespace FirstTry_app_1
                 {
                     ListDB.Clear();
                 });
-                await Task.Run(() => TestCaseConverter(oldCase));
+                Task.Run(() => TestCaseConverter(oldCase)).Wait();
             }
             catch (Exception ex)
             {
@@ -4769,7 +4771,7 @@ namespace FirstTry_app_1
                     string tempCommand = FindBetween(input[i + 1], "<td>", "</td>");
                     if (tempCommand == "open2" || tempCommand == "open2AndWait")
                         tempCommand = "open";
-                    if (tempCommand == "clickAndWait")
+                    if (tempCommand == "clickAndWait" || tempCommand == "clickAt")
                         tempCommand = "click";
                     App.Current.Dispatcher.Invoke(delegate
                     {
@@ -4960,6 +4962,13 @@ namespace FirstTry_app_1
         {
             try
             {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                    string itemBackGround2 = lvitem.Background.ToString();
+
+                }));
+                ListView temp2 = listView;
                 try
                 {
                     if (driver == null)
@@ -5036,8 +5045,12 @@ namespace FirstTry_app_1
                         tempTarget = thisCommand.Target;
                         break;
                 }
-
-                Thread.Sleep(Convert.ToInt16(Speed.Value) * 3);
+                double tempSpeed = 0;
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    tempSpeed = Speed.Value;
+                }));
+                Thread.Sleep(Convert.ToInt16(tempSpeed * 3));
 
                 if (!pause)
                     switch (thisCommand.Command)
@@ -5050,7 +5063,7 @@ namespace FirstTry_app_1
                                 {
                                     listView.SelectedIndex = thisCommand.Number - 1;
                                     listView.ScrollIntoView(listView.SelectedItem);
-                                })); 
+                                }));
                                 lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {

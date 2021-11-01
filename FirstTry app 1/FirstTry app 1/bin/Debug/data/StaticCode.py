@@ -159,6 +159,7 @@ class StoreEvalDB:
 try:
 #bodyCode#
 
+
     log.debug("+" + ("-" * (tableWidth + 36)) + "+")
     log.warning("Succeeded after %s minutes." % round(((time.time() - start_time) / 60), 2))
     log.info(StoreEvalDB.vars)
