@@ -52,9 +52,9 @@ driver.get("http://test.iais.co:8080/Urban-Warehouse-Rajae/buildDate")
 WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located(("css selector", "pre")))
 UrbanWarehouse_buildDate = driver.find_element_by_css_selector("pre").text
 
-# driver.get("http://test.iais.co:8080/Acc-Rajae/pay/buildDate")
-# WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located(("css selector", "pre")))
-Acc_buildDate = "null"
+driver.get("http://test.iais.co:8080/Acc-Rajae/pay/buildDate")
+WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located(("css selector", "span[wicketpath$='label']")))
+Acc_buildDate = driver.find_element_by_css_selector("span[wicketpath$='label']").text
 
 driver.get("http://test.iais.co:8080/Center-Rajae/buildDate")
 WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located(("css selector", "pre")))
@@ -113,15 +113,15 @@ log.info("|" + (" *--> Info <--*".center((tableWidth + 36)) + "|"))
 log.info("+" + ("-" * (tableWidth + 36)) + "+")
 log.info("| Date and time : " + str(now.strftime("%d/%m/%Y & %H:%M:%S")) + (" ".center((tableWidth + 36) - 38) + "|"))
 log.info("| Server : " + server + (" ".center((tableWidth + 36) - 24)) + "|")
-log.info("| PackingList build date : = " + PackingList_buildDate + (" ".center((tableWidth + 36) - len(" PackingList build date : = " + Coding_buildDate))) + "|")
-log.info("| Customs build date : = " + Customs_buildDate + (" ".center((tableWidth + 36) - len(" Customs build date : = " + Coding_buildDate))) + "|")
-log.info("| Janbar build date : = " + Janbar_buildDate + (" ".center((tableWidth + 36) - len(" Janbar build date : = " + Coding_buildDate))) + "|")
-log.info("| Baskool build date : = " + Baskool_buildDate + (" ".center((tableWidth + 36) - len(" Baskool build date : = " + Coding_buildDate))) + "|")
-log.info("| Urban-Warehouse build date : = " + UrbanWarehouse_buildDate + (" ".center((tableWidth + 36) - len(" Urban-Warehouse build date : = " + Coding_buildDate))) + "|")
-log.info("| Acc build date : = " + Acc_buildDate + (" ".center((tableWidth + 36) - len(" Acc build date : = " + Coding_buildDate))) + "|")
-log.info("| Center build date : = " + Center_buildDate + (" ".center((tableWidth + 36) - len(" Center build date : = " + Coding_buildDate))) + "|")
-log.info("| Swich build date : = " + Swich_buildDate + (" ".center((tableWidth + 36) - len(" Swich build date : = " + Coding_buildDate))) + "|")
-log.info("| Coding build date : = " + Coding_buildDate + (" ".center((tableWidth + 36) - len(" Coding build date : = " + Coding_buildDate))) + "|")
+log.info("| PackingList build date : " + PackingList_buildDate + (" ".center((tableWidth + 36) - len(" PackingList build date : " + Coding_buildDate))) + "|")
+log.info("| Customs build date : " + Customs_buildDate + (" ".center((tableWidth + 36) - len(" Customs build date : " + Coding_buildDate))) + "|")
+log.info("| Janbar build date : " + Janbar_buildDate + (" ".center((tableWidth + 36) - len(" Janbar build date : " + Coding_buildDate))) + "|")
+log.info("| Baskool build date : " + Baskool_buildDate + (" ".center((tableWidth + 36) - len(" Baskool build date : " + Coding_buildDate))) + "|")
+log.info("| Urban-Warehouse build date : " + UrbanWarehouse_buildDate + (" ".center((tableWidth + 36) - len(" Urban-Warehouse build date : " + Coding_buildDate))) + "|")
+log.info("| Acc build date : " + Acc_buildDate + (" ".center((tableWidth + 36) - len(" Acc build date : " + Coding_buildDate))) + "|")
+log.info("| Center build date : " + Center_buildDate + (" ".center((tableWidth + 36) - len(" Center build date : " + Coding_buildDate))) + "|")
+log.info("| Swich build date : " + Swich_buildDate + (" ".center((tableWidth + 36) - len(" Swich build date : " + Coding_buildDate))) + "|")
+log.info("| Coding build date : " + Coding_buildDate + (" ".center((tableWidth + 36) - len(" Coding build date : " + Coding_buildDate))) + "|")
 log.info("+" + ("-" * (tableWidth + 36)) + "+")
 log.debug("+" + ("-" * (tableWidth + 36)) + "+")
 log.debug("|" + " *--> testSuit <--* ".center(tableWidth + 36) + "|")
@@ -129,15 +129,15 @@ log.debug("+" + ("-" * (tableWidth + 36)) + "+")
 
 Info.add_row([" Date and time : " + str(now.strftime("%d/%m/%Y & %H:%M:%S"))])
 Info.add_row([" Server : " + server])
-Info.add_row([" PackingList build date : = " + PackingList_buildDate])
-Info.add_row([" Customs build date : = " + Customs_buildDate])
-Info.add_row([" Janbar build date : = " + Janbar_buildDate])
-Info.add_row([" Baskool build date : = " + Baskool_buildDate])
-Info.add_row([" Urban-Warehouse build date : = " + UrbanWarehouse_buildDate])
-Info.add_row([" Acc build date : = " + Acc_buildDate])
-Info.add_row([" Center build date : = " + Center_buildDate])
-Info.add_row([" Swich build date : = " + Swich_buildDate])
-Info.add_row([" Coding build date : = " + Coding_buildDate])
+Info.add_row([" PackingList build date : " + PackingList_buildDate])
+Info.add_row([" Customs build date : " + Customs_buildDate])
+Info.add_row([" Janbar build date : " + Janbar_buildDate])
+Info.add_row([" Baskool build date : " + Baskool_buildDate])
+Info.add_row([" Urban-Warehouse build date : " + UrbanWarehouse_buildDate])
+Info.add_row([" Acc build date : " + Acc_buildDate])
+Info.add_row([" Center build date : " + Center_buildDate])
+Info.add_row([" Swich build date : " + Swich_buildDate])
+Info.add_row([" Coding build date : " + Coding_buildDate])
 
 def highlight(element):
     driver = element._parent
@@ -157,6 +157,7 @@ class StoreEvalDB:
 
 try:
 #bodyCode#
+
 
     log.debug("+" + ("-" * (tableWidth + 36)) + "+")
     log.warning("Succeeded after %s minutes." % round(((time.time() - start_time) / 60), 2))

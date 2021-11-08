@@ -253,3 +253,4 @@ C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.exe
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.pdb
 C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.AssemblyReference.cache
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CopyComplete
