@@ -1,0 +1,924 @@
+﻿<Window PreviewKeyDown="Window_KeyDown"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:properties="clr-namespace:FirstTry_app_1.Properties"
+        xmlns:local="clr-namespace:FirstTry_app_1"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:dotNetKitControls="clr-namespace:DotNetKit.Windows.Controls;assembly=DotNetKit.Wpf.AutoCompleteComboBox"
+        xmlns:Combo="clr-namespace:Combo;assembly=Combo" x:Class="FirstTry_app_1.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="707" Width="1200" WindowStyle="None" WindowStartupLocation="CenterScreen" Background="Transparent" AllowsTransparency="False">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="dotNetKitControls:AutoCompleteComboBox">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="myHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid x:Name="MainGrid" Background="#ffe5e5e5">
+        <Grid RenderOptions.BitmapScalingMode="HighQuality" Background="#ffe5e5e5">
+            <Grid Background="#FFE5E5E5" VerticalAlignment="Stretch" Margin="0">
+                <Border BorderBrush="White" BorderThickness="0 0 0 0" Grid.Row="0" Margin="0,0,-0.4,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="30">
+                    <Grid>
+                        <Grid Height="30" Background="#FFEEEEEE" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="922*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <Border BorderBrush="Black" BorderThickness="0 0 0 0" Grid.Column="0" Margin="0,0,39.6,0" Grid.ColumnSpan="2">
+                                <Label FontFamily="Roboto Medium" FontSize="13" Content="Selenium WebDriver IDE" Margin="4,3,-4.4,-2.6" Foreground="#FF282828"/>
+                            </Border>
+                            <Border BorderBrush="Black" BorderThickness="0 0 0 0" Grid.Column="1" Margin="0,0,183.6,0">
+                                <Button x:Name="Minimize" Click="Minimize_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" Margin="10,2,-34,4.4" Cursor="Hand">
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <ImageBrush ImageSource="Images/minimize-1779402-1512859.png"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <ImageBrush>
+                                                                <ImageBrush.ImageSource>
+                                                                    <BitmapImage UriSource="Images/minimize-1779402-15128592.png"/>
+                                                                </ImageBrush.ImageSource>
+                                                            </ImageBrush>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </Border>
+                            <Border BorderBrush="Black" BorderThickness="0 0 0 0" Grid.Column="2" Margin="0,0,183.6,0">
+                                <Button x:Name="Maximize" Click="Maximize_Click"  Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="11,5,-31,5.4" Cursor="Hand">
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <ImageBrush ImageSource="Images/Resize-512 2.png"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <ImageBrush>
+                                                                <ImageBrush.ImageSource>
+                                                                    <BitmapImage UriSource="Images/Resize-512.png"/>
+                                                                </ImageBrush.ImageSource>
+                                                            </ImageBrush>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </Border>
+                            <Border BorderBrush="Black" BorderThickness="0 0 0 0" Grid.Column="3" Margin="0,0,183.6,0">
+                                <Button x:Name="Close" Click="Close_Click" Margin="10,5,-31,4.4" BorderBrush="{x:Null}" Foreground="{x:Null}" Cursor="Hand">
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <ImageBrush ImageSource="Images/icon-close-512.png"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <ImageBrush>
+                                                                <ImageBrush.ImageSource>
+                                                                    <BitmapImage UriSource="Images/icon-close-512-Copy.png"/>
+                                                                </ImageBrush.ImageSource>
+                                                            </ImageBrush>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </Border>
+                        </Grid>
+                        <Rectangle Margin="0,0,113.6,0.4" MouseDown="move_window" HorizontalAlignment="Stretch" Fill="Black" Opacity="0.01"/>
+                    </Grid>
+                </Border>
+                <Border VerticalAlignment="Top" BorderBrush="White" BorderThickness="0 0 0 0" Margin="0,30,-0.4,0.4" HorizontalAlignment="Stretch" RenderOptions.BitmapScalingMode="HighQuality" Grid.RowSpan="2">
+                    <Grid VerticalAlignment="Top" Height="40" Background="#FFEEEEEE" HorizontalAlignment="Stretch" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border VerticalAlignment="Top" BorderBrush="Black" BorderThickness="0 0 0 0" Grid.Column="0" Margin="0 2 0 1">
+                            <Grid>
+                                <Rectangle Fill="#FFE7E7E7" Margin="0,0,0,0">
+                                    <Rectangle.Effect>
+                                        <DropShadowEffect Direction="90" ShadowDepth="2" Color="#FF828282" Opacity="0.3" RenderingBias="Quality"  RenderOptions.BitmapScalingMode="HighQuality" BlurRadius="3"/>
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                                <Grid Background="White" VerticalAlignment="Stretch" Margin="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="73"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="34"/>
+                                        <ColumnDefinition Width="34"/>
+                                        <ColumnDefinition Width="34"/>
+                                        <ColumnDefinition Width="34"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Margin="0,0,986.2,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                                        <Label FontFamily="Roboto Medium" FontSize="18" Content="Project:" Margin="4,5,-80,0" Background="{x:Null}" Foreground="#FF323232" Opacity="0.8"/>
+                                    </Border>
+                                    <Border Grid.Column="1" Margin="0,0,986.2,0" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                                        <TextBox TabIndex="4" x:Name="ProjectNameText" FontFamily="Roboto Medium" FontSize="16" Margin="4,7,-204,3.8" Foreground="#FF323232" TextWrapping="Wrap" BorderBrush="{x:Null}" Background="{x:Null}" materialDesign:HintAssist.Hint="*" CaretBrush="#FF73CFFF"/>
+                                    </Border>
+                                    <Border Grid.Column="2" Margin="0,0,986.2,0" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                                        <Button x:Name="Create" Click="Create_Click" Margin="8,10,-32,7.8" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="20" Cursor="Hand" Opacity="0.8" Height="19">
+                                            <Button.Style>
+                                                <Style TargetType="{x:Type Button}">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <ImageBrush>
+                                                                <ImageBrush.ImageSource>
+                                                                    <BitmapImage UriSource="Images\create-icon-15.jpg"/>
+                                                                </ImageBrush.ImageSource>
+                                                            </ImageBrush>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                                <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <ImageBrush>
+                                                                        <ImageBrush.ImageSource>
+                                                                            <BitmapImage UriSource="Images\create-icon-152.png"/>
+                                                                        </ImageBrush.ImageSource>
+                                                                    </ImageBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                            <Button.ToolTip>
+                                                <ToolTip>
+                                                    Create project
+                                                </ToolTip>
+                                            </Button.ToolTip>
+                                        </Button>
+                                    </Border>
+                                    <Border Grid.Column="3" Margin="0.2,0,0,-0.2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="33">
+                                        <materialDesign:PopupBox Name="OpenFile" MouseEnter="OpenFile_MouseEnter" Cursor="Hand" BorderThickness="0" Margin="7,9,0,0" Grid.Column="4" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="23" MouseLeave="OpenFile_MouseLeave" Foreground="#FF1C1C1C">
+                                            <materialDesign:PopupBox.ToggleContent>
+                                                <materialDesign:PackIcon Name="OpenFileIcon" Kind="FolderOpen" Foreground="#FF1C1C1C" Width="20" Height="20" Opacity="0.8"/>
+                                            </materialDesign:PopupBox.ToggleContent>
+                                            <materialDesign:PopupBox.ToolTip>
+                                                <ToolTip>
+                                                    Open file
+                                                </ToolTip>
+                                            </materialDesign:PopupBox.ToolTip>
+                                            <StackPanel Width="150" Margin="5">
+                                                <Button Name="OpenTestCaseClick" Click="OpenTestCase_Click"  Content="Test Case" Cursor="Hand">
+                                                    <Button.ToolTip>
+                                                        Ctrl + O
+                                                    </Button.ToolTip>
+                                                </Button>
+                                                <Button Name="OpenTestSuitClick" Click="OpenTestSuit_Click" Content="Test Suit" Cursor="Hand"/>
+                                            </StackPanel>
+                                        </materialDesign:PopupBox>
+                                    </Border>
+                                    <Border Grid.Column="5" Margin="0,0,-0.4,-0.2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="34">
+                                        <materialDesign:PopupBox Name="SaveAsFile" MouseEnter="SaveAsFile_MouseEnter" MouseLeave="SaveAsFile_MouseLeave" Cursor="Hand" BorderThickness="0" Margin="-27,9,0,0" Grid.Column="5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="22" Foreground="#FF1C1C1C">
+                                            <materialDesign:PopupBox.ToolTip>
+                                                <ToolTip>
+                                                    Save As
+                                                </ToolTip>
+                                            </materialDesign:PopupBox.ToolTip>
+                                            <materialDesign:PopupBox.ToggleContent>
+                                                <materialDesign:PackIcon Name="SaveAsFileIcon" Kind="ContentSaveEditOutline" Foreground="#FF1C1C1C" Width="20" Height="20" Opacity="0.8"/>
+                                            </materialDesign:PopupBox.ToggleContent>
+                                            <StackPanel Width="150" Margin="5">
+                                                <Button Name="SaveAsTestCaseClick" Click="SaveAsTestCase_Click"  Content="Test Case" Cursor="Hand">
+                                                    <Button.ToolTip>
+                                                        Ctrl + Shift + S
+                                                    </Button.ToolTip>
+                                                </Button>
+                                                <Button Name="SaveAsTestSuitClick" Click="SaveAsTestSuit_Click" Content="Test Suit" Cursor="Hand"/>
+                                            </StackPanel>
+                                        </materialDesign:PopupBox>
+                                    </Border>
+                                    <Border Grid.Column="5" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="34">
+                                        <materialDesign:PopupBox Name="SaveFile" MouseEnter="SaveFile_MouseEnter" MouseLeave="SaveFile_MouseLeave" Cursor="Hand" BorderThickness="0" Margin="5,10,0,0" Grid.Column="5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Foreground="#FF1C1C1C">
+                                            <materialDesign:PopupBox.ToolTip>
+                                                <ToolTip>
+                                                    Save
+                                                </ToolTip>
+                                            </materialDesign:PopupBox.ToolTip>
+                                            <materialDesign:PopupBox.ToggleContent>
+                                                <materialDesign:PackIcon Name="SaveFileIcon" Kind="ContentSaveOutline" Foreground="#FF1C1C1C" Width="20" Height="20" Opacity="0.8"/>
+                                            </materialDesign:PopupBox.ToggleContent>
+                                            <StackPanel Width="150" Margin="5">
+                                                <Button Name="SaveTestCaseClick" Click="SaveTestCase_Click"  Content="Test Case" Cursor="Hand">
+                                                    <Button.ToolTip>
+                                                        Ctrl + S
+                                                    </Button.ToolTip>
+                                                </Button>
+                                                <Button Name="SaveTestSuitClick" Click="SaveTestSuit_Click" Content="Test Suit" Cursor="Hand"/>
+                                            </StackPanel>
+                                        </materialDesign:PopupBox>
+                                    </Border>
+                                </Grid>
+                                <Rectangle Margin="280,0,128.6,0.8" MouseDown="move_window" HorizontalAlignment="Stretch" Fill="Red" Opacity="0.01"/>
+                                <Rectangle Margin="0,0,1123.6,0.8" MouseDown="move_window" HorizontalAlignment="Stretch" Fill="Red" Opacity="0.01"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+                <Grid Margin="0,70,-0.4,-0.2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="460*" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="160*" MinHeight="50" MaxHeight="270" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" BorderBrush="White" BorderThickness="0 0 0 0" HorizontalAlignment="Stretch" Grid.RowSpan="2">
+                        <Grid Background="#FFE5E5E5" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="198*" MinWidth="100" MaxWidth="350"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="1097*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="Black" Background="White" BorderThickness="0 0 0 0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0">
+                                        <Grid>
+                                            <Rectangle Fill="#FFE5E5E5" Margin="0,0,-1.4,0.2"/>
+                                            <Label Content="Tests" FontFamily="Roboto Medium" FontSize="16" Margin="5,4,28.2,7.2" Foreground="#FF323232" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                                            <Button Click="AddTest_Click" x:Name="AddTest" Margin="0,7,7.2,7.2" Height="Auto" Cursor="Hand" HorizontalAlignment="Right" Width="21">
+                                                <Button.Style>
+                                                    <Style TargetType="{x:Type Button}">
+                                                        <Setter Property="Background">
+                                                            <Setter.Value>
+                                                                <ImageBrush>
+                                                                    <ImageBrush.ImageSource>
+                                                                        <BitmapImage UriSource="Images\Add.jpg"/>
+                                                                    </ImageBrush.ImageSource>
+                                                                </ImageBrush>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                                    <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background">
+                                                                    <Setter.Value>
+                                                                        <ImageBrush>
+                                                                            <ImageBrush.ImageSource>
+                                                                                <BitmapImage UriSource="Images\Add2.png"/>
+                                                                            </ImageBrush.ImageSource>
+                                                                        </ImageBrush>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                <Button.ToolTip>
+                                                    <ToolTip>
+                                                        Add test case (Ctrl + N)
+                                                    </ToolTip>
+                                                </Button.ToolTip>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                    <Border Grid.Row="1" CornerRadius="5" BorderThickness="1" BorderBrush="#FFE5E5E5" Margin="5">
+                                        <Grid>
+                                            <TextBox Margin="2 2 22 0" VerticalAlignment="Top" BorderThickness="0" BorderBrush="Transparent" FontFamily="Roboto Medium" FontSize="11" Foreground="#FF464646" TextWrapping="Wrap" Background="{x:Null}" materialDesign:HintAssist.Hint=" Search tests ..." CaretBrush="#FF73CFFF" Height="21" />
+                                            <Border Margin="0,0,0.6,0" HorizontalAlignment="Right" Width="21">
+                                                <Image Height="21" Margin="0,2,-0.2,0" Source="Images\Search.png" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Right" Width="21"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                    <Border Grid.Row="2">
+                                        <ListView HorizontalAlignment="Stretch" x:Name="TestCaseListView" FontSize="14" FontFamily="Roboto" MouseDoubleClick="TestCaseListView_MouseDoubleClick" Margin="0,0,-0.4,5.2">
+                                            <ListView.View>
+                                                <GridView>
+                                                    <GridView.ColumnHeaderContainerStyle>
+                                                        <Style TargetType="GridViewColumnHeader">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Style>
+                                                    </GridView.ColumnHeaderContainerStyle>
+                                                    <GridViewColumn x:Name="testNameRow" DisplayMemberBinding="{Binding TestName}"/>
+                                                </GridView>
+                                            </ListView.View>
+                                        </ListView>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <GridSplitter Background="#FFE5E5E5" ResizeDirection="Columns" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0.4,0,0.4,1.6" Opacity="1" Grid.Column="1"/>
+                            <Border Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" BorderThickness="0 0 0 0">
+                                <Grid VerticalAlignment="Stretch">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="31"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="170"/>
+                                    </Grid.RowDefinitions>
+                                    <Border VerticalAlignment="Top" Margin="0,0,0,0" BorderThickness="0 0 0 1" BorderBrush="#FFE5E5E5" Grid.Row="0">
+                                        <Grid Margin="0 0 0 0" HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" HorizontalAlignment="Left">
+                                                <Button x:Name="RunAllTest" Click="RunAllTest_Click" Margin="8,3,-32,3.6" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="24" Height="23" Cursor="Hand" Opacity="0.8">
+                                                    <Button.Style>
+                                                        <Style TargetType="{x:Type Button}">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <ImageBrush>
+                                                                        <ImageBrush.ImageSource>
+                                                                            <BitmapImage UriSource="Images\RunAllTest.png"/>
+                                                                        </ImageBrush.ImageSource>
+                                                                    </ImageBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background">
+                                                                        <Setter.Value>
+                                                                            <ImageBrush>
+                                                                                <ImageBrush.ImageSource>
+                                                                                    <BitmapImage UriSource="Images\RunAllTest2.png"/>
+                                                                                </ImageBrush.ImageSource>
+                                                                            </ImageBrush>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <Button.ToolTip>
+                                                        <ToolTip>
+                                                            Run all
+                                                        </ToolTip>
+                                                    </Button.ToolTip>
+                                                </Button>
+                                            </Border>
+                                            <Border Grid.Column="1" HorizontalAlignment="Left">
+                                                <Button x:Name="RunCurrent" Click="RunCurrent_Click" Margin="8,5,-32,4.6" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="20" Cursor="Hand" Opacity="0.8">
+                                                    <Button.Style>
+                                                        <Style TargetType="{x:Type Button}">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <ImageBrush>
+                                                                        <ImageBrush.ImageSource>
+                                                                            <BitmapImage UriSource="Images\RunCurrent.png"/>
+                                                                        </ImageBrush.ImageSource>
+                                                                    </ImageBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background">
+                                                                        <Setter.Value>
+                                                                            <ImageBrush>
+                                                                                <ImageBrush.ImageSource>
+                                                                                    <BitmapImage UriSource="Images\RunCurrent2.png"/>
+                                                                                </ImageBrush.ImageSource>
+                                                                            </ImageBrush>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <Button.ToolTip>
+                                                        <ToolTip>
+                                                            Run current
+                                                        </ToolTip>
+                                                    </Button.ToolTip>
+                                                </Button>
+                                            </Border>
+                                            <Border Grid.Column="2" HorizontalAlignment="Left">
+                                                <Button x:Name="Pause" Click="Pause_Click" Margin="8,3,-32,2.6" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="26" Cursor="Hand" Opacity="0.8">
+                                                    <Button.Style>
+                                                        <Style TargetType="{x:Type Button}">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <ImageBrush>
+                                                                        <ImageBrush.ImageSource>
+                                                                            <BitmapImage UriSource="Images\Pause3.png"/>
+                                                                        </ImageBrush.ImageSource>
+                                                                    </ImageBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background">
+                                                                        <Setter.Value>
+                                                                            <ImageBrush>
+                                                                                <ImageBrush.ImageSource>
+                                                                                    <BitmapImage UriSource="Images\Pause4.png"/>
+                                                                                </ImageBrush.ImageSource>
+                                                                            </ImageBrush>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <Button.ToolTip>
+                                                        <ToolTip>
+                                                            Pause
+                                                        </ToolTip>
+                                                    </Button.ToolTip>
+                                                </Button>
+                                            </Border>
+                                            <Border Grid.Column="3" HorizontalAlignment="Left">
+                                                <Button x:Name="Speed" Click="Speed_Click" Margin="8,5,-32,4.6" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="20" Cursor="Hand" Opacity="0.8">
+                                                    <Button.Style>
+                                                        <Style TargetType="{x:Type Button}">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <ImageBrush>
+                                                                        <ImageBrush.ImageSource>
+                                                                            <BitmapImage UriSource="Images\Speed.png"/>
+                                                                        </ImageBrush.ImageSource>
+                                                                    </ImageBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background">
+                                                                        <Setter.Value>
+                                                                            <ImageBrush>
+                                                                                <ImageBrush.ImageSource>
+                                                                                    <BitmapImage UriSource="Images\Speed2.png"/>
+                                                                                </ImageBrush.ImageSource>
+                                                                            </ImageBrush>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <Button.ToolTip>
+                                                        <ToolTip>
+                                                            Speed
+                                                        </ToolTip>
+                                                    </Button.ToolTip>
+                                                </Button>
+                                            </Border>
+                                            <Border Grid.Column="4"/>
+                                        </Grid>
+                                    </Border>
+                                    <Border VerticalAlignment="Stretch" Grid.Row="1">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                                <ListView HorizontalAlignment="Stretch" x:Name="listView" FontSize="12" FontFamily="Roboto" SizeChanged="listView_SizeChanged" MouseDoubleClick="ListView_MouseDoubleClick">
+                                                    <ListView.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem Header="Copy" Click="CopyItem_Click"/>
+                                                            <MenuItem Header="Cut" Click="CutItem_Click"/>
+                                                            <MenuItem Header="Remove" Click="RemoveItem_Click"/>
+                                                        </ContextMenu>
+                                                    </ListView.ContextMenu>
+                                                    <ListView.View>
+                                                        <GridView x:Name="CommandsListView">
+                                                            <GridViewColumn Header="" x:Name="row" DisplayMemberBinding="{Binding Number}"/>
+                                                            <GridViewColumn Header="Command" x:Name="command" DisplayMemberBinding="{Binding CommandList}"/>
+                                                            <GridViewColumn Header="Taregt" x:Name="target" DisplayMemberBinding="{Binding Target}"/>
+                                                            <GridViewColumn Header="Value" x:Name="value" DisplayMemberBinding="{Binding Value}"/>
+                                                            <GridViewColumn Header="Description" x:Name="description" DisplayMemberBinding="{Binding Description}"/>
+                                                        </GridView>
+                                                    </ListView.View>
+                                                </ListView>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                    <Border VerticalAlignment="Bottom" Grid.Row="2" BorderBrush="#FFE5E5E5" BorderThickness="0 1 0 0">
+                                        <Grid VerticalAlignment="Bottom">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border VerticalAlignment="Bottom" Height="169" Grid.Column="0" Margin="0,0,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="200*"/>
+                                                        <ColumnDefinition Width="200*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Margin="0,2,0,-0.2">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="40"/>
+                                                            <RowDefinition Height="40"/>
+                                                            <RowDefinition Height="40"/>
+                                                            <RowDefinition Height="45"/>
+                                                        </Grid.RowDefinitions>
+                                                        <Border Grid.Row="0" HorizontalAlignment="Stretch" Margin="0,0,0,0.8">
+                                                            <Grid Margin="0,0,14,0">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="101"/>
+                                                                    <ColumnDefinition Width="349*"/>
+                                                                    <ColumnDefinition Width="40"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Border Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,0.8,0">
+                                                                    <Label Content="Command" x:Name="CommandCB" Margin="11,6,18.4,7" FontSize="12" FontFamily="Roboto"/>
+                                                                </Border>
+                                                                <Border VerticalAlignment="Stretch" Grid.Column="1" BorderBrush="#FFE5E5E5" BorderThickness="1" CornerRadius="5" Margin="5.2,3,0.6,3">
+                                                                    <dotNetKitControls:AutoCompleteComboBox
+                                                                        x:Name="CommandsComboBox"
+                                                                        KeyDown="CommandBorder_KeyDown"
+                                                                        SelectedValuePath="Number"
+                                                                        TextSearch.TextPath="Command"
+                                                                        ItemsSource="{Binding Items}"
+                                                                        SelectedItem="{Binding SelectedItem}"
+                                                                        SelectedValue="{Binding SelectedValue}"
+                                                                        BorderThickness="0" TabIndex="0"
+                                                                        FontSize="14" FontFamily="Roboto" Background="Black" BorderBrush="{x:Null}" Foreground="Black" Margin="2.2,4.2,1.6,0.8"
+                                                                        VerticalAlignment="Stretch"
+                                                                        >
+                                                                        <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <TextBlock FontSize="12" FontFamily="Roboto medium" Text="{Binding Command}"/>
+                                                                            </DataTemplate>
+                                                                        </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                                                                    </dotNetKitControls:AutoCompleteComboBox>
+                                                                </Border>
+                                                                <Border Grid.Column="2" VerticalAlignment="Stretch" Margin="3.4,3,0,3" BorderBrush="#FFE5E5E5" BorderThickness="1" CornerRadius="5" HorizontalAlignment="Left" Width="34">
+                                                                    <Button Height="25" Name="AddCommandButton" Click="AddCommand_Click" Margin="4.2,3.2,2.8,3.8" Grid.Column="2" RenderTransformOrigin="0.5,0.5" Opacity="0.8" Cursor="Hand">
+                                                                        <Button.Style>
+                                                                            <Style TargetType="{x:Type Button}">
+                                                                                <Setter Property="Background">
+                                                                                    <Setter.Value>
+                                                                                        <ImageBrush>
+                                                                                            <ImageBrush.ImageSource>
+                                                                                                <BitmapImage UriSource="Images\AddCommand3.png"/>
+                                                                                            </ImageBrush.ImageSource>
+                                                                                        </ImageBrush>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                                <Setter Property="Template">
+                                                                                    <Setter.Value>
+                                                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                                                            <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                                            </Border>
+                                                                                        </ControlTemplate>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                        <Setter Property="Background">
+                                                                                            <Setter.Value>
+                                                                                                <ImageBrush>
+                                                                                                    <ImageBrush.ImageSource>
+                                                                                                        <BitmapImage UriSource="Images\AddCommand4.png"/>
+                                                                                                    </ImageBrush.ImageSource>
+                                                                                                </ImageBrush>
+                                                                                            </Setter.Value>
+                                                                                        </Setter>
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Button.Style>
+                                                                        <Button.ToolTip>
+                                                                            <ToolTip>
+                                                                                Add/Edit command
+                                                                            </ToolTip>
+                                                                        </Button.ToolTip>
+                                                                    </Button>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                        <Border Grid.Row="1" HorizontalAlignment="Stretch">
+                                                            <Grid Margin="0,0,14,-0.2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="101"/>
+                                                                    <ColumnDefinition Width="312*"/>
+                                                                    <ColumnDefinition Width="39"/>
+                                                                    <ColumnDefinition Width="38"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Border Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,0.8,-0.2">
+                                                                    <Label Content="Target" Margin="11,6,18.4,4" FontSize="12" FontFamily="Roboto"/>
+                                                                </Border>
+                                                                <Border VerticalAlignment="Stretch" Grid.Column="1" BorderBrush="#FFE5E5E5" BorderThickness="1" CornerRadius="5" Margin="5.2,3,3,4">
+                                                                    <TextBox KeyDown="CommandBorder_KeyDown" TabIndex="1" x:Name="TargetTB" Margin="5.2,3.2,4.4,1.8" Grid.Column="1" TextWrapping="Wrap" BorderBrush="{x:Null}" FontSize="14" FontFamily="Roboto" Text="{Binding CommandsListView, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                </Border>
+                                                                <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2,3,0,4" BorderBrush="#FFE5E5E5" BorderThickness="1" CornerRadius="5" Width="34">
+                                                                    <Button Width="24" Height="25" Name="SelectTarget" Click="SelectTarget_Click" Margin="2.2,2.2,1.8,0.8" Grid.Column="2" Opacity="0.8" Cursor="Hand">
+                                                                        <Button.Style>
+                                                                            <Style TargetType="{x:Type Button}">
+                                                                                <Setter Property="Background">
+                                                                                    <Setter.Value>
+                                                                                        <ImageBrush>
+                                                                                            <ImageBrush.ImageSource>
+                                                                                                <BitmapImage UriSource="Images\SelectTarget3.png"/>
+                                                                                            </ImageBrush.ImageSource>
+                                                                                        </ImageBrush>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                                <Setter Property="Template">
+                                                                                    <Setter.Value>
+                                                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                                                            <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                                            </Border>
+                                                                                        </ControlTemplate>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                        <Setter Property="Background">
+                                                                                            <Setter.Value>
+                                                                                                <ImageBrush>
+                                                                                                    <ImageBrush.ImageSource>
+                                                                                                        <BitmapImage UriSource="Images\SelectTarget4.png"/>
+                                                                                                    </ImageBrush.ImageSource>
+                                                                                                </ImageBrush>
+                                                                                            </Setter.Value>
+                                                                                        </Setter>
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Button.Style>
+                                                                    </Button>
+                                                                </Border>
+                                                                <Border Width="34" Grid.Column="3" VerticalAlignment="Stretch" HorizontalAlignment="Left" Margin="1.8,3,0,4" BorderBrush="#FFE5E5E5" BorderThickness="1" CornerRadius="5">
+                                                                    <Button Width="24" Height="25" Name="Find" Click="Find_Click" Margin="4.2,4.2,3.8,2.8" Grid.Column="2" RenderTransformOrigin="0.5,0.5" Opacity="0.8" Cursor="Hand">
+                                                                        <Button.Style>
+                                                                            <Style TargetType="{x:Type Button}">
+                                                                                <Setter Property="Background">
+                                                                                    <Setter.Value>
+                                                                                        <ImageBrush>
+                                                                                            <ImageBrush.ImageSource>
+                                                                                                <BitmapImage UriSource="Images\Find.png"/>
+                                                                                            </ImageBrush.ImageSource>
+                                                                                        </ImageBrush>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                                <Setter Property="Template">
+                                                                                    <Setter.Value>
+                                                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                                                            <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                                            </Border>
+                                                                                        </ControlTemplate>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                        <Setter Property="Background">
+                                                                                            <Setter.Value>
+                                                                                                <ImageBrush>
+                                                                                                    <ImageBrush.ImageSource>
+                                                                                                        <BitmapImage UriSource="Images\Find2.png"/>
+                                                                                                    </ImageBrush.ImageSource>
+                                                                                                </ImageBrush>
+                                                                                            </Setter.Value>
+                                                                                        </Setter>
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Button.Style>
+                                                                    </Button>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                        <Border Grid.Row="2" HorizontalAlignment="Stretch">
+                                                            <Grid Margin="0,0,14,-0.2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="101"/>
+                                                                    <ColumnDefinition Width="389*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Border Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,2.8,-0.2">
+                                                                    <Label Content="Value" Margin="11,6,18.4,7" FontSize="12" FontFamily="Roboto"/>
+                                                                </Border>
+                                                                <Border VerticalAlignment="Stretch" Grid.Column="1" BorderBrush="#FFE5E5E5" BorderThickness="1" CornerRadius="5" Margin="5.2,3,1.6,4">
+                                                                    <TextBox KeyDown="CommandBorder_KeyDown" TabIndex="2" x:Name="ValueTB" Margin="5.2,3.2,4.6,1.8" Grid.Column="1" TextWrapping="Wrap" BorderBrush="{x:Null}" FontSize="14" FontFamily="Roboto" Text="{Binding Value, Mode =TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                        <Border Grid.Row="3" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                                            <Grid Margin="0,0,14,0">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="101"/>
+                                                                    <ColumnDefinition Width="389*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Border Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,1,0">
+                                                                    <Label Content="Description" Margin="11,6,18.4,7"/>
+                                                                </Border>
+                                                                <Border Height="34" VerticalAlignment="Stretch" Grid.Column="1" BorderBrush="#FFE5E5E5" BorderThickness="1" CornerRadius="5" Margin="5.2,3,1.6,4">
+                                                                    <TextBox KeyDown="CommandBorder_KeyDown" TabIndex="3" x:Name="DescriptionTB" Margin="5.2,3.2,4.6,1.8" Grid.Column="1" TextWrapping="Wrap" BorderBrush="{x:Null}" FontSize="14" FontFamily="Roboto" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                    </Grid>
+                                                    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1">
+                                                        <Border HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                                            <Grid Margin="0,0,14,0">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="101"/>
+                                                                    <ColumnDefinition Width="389*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Border Height="34" Grid.Column="0" VerticalAlignment="Top" Margin="5.2,3,0.6,3">
+                                                                    <Label Content="Description" Margin="11,6,18.4,7"/>
+                                                                </Border>
+                                                                <Border Margin="5.2,3,0.6,3" Height="34" VerticalAlignment="Top" Grid.Column="1" BorderBrush="#FFE5E5E5" BorderThickness="1" CornerRadius="5">
+                                                                    <TextBox KeyDown="CommandBorder_KeyDown" TabIndex="3" x:Name="DescrionTB" Margin="5.2,3.2,4.6,1.8" Grid.Column="1" TextWrapping="Wrap" BorderBrush="{x:Null}" FontSize="14" FontFamily="Roboto" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <GridSplitter Background="#FF767676" ResizeDirection="Rows" Height="4" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,0.2,0,0.8" Grid.Row="1" Opacity="1"/>
+                    <Border Grid.Row="2" BorderThickness="0" Margin="0,0.2" HorizontalAlignment="Stretch" RenderTransformOrigin="0.5,1">
+                        <Grid Margin="0,0,-0.4,6">
+                            <TabControl BorderThickness="0 0 0 2" BorderBrush="#FF767676" Background="#FFE5E5E5" materialDesign:ThemeAssist.Theme="Inherit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,20.6" Foreground="#FF4E4E4E">
+                                <TabItem HorizontalAlignment="Left" Header="Log" Background="White" Width="70" BorderThickness="0" Margin="0" BorderBrush="{x:Null}">
+                                    <ListBox Name="Log" Foreground="Black" Background="White" Margin="0,0,0,-3" Grid.ColumnSpan="2">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                                <Setter Property="Background" Value="White"/>
+                                                <Setter Property="Foreground" Value="Black"/>
+                                                <Setter Property="Height" Value="28" />
+                                                <Setter Property="FontFamily" Value="roboto"/>
+                                                <Setter Property="FontSize" Value="11"/>
+                                                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                                                <Setter Property="Margin" Value="0"/>
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                    </ListBox>
+                                </TabItem>
+                                <TabItem Header="Refrence" Background="White" Width="70" BorderThickness="0" BorderBrush="{x:Null}">
+                                    <TextBlock Name="Refrence" Background="White" Margin="0,0,0,-3"/>
+                                </TabItem>
+                            </TabControl>
+                            <Button x:Name="ClearLog" Click="ClearLog_Click" Margin="0,3,5.6,0" Height="17" Opacity="0.8" VerticalAlignment="Top" HorizontalAlignment="Right" Width="19" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <ImageBrush>
+                                                    <ImageBrush.ImageSource>
+                                                        <BitmapImage UriSource="Images\Clear.png"/>
+                                                    </ImageBrush.ImageSource>
+                                                </ImageBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border Background="{TemplateBinding Background}" BorderBrush="{x:Null}" BorderThickness="1">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <ImageBrush>
+                                                            <ImageBrush.ImageSource>
+                                                                <BitmapImage UriSource="Images\Clear2.png"/>
+                                                            </ImageBrush.ImageSource>
+                                                        </ImageBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                            <TextBlock RenderOptions.BitmapScalingMode="HighQuality"
+                                    Text="©iais.ir .Intellectual property rights of this software belongs to University of Tehran Research Institute ." Margin="3,0,6,-0.4"
+                                    FontFamily="roboto" FontSize="13" FontWeight="Bold" VerticalAlignment="Bottom"
+                            />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Border x:Name="Splash" Grid.RowSpan="4" Opacity=".2" Visibility="Collapsed" Background="Black"/>
+    </Grid>
+</Window>

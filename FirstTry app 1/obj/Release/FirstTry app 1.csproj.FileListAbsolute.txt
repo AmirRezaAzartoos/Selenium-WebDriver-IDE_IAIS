@@ -1,0 +1,313 @@
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\FirstTry app 1.exe.config
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\FirstTry app 1.exe.manifest
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\FirstTry app 1.application
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\FirstTry app 1.exe
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\FirstTry app 1.pdb
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.dll
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.dll
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.pdb
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.pdb
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.xml
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\App.baml
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.g.cs
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\App.g.cs
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1_MarkupCompile.cache
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1_MarkupCompile.lref
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.baml
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.g.resources
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry_app_1.Properties.Resources.resources
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.GenerateResource.cache
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CoreCompileInputs.cache
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.exe.manifest
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.application
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CopyComplete
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.exe
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.pdb
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\Combo.dll
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\DotNetKit.Wpf.AutoCompleteComboBox.dll
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\OreganoSoft.WpfToolkit.dll
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\WPF_AutoCompleteComboBox.dll
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\bin\Release\DotNetKit.Wpf.AutoCompleteComboBox.xml
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csprojAssemblyReference.cache
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.baml
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.g.cs
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.g.cs
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.g.cs
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.baml
+C:\Users\AmirReza\source\repos\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe.config
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe.manifest
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.application
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.pdb
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\CommonServiceLocator.dll
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.dll
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.dll
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Dynamic.dll
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.dll
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.dll
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.pdb
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.pdb
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.xml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Dynamic.xml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.xml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.xml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\App.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\ProgressBar.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\EmptyField.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UpdateAck.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\RenameTestCase.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\StartUpMessage.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\App.g.cs
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.cache
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.lref
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\ProgressBar.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\EmptyField.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UpdateAck.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\RenameTestCase.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\StartUpMessage.baml
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.g.resources
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry_app_1.Properties.Resources.resources
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.GenerateResource.cache
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CoreCompileInputs.cache
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.exe.manifest
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.application
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CopyComplete
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.exe
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.pdb
+C:\Users\AmirReza\source\repos\FirstTryIDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csprojAssemblyReference.cache
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csprojAssemblyReference.cache
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\App.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\ProgressBar.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\EmptyField.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UpdateAck.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\RenameTestCase.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\StartUpMessage.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\App.g.cs
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.cache
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.lref
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\ProgressBar.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\EmptyField.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UpdateAck.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\RenameTestCase.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\StartUpMessage.baml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.g.resources
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry_app_1.Properties.Resources.resources
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.GenerateResource.cache
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CoreCompileInputs.cache
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.pdb
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe.config
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe.manifest
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.application
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.pdb
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\CommonServiceLocator.dll
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.dll
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.dll
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Dynamic.dll
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.dll
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.dll
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.pdb
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.pdb
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.xml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Dynamic.xml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.xml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.xml
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.exe.manifest
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.application
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CopyComplete
+D:\Selenium-WebDriver-IDE\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.exe
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe.config
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.pdb
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\CommonServiceLocator.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Dynamic.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.pdb
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.pdb
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.xml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Dynamic.xml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.xml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.xml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\App.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\TestSuitNameWarn.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\EmptyField.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UpdateAck.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\RenameTestCase.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\StartUpMessage.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\App.g.cs
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.cache
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.lref
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\TestSuitNameWarn.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\EmptyField.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UpdateAck.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\RenameTestCase.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\StartUpMessage.baml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.g.resources
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry_app_1.Properties.Resources.resources
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.GenerateResource.cache
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CoreCompileInputs.cache
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CopyComplete
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.exe
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.pdb
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Analytics.Interfaces.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Analytics.Types.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\nunit.framework.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\nunit.framework.xml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.xml
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.Support.dll
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.Support.xml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe.config
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.exe
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriverIDE.pdb
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\CommonServiceLocator.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Dynamic.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\nunit.framework.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.Support.dll
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignColors.pdb
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.pdb
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.xml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Dynamic.xml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.xml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.xml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\nunit.framework.xml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.xml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Release\WebDriver.Support.xml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.SuggestedBindingRedirects.cache
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\App.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\TestSuitNameWarn.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\EmptyField.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UpdateAck.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\RenameTestCase.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\StartUpMessage.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\App.g.cs
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.cache
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.lref
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\AddTestCase.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\CreateNewProject.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MainWindow.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\TestSuitNameWarn.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\EmptyField.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\MessageBox\UpdateAck.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\RenameTestCase.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\StartUpMessage.baml
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.g.resources
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry_app_1.Properties.Resources.resources
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.GenerateResource.cache
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CoreCompileInputs.cache
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.exe
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\WebDriverIDE.pdb
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.AssemblyReference.cache
+C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CopyComplete
+C:\webdriver-ide-source\FirstTry app 1\FirstTry app 1\obj\Release\FirstTry app 1.csprojAssemblyReference.cache
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\WebDriverIDE.exe.config
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\WebDriverIDE.exe
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\WebDriverIDE.pdb
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\CommonServiceLocator.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\MaterialDesignColors.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\Microsoft.Analytics.Interfaces.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\Microsoft.Analytics.Types.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\Microsoft.Dynamic.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\Microsoft.Scripting.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\nunit.framework.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\WebDriver.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\WebDriver.Support.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\MaterialDesignColors.pdb
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.pdb
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\MaterialDesignThemes.Wpf.xml
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\Microsoft.Dynamic.xml
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\Microsoft.Scripting.xml
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\Microsoft.Scripting.Metadata.xml
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\nunit.framework.xml
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\WebDriver.xml
+C:\webdriver-ide-source\FirstTry app 1\bin\Release\WebDriver.Support.xml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\FirstTry app 1.csprojAssemblyReference.cache
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\App.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\AddTestCase.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\CreateNewProject.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MainWindow.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\AddTestFirst.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\TestSuitNameWarn.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\EmptyField.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\UpdateAck.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\RenameTestCase.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\StartUpMessage.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\App.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.cache
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\WebDriverIDE_MarkupCompile.lref
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\AddTestCase.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\CreateNewProject.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MainWindow.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\TestSuitNameWarn.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\UnsavedContent.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\UnvalidCommand.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\EmptyField.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\MessageBox\UpdateAck.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\RenameTestCase.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\StartUpMessage.baml
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\WebDriverIDE.g.resources
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\FirstTry_app_1.Properties.Resources.resources
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\FirstTry app 1.csproj.GenerateResource.cache
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CoreCompileInputs.cache
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\FirstTry app 1.csproj.CopyComplete
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\WebDriverIDE.exe
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\WebDriverIDE.pdb
