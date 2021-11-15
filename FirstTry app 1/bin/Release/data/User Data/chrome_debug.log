@@ -1,14 +1,0 @@
-[8512:11256:1114/134343.186:ERROR:os_crypt_win.cc(93)] Failed to decrypt: Key not valid for use in specified state. (0x8009000B)
-[8512:4460:1114/134343.896:ERROR:model_type_store_service_impl.cc(39)] Failed to initialize ModelTypeStore backend: Init@components/sync/model/model_type_store_backend.cc:109: IO error: C:\webdriver-ide-source\FirstTry app 1\bin\Release\data\User Data\Default\Sync Data\LevelDB/MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
-[8512:12532:1114/134345.253:WARNING:value_store_frontend.cc(50)] Reading ahfgeienlihckogmohjhadlkjgocpleb.alarms from  failed: IO error: .../MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
-[8512:12532:1114/134345.279:WARNING:value_store_frontend.cc(50)] Reading mhjfbmdgcfjbbpaeojofohoefgiehjai.alarms from  failed: IO error: .../MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
-[8512:12532:1114/134345.360:WARNING:value_store_frontend.cc(50)] Reading bkbmfiodmgfcmphgpahdkjdclhagbanf.alarms from  failed: IO error: .../MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
-[8512:12532:1114/134345.362:WARNING:value_store_frontend.cc(50)] Reading bkbmfiodmgfcmphgpahdkjdclhagbanf.context_menus from  failed: IO error: .../MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
-[8512:11256:1114/134345.519:INFO:CONSOLE(2)] "installed", source: chrome-extension://bkbmfiodmgfcmphgpahdkjdclhagbanf/background.js (2)
-[8512:12820:1114/134349.638:ERROR:chrome_browser_main_extra_parts_metrics.cc(230)] crbug.com/1216328: Checking Bluetooth availability started. Please report if there is no report that this ends.
-[8512:12692:1114/134349.647:ERROR:data_store_impl.cc(131)] Failed to open Data Reduction Proxy DB: 3
-[8512:12820:1114/134350.820:ERROR:chrome_browser_main_extra_parts_metrics.cc(233)] crbug.com/1216328: Checking Bluetooth availability ended.
-[8512:11256:1114/134350.960:ERROR:device_event_log_impl.cc(214)] [13:43:50.960] Bluetooth: bluetooth_adapter_winrt.cc:1073 Getting Default Adapter failed.
-[8512:12820:1114/134350.962:ERROR:chrome_browser_main_extra_parts_metrics.cc(236)] crbug.com/1216328: Checking default browser status started. Please report if there is no report that this ends.
-[8512:12820:1114/134352.105:ERROR:chrome_browser_main_extra_parts_metrics.cc(240)] crbug.com/1216328: Checking default browser status ended.
-[8512:11256:1114/134352.428:WARNING:pref_notifier_impl.cc(40)] Pref observer for media_router.cast_allow_all_ips found at shutdown.
