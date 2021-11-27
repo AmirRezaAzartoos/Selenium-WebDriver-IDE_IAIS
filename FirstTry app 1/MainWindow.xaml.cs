@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Configuration;
+using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -64,6 +66,7 @@ namespace FirstTry_app_1
         public static TestSuit SelectedTest = new TestSuit() { };
         bool edit;
         bool ok = false;
+        bool RunFromMiddle = false;
         bool saveUbuntu = false;
         public static bool TestSuitSaved = false;
         public static bool Continue = false;
@@ -205,6 +208,7 @@ namespace FirstTry_app_1
             options.AddArguments("start-maximized");
             options.AddExtension(startupPath + "\\data\\extention-test.crx");
             options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
+            //var temp124 = ConfigurationManager.AppSettings.Get("IAIS");
         }
         ///////BUILD
         #region Save
@@ -3281,6 +3285,7 @@ namespace FirstTry_app_1
                 return false;
             }
         }
+
         public void switchTestCase(int index)
         {
             try
@@ -3340,6 +3345,311 @@ namespace FirstTry_app_1
             }
         }
 
+        bool notConvertedTest = false;
+        private async Task updateMethod()
+        {
+            try
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    BL.BuildFile _buildFile = new BL.BuildFile();
+                }));
+                if (updateAck)
+                {
+                    string AllSuit = "C:\\run-test-selenium\\Source\\Test-suits\\AllSuits.txt";
+                    List<string> Suits = File.ReadLines(@AllSuit).ToList();
+                    /*List<string> builtSuits = Directory.GetFiles(@"C:\\run-test-selenium\\Source\\Test-suits-ubuntu", "*", SearchOption.AllDirectories).ToList();
+                    for (int j = 0; j < builtSuits.Count; j++)
+                        builtSuits[j] = FindBetween(builtSuits[j], "Test-suits-ubuntu\\", "_ubuntu.py");
+                    var needsBuild = Suits.Except(builtSuits).ToList();
+                    if (needsBuild.Count != 0)
+                    {
+                        notConvertedTest = true;
+                        for (int k = 0; k < needsBuild.Count; k++)
+                        {
+                            string tempneedsBuild = "C:\\seleniums\\Test_suits\\" + needsBuild[k] + "\\suit";
+                            string needsBuildSuit = File.ReadAllText(@tempneedsBuild);
+                            List<string> needsBuildTestCaseDR = TestCase(needsBuildSuit, true);
+                            for (int k1 = 0; k1 < needsBuildTestCaseDR.Count; k1++)
+                            {
+                                Application.Current.Dispatcher.Invoke(new Action(() => {
+                                    BL.OldIDEConverter.openOldTestCase("C:\\seleniums\\" + needsBuildTestCaseDR[k1].ToString() + ".html");
+                                    if (!File.Exists("C:\\run-test-selenium\\Source\\" + needsBuildTestCaseDR[k1].ToString() + ".py"))
+                                        TestMethod("C:\\run-test-selenium\\Source\\" + needsBuildTestCaseDR[k1].ToString() + ".py");
+                                }));
+                            }
+                        }
+                        notConvertedTest = false;
+                    }*/
+                    for (int i = 0; i < Suits.Count; i++)
+                    {
+                        string initJ = null;
+                        string temp1 = "C:\\seleniums\\Test_suits\\" + Suits[i] + "\\suit";
+                        string temp2 = "C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i] + "\\suit";
+                        Directory.CreateDirectory("C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i]);
+                        string Suit = File.ReadAllText(@temp1);
+
+                        //notConvertedTest = true;
+
+                        List<string> TestCaseDR = TestCase(Suit, true);
+                        List<string> TestCaseNames = TestCase(Suit, false);
+
+                        //notConvertedTest = false;
+
+                        string StaticCodeNew = File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
+                        int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
+                        string StaticCodeNew_First = StaticCodeNew.Substring(0, splitterIndex);
+                        string StaticCodeNew_Last = StaticCodeNew.Remove(0, splitterIndex + 11);
+
+                        string StaticCodeNew_ubuntu = File.ReadAllText(@"data\StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
+                        int splitterIndex_ubuntu = StaticCodeNew_ubuntu.IndexOf("#bodyCode#");
+                        string StaticCodeNew_First_ubuntu = StaticCodeNew_ubuntu.Substring(0, splitterIndex_ubuntu);
+                        string StaticCodeNew_Last_ubuntu = StaticCodeNew_ubuntu.Remove(0, splitterIndex_ubuntu + 11);
+
+                        string tempSuit = StaticCodeNew_First;
+                        string tempSuit_ubuntu = StaticCodeNew_First_ubuntu;
+                        for (int j = 0; j < TestCaseDR.Count; j++)
+                        {
+                            string temp3 = "C:\\run-test-selenium\\Source\\" + TestCaseDR[j] + ".py";
+                            tempSuit += "\n";
+                            tempSuit_ubuntu += "\n";
+                            string testCaseName = TestCaseDR[j].Split(new[] { "\\" }, StringSplitOptions.None)[1].Replace("-", "_").Replace(".", "_").Replace(" ", "_").Replace("&", "_");
+                            if (!File.Exists(@temp3))
+                            {
+                                openOldTestCase("C:\\seleniums\\" + TestCaseDR[j].ToString() + ".html");
+                                TestMethod("C:\\run-test-selenium\\Source\\" + TestCaseDR[j].ToString() + ".py", false);
+                            }
+                            string tempSuit2 = File.ReadAllText(@temp3);
+                            int classStartLine = tempSuit2.IndexOf(":\r\n\t#");
+                            if (classStartLine == -1)
+                                classStartLine = tempSuit2.IndexOf(":\n\t#");
+                            tempSuit2 = "\r\nclass " + testCaseName + ":" + tempSuit2.Remove(0, classStartLine + 1);
+                            tempSuit += tempSuit2.Replace("\t", "\t\t").Replace("\r\nclass ", "\r\n\tclass ").Replace(testCaseName + ":", testCaseName + ":\r\n\t\tlog.debug(\"{:<8} {:<" + (_testCaseNameCount + 8) + "} {:<18}\".format('|  #" + (j + 1) + "', '|  " + testCaseName + "', '|  is running ...  |'))\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Failure'])");
+                            tempSuit += "\t\tTestCases.del_row(-1)\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Success'])\r\n";
+                            tempSuit_ubuntu += tempSuit2.Replace("\t", "\t\t").Replace("\r\nclass ", "\r\n\tclass ").Replace(testCaseName + ":", testCaseName + ":\r\n\t\tlog.debug(\"{:<8} {:<" + (_testCaseNameCount + 8) + "} {:<18}\".format('|  #" + (j + 1) + "', '|  " + testCaseName + "', '|  is running ...  |'))\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Failure'])");
+                            tempSuit_ubuntu += "\t\tTestCases.del_row(-1)\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Success'])\r\n";
+                            initJ = temp3;
+                        }
+                        suittemp = initJ + " in " + Suits[i];
+                        string A = "C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i] + "\\" + Suits[i] + ".py";
+                        string A_ubuntu = "C:\\run-test-selenium\\Source\\Test-suits-ubuntu\\" + Suits[i] + "_ubuntu.py";
+                        FileInfo file1 = new FileInfo(@A);
+                        FileInfo file1_ubuntu = new FileInfo(@A_ubuntu);
+                        StreamWriter tempSuit1 = file1.CreateText();
+                        StreamWriter tempSuit1_ubuntu = file1_ubuntu.CreateText();
+                        tempSuit += StaticCodeNew_Last;
+                        tempSuit = tempSuit.Replace("\t\t\t\t", "\t\t\t");
+                        tempSuit = tempSuit.Replace("\t\t\t\t\t", "\t\t\t\t");
+                        tempSuit = tempSuit.Replace("\t\t\t\t\t\t", "\t\t\t\t\t");
+                        tempSuit1.WriteLine(tempSuit);
+                        tempSuit1.Close();
+
+                        tempSuit_ubuntu += StaticCodeNew_Last_ubuntu;
+                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t", "\t\t\t");
+                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t\t", "\t\t\t\t");
+                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t\t\t", "\t\t\t\t\t");
+                        tempSuit1_ubuntu.WriteLine(tempSuit_ubuntu);
+                        tempSuit1_ubuntu.Close();
+
+                        string[] fixDates = File.ReadAllLines(@A_ubuntu);
+                        int _currentLine = 0;
+                        string className = "";
+                        using (StreamWriter writer = new StreamWriter(@A_ubuntu))
+                        {
+                            for (int currentLine = 0; currentLine < fixDates.Length - 4; currentLine++)
+                            {
+                                int temp = 0;
+                                if (fixDates[currentLine].Contains("class "))
+                                {
+                                    className = FindBetween(fixDates[currentLine], "class ", ":");
+                                    if (fixDates[currentLine].Contains("class downloadQoarri"))
+                                    {
+                                        temp = currentLine;
+                                    }
+                                }
+                                if (fixDates[currentLine].Contains("class downloadQoarri"))
+                                {
+                                    while (!fixDates[currentLine + 1].Contains("class "))
+                                    {
+                                        if (currentLine == temp + 3)
+                                        {
+                                            writer.WriteLine("\t\t# 2 | storeEval");
+                                            writer.WriteLine("\t\tStoreEvalDB.vars[\"allText\"] = \"\"");
+                                            writer.WriteLine("\t\t# Description: None");
+                                        }
+                                        if (fixDates[currentLine].Contains(" | sendKeys"))
+                                        {
+                                            string element = FindBetween(fixDates[currentLine + 1], " = ", ")") + ")";
+                                            string elementValue;
+                                            elementValue = FindBetween(fixDates[currentLine + 3], "send_keys(", ")");
+                                            if (elementValue.Contains("Keys.ENTER"))
+                                            {
+                                                writer.WriteLine("\t\t# 5 | runScript");
+                                                writer.WriteLine("\t\tdriver.execute_script('var ele=arguments[0]; ele.innerHTML += \"\\\\r\"; ', " + element + ")");
+                                                writer.WriteLine("\t\t# Description: None");
+                                            }
+                                            else
+                                            {
+                                                writer.WriteLine("\t\t# 5 | runScript");
+                                                writer.WriteLine("\t\tdriver.execute_script('var ele=arguments[0]; ele.innerHTML += " + elementValue.Replace("\'", "\"").Replace("\" + str(", "' + str(").Replace("]) + \"", "]) + '").Replace(")) + \"", ")) + '")/**/ + "; ', " + element + ")");
+                                                writer.WriteLine("\t\t# Description: None");
+                                            }
+                                            currentLine += 5;
+                                        }
+                                        else
+                                        {
+                                            writer.WriteLine(fixDates[currentLine].Replace("highlight", "# highlight"));
+                                            currentLine++;
+                                        }
+                                    }
+                                    writer.WriteLine(fixDates[currentLine]);
+                                }
+
+                                if (fixDates[currentLine].Contains("| type") && fixDates[currentLine + 4].Contains("/"))
+                                {
+                                    string element = FindBetween(fixDates[currentLine + 1], " = ", ")") + ")";
+                                    string elementValue;
+                                    if (fixDates[currentLine + 4].Contains("'"))
+                                    {
+                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys('", "')").Replace("\"", "\\\"");
+                                    }
+                                    else
+                                    {
+                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys(\"", "\")").Replace("\"", "\\\"");
+                                    }
+                                    writer.WriteLine("\t\t# 5 | runScript");
+                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].focus();', " + element + ")");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 2 | pause");
+                                    writer.WriteLine("\t\ttime.sleep(3)");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 5 | runScript");
+                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].removeAttribute(\"value\");', " + element + ")");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 2 | pause");
+                                    writer.WriteLine("\t\ttime.sleep(3)");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 5 | runScript");
+                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].setAttribute(\"value\", \"" + elementValue.Replace("[\\\"", "[\"").Replace("\\\"])", "\"])") + "\");', " + element + ")");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 2 | pause");
+                                    writer.WriteLine("\t\ttime.sleep(2)");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    writer.WriteLine("\t\t# 5 | runScript");
+                                    writer.WriteLine("\t\tdriver.execute_script(\"arguments[0].click();\", " + element + ")");
+                                    writer.WriteLine("\t\t# Description: None");
+                                    currentLine += 6;
+                                }
+                                else if (fixDates[currentLine].Contains("number_of_windows_to_be") || (fixDates[currentLine].Contains("window_handles") && fixDates[currentLine + 3].Contains("document.querySelector('print-preview-app').shadowRoot"))
+                                     || (fixDates[currentLine].Contains("window_handles") && fixDates[currentLine - 9].Contains("document.querySelector('print-preview-app').shadowRoot")) || fixDates[currentLine].Contains("document.querySelector('print-preview-app').shadowRoot"))
+                                {
+                                    writer.WriteLine(fixDates[currentLine].Replace("\t\t", "\t\t# "));
+                                }
+                                else if (fixDates[currentLine].Contains("\thighlight"))
+                                {
+                                    writer.WriteLine(fixDates[currentLine].Replace("highlight", "# highlight"));
+                                }
+                                else
+                                {
+                                    writer.WriteLine(fixDates[currentLine]);
+                                }
+                                _currentLine = currentLine;
+                            }
+                            writer.WriteLine(fixDates[_currentLine + 1]);
+                            writer.WriteLine(fixDates[_currentLine + 2]);
+                            writer.WriteLine(fixDates[_currentLine + 3]);
+                            writer.WriteLine(fixDates[_currentLine + 4]);
+                        }
+                        indexError = i;
+                        Application.Current.Dispatcher.Invoke(new Action(() => { PBar.Value += step; }));
+                    }
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        Log.Items.Add("Successfully updated");
+                    }));
+                    updateAck = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    PBar.Opacity = 0;
+                    PBar.Visibility = Visibility.Hidden;
+                }));
+                Log.Items.Add("Update_Click ---> Failed Because of error : " + ex.ToString());
+            }
+        }
+
+        public List<string> TestCase(string suit, bool wich)
+        {
+            string[] temp = null;
+            if (suit.Contains("</b></td></tr>\r\n"))
+            {
+                suit = FindBetween(suit, "</b></td></tr>\r\n", "\r\n</tbody></table>");
+                temp = suit.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            }
+            else if (suit.Contains("</b></td></tr>\n"))
+            {
+                suit = FindBetween(suit, "</b></td></tr>\n", "\n</tbody></table>");
+                temp = suit.Split(new string[] { "\n" }, StringSplitOptions.None);
+            }
+            int lines = suit.Split(new string[] { "\n" }, StringSplitOptions.None).Length;
+            List<string> temp2 = new List<string>();
+            List<string> temp3 = new List<string>();
+            if (wich)
+            {
+                for (int i = 0; i < lines; i++)
+                {
+                    string temp4 = FindBetween(temp[i], "<tr><td><a href=\"../../", "\">").Replace(".html", "").Replace(".htm", "");
+                    if (temp4.Contains("setGeneralPort") && temp4.Contains("setUploadPath") && temp4.Contains("pause2s"))
+                        continue;
+                    else
+                    {
+                        if (notConvertedTest)
+                            temp2.Add(temp4.Replace("/", "\\"));
+                        else
+                            temp2.Add(temp4.Replace(".", "_").Replace("/", "\\"));
+                    }
+                    if (temp4.Contains("ezharPishAzVorud3"))
+                    {
+
+                    }
+                }
+                return temp2;
+            }
+            else
+            {
+                _testCaseNameCount = 32;
+                for (int i = 0; i < lines; i++)
+                {
+                    string temp5 = FindBetween(temp[i], "\">", "</a></td></tr>");
+                    if (temp5.Contains("setGeneralPort") && temp5.Contains("setUploadPath") && temp5.Contains("pause2s"))
+                        continue;
+                    else
+                    {
+                        if (notConvertedTest)
+                            temp3.Add(temp5);
+                        else
+                            temp3.Add(temp5.Replace(".", "_"));
+                    }
+                    if (temp5.Contains("ezharPishAzVorud3"))
+                    {
+
+                    }
+                    _testCaseNameCount = (temp3[i].Length > _testCaseNameCount) ? temp3[i].Length : _testCaseNameCount;
+                }
+                return temp3;
+            }
+        }
+
+        public string ConvertPythonToCSharp(string IN)
+        {
+            IN.Replace("and", "&&");
+            IN.Replace("or", "||");
+            
+            return "0";
+        }
         #endregion
 
         ///////BUTTON///////
@@ -3379,24 +3689,21 @@ namespace FirstTry_app_1
 
         private void Maximize_Click(object sender, RoutedEventArgs e)
         {
-            ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-            view.Refresh();
-            ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-            view2.Refresh();
-            /*try
+
+        try
+        {
+            if (WindowState == WindowState.Normal)
             {
-                if (WindowState == WindowState.Normal)
-                {
-                    WindowState = WindowState.Maximized;
-                }
-                else
-                    this.WindowState = WindowState.Normal;
+                WindowState = WindowState.Maximized;
             }
-            catch (Exception ex)
-            {
-                Log.Items.Add("Maximize_Click ---> Failed Because of error : " + ex.ToString());
-            }*/
+            else
+                this.WindowState = WindowState.Normal;
         }
+        catch (Exception ex)
+        {
+            Log.Items.Add("Maximize_Click ---> Failed Because of error : " + ex.ToString());
+        }
+    }
 
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
@@ -3779,43 +4086,24 @@ namespace FirstTry_app_1
             PasteTestCase();
         }
 
-        private void EditItemTestCaseList_Click(object sender, RoutedEventArgs e)
+        private async void RunFromHereCM_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (TestCaseListView.SelectedItems.Count != 0)
                 {
-                    CurrentTestCase = (TestSuit)TestCaseListView.SelectedItems[0];
-                    _testCaseCounter = CurrentTestCase.TestNumber;
-                    edit = false;
-                    if (CurrentTestCase.TestValue != null)
+                    RunFromMiddle = true;
+                    TestSuit selected = (TestSuit)TestCaseListView.SelectedItem;
+                    await Task.Run(() =>
                     {
-                        var obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
-                        if (obj != null) ListDB = new ObservableCollection<Commands>(obj.TestValue);
-                        CommandCounter = _commandCounter = obj.TestValue.Count;
-                        CommandCounterTB.Text = Convert.ToString(CommandCounter);
-                    }
-                    else
-                    {
-                        var obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
-                        CommandCounter = _commandCounter = 0;
-                        CommandCounterTB.Text = Convert.ToString(CommandCounter);
-                        ListDB.Clear();
-                        listView.ItemsSource = ListDB;
-                        ICollectionView view3 = CollectionViewSource.GetDefaultView(ListDB);
-                        view3.Refresh();
-                    }
-                    TestCaseListView.ItemsSource = TestList;
-                    listView.ItemsSource = ListDB;
-                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                    view.Refresh();
-                    ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                    view2.Refresh();
+                        runSuit(selected.TestNumber);
+                    });
+                    RunFromMiddle = false;
                 }
             }
             catch (Exception ex)
             {
-                Log.Items.Add("EditItemTestCaseList_Click ---> Failed Because of error : " + ex.ToString());
+                Log.Items.Add("RunFromHereCM_Click ---> Failed Because of error : " + ex.ToString());
             }
         }
 
@@ -3844,6 +4132,35 @@ namespace FirstTry_app_1
         private void RemoveItemTestCaseList_Click(object sender, RoutedEventArgs e)
         {
             RemoveTestCase();
+        }
+
+
+        private void CopyLogItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                multiplication = Multiplication.copy;
+                CopiedLogItem = Log.SelectedItems[0].ToString();
+                Clipboard.SetText(CopiedLogItem);
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("CopiedLogItem ---> Failed Because of error : " + ex.ToString());
+            }
+        }
+
+        private void CopyStoredItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                multiplication = Multiplication.copy;
+                CopiedLogItem = Stored.SelectedItems[0].ToString();
+                Clipboard.SetText(CopiedLogItem);
+            }
+            catch (Exception ex)
+            {
+                Log.Items.Add("CopyStoredItem ---> Failed Because of error : " + ex.ToString());
+            }
         }
         #endregion
 
@@ -3991,18 +4308,18 @@ namespace FirstTry_app_1
                     CopyTestCM.IsEnabled = false;
                     CutTestCM.IsEnabled = false;
                     PasteTestCM.IsEnabled = false;
-                    EditTestCM.IsEnabled = false;
                     RenameTestCM.IsEnabled = false;
                     RemoveTestCM.IsEnabled = false;
+                    RunFromHereCM.IsEnabled = false;
                 }
                 else
                 {
                     //CopyTestCM.IsEnabled = true;
                     //CutTestCM.IsEnabled = true;
                     //PasteTestCM.IsEnabled = true;
-                    EditTestCM.IsEnabled = true;
                     RenameTestCM.IsEnabled = true;
                     RemoveTestCM.IsEnabled = true;
+                    RunFromHereCM.IsEnabled = true;
                 }
             }
             catch (Exception ex)
@@ -4385,326 +4702,45 @@ namespace FirstTry_app_1
             }
         }
 
-        bool notConvertedTest = false;
-        private async Task updateMethod()
+
+        private void listView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            try
+            if (e.LeftButton == MouseButtonState.Released)
             {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                if (listView.SelectedItems.Count != 0)
                 {
-                    BL.BuildFile _buildFile = new BL.BuildFile();
-                }));
-                if (updateAck)
-                {
-                    string AllSuit = "C:\\run-test-selenium\\Source\\Test-suits\\AllSuits.txt";
-                    List<string> Suits = File.ReadLines(@AllSuit).ToList();
-                    /*List<string> builtSuits = Directory.GetFiles(@"C:\\run-test-selenium\\Source\\Test-suits-ubuntu", "*", SearchOption.AllDirectories).ToList();
-                    for (int j = 0; j < builtSuits.Count; j++)
-                        builtSuits[j] = FindBetween(builtSuits[j], "Test-suits-ubuntu\\", "_ubuntu.py");
-                    var needsBuild = Suits.Except(builtSuits).ToList();
-                    if (needsBuild.Count != 0)
-                    {
-                        notConvertedTest = true;
-                        for (int k = 0; k < needsBuild.Count; k++)
-                        {
-                            string tempneedsBuild = "C:\\seleniums\\Test_suits\\" + needsBuild[k] + "\\suit";
-                            string needsBuildSuit = File.ReadAllText(@tempneedsBuild);
-                            List<string> needsBuildTestCaseDR = TestCase(needsBuildSuit, true);
-                            for (int k1 = 0; k1 < needsBuildTestCaseDR.Count; k1++)
-                            {
-                                Application.Current.Dispatcher.Invoke(new Action(() => {
-                                    BL.OldIDEConverter.openOldTestCase("C:\\seleniums\\" + needsBuildTestCaseDR[k1].ToString() + ".html");
-                                    if (!File.Exists("C:\\run-test-selenium\\Source\\" + needsBuildTestCaseDR[k1].ToString() + ".py"))
-                                        TestMethod("C:\\run-test-selenium\\Source\\" + needsBuildTestCaseDR[k1].ToString() + ".py");
-                                }));
-                            }
-                        }
-                        notConvertedTest = false;
-                    }*/
-                    for (int i = 0; i < Suits.Count; i++)
-                    {
-                        string initJ = null;
-                        string temp1 = "C:\\seleniums\\Test_suits\\" + Suits[i] + "\\suit";
-                        string temp2 = "C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i] + "\\suit";
-                        Directory.CreateDirectory("C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i]);
-                        string Suit = File.ReadAllText(@temp1);
-
-                        //notConvertedTest = true;
-
-                        List<string> TestCaseDR = TestCase(Suit, true);
-                        List<string> TestCaseNames = TestCase(Suit, false);
-
-                        //notConvertedTest = false;
-
-                        string StaticCodeNew = File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
-                        int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
-                        string StaticCodeNew_First = StaticCodeNew.Substring(0, splitterIndex);
-                        string StaticCodeNew_Last = StaticCodeNew.Remove(0, splitterIndex + 11);
-
-                        string StaticCodeNew_ubuntu = File.ReadAllText(@"data\StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
-                        int splitterIndex_ubuntu = StaticCodeNew_ubuntu.IndexOf("#bodyCode#");
-                        string StaticCodeNew_First_ubuntu = StaticCodeNew_ubuntu.Substring(0, splitterIndex_ubuntu);
-                        string StaticCodeNew_Last_ubuntu = StaticCodeNew_ubuntu.Remove(0, splitterIndex_ubuntu + 11);
-
-                        string tempSuit = StaticCodeNew_First;
-                        string tempSuit_ubuntu = StaticCodeNew_First_ubuntu;
-                        for (int j = 0; j < TestCaseDR.Count; j++)
-                        {
-                            string temp3 = "C:\\run-test-selenium\\Source\\" + TestCaseDR[j] + ".py";
-                            tempSuit += "\n";
-                            tempSuit_ubuntu += "\n";
-                            string testCaseName = TestCaseDR[j].Split(new[] { "\\" }, StringSplitOptions.None)[1].Replace("-", "_").Replace(".", "_").Replace(" ", "_").Replace("&", "_");
-                            if (!File.Exists(@temp3))
-                            {
-                                openOldTestCase("C:\\seleniums\\" + TestCaseDR[j].ToString() + ".html");
-                                TestMethod("C:\\run-test-selenium\\Source\\" + TestCaseDR[j].ToString() + ".py", false);
-                            }
-                            string tempSuit2 = File.ReadAllText(@temp3);
-                            int classStartLine = tempSuit2.IndexOf(":\r\n\t#");
-                            if (classStartLine == -1)
-                                classStartLine = tempSuit2.IndexOf(":\n\t#");
-                            tempSuit2 = "\r\nclass " + testCaseName + ":" + tempSuit2.Remove(0, classStartLine + 1);
-                            tempSuit += tempSuit2.Replace("\t", "\t\t").Replace("\r\nclass ", "\r\n\tclass ").Replace(testCaseName + ":", testCaseName + ":\r\n\t\tlog.debug(\"{:<8} {:<" + (_testCaseNameCount + 8) + "} {:<18}\".format('|  #" + (j + 1) + "', '|  " + testCaseName + "', '|  is running ...  |'))\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Failure'])");
-                            tempSuit += "\t\tTestCases.del_row(-1)\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Success'])\r\n";
-                            tempSuit_ubuntu += tempSuit2.Replace("\t", "\t\t").Replace("\r\nclass ", "\r\n\tclass ").Replace(testCaseName + ":", testCaseName + ":\r\n\t\tlog.debug(\"{:<8} {:<" + (_testCaseNameCount + 8) + "} {:<18}\".format('|  #" + (j + 1) + "', '|  " + testCaseName + "', '|  is running ...  |'))\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Failure'])");
-                            tempSuit_ubuntu += "\t\tTestCases.del_row(-1)\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Success'])\r\n";
-                            initJ = temp3;
-                        }
-                        suittemp = initJ + " in " + Suits[i];
-                        string A = "C:\\run-test-selenium\\Source\\Test-suits\\" + Suits[i] + "\\" + Suits[i] + ".py";
-                        string A_ubuntu = "C:\\run-test-selenium\\Source\\Test-suits-ubuntu\\" + Suits[i] + "_ubuntu.py";
-                        FileInfo file1 = new FileInfo(@A);
-                        FileInfo file1_ubuntu = new FileInfo(@A_ubuntu);
-                        StreamWriter tempSuit1 = file1.CreateText();
-                        StreamWriter tempSuit1_ubuntu = file1_ubuntu.CreateText();
-                        tempSuit += StaticCodeNew_Last;
-                        tempSuit = tempSuit.Replace("\t\t\t\t", "\t\t\t");
-                        tempSuit = tempSuit.Replace("\t\t\t\t\t", "\t\t\t\t");
-                        tempSuit = tempSuit.Replace("\t\t\t\t\t\t", "\t\t\t\t\t");
-                        tempSuit1.WriteLine(tempSuit);
-                        tempSuit1.Close();
-
-                        tempSuit_ubuntu += StaticCodeNew_Last_ubuntu;
-                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t", "\t\t\t");
-                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t\t", "\t\t\t\t");
-                        tempSuit_ubuntu = tempSuit_ubuntu.Replace("\t\t\t\t\t\t", "\t\t\t\t\t");
-                        tempSuit1_ubuntu.WriteLine(tempSuit_ubuntu);
-                        tempSuit1_ubuntu.Close();
-
-                        string[] fixDates = File.ReadAllLines(@A_ubuntu);
-                        int _currentLine = 0;
-                        string className = "";
-                        using (StreamWriter writer = new StreamWriter(@A_ubuntu))
-                        {
-                            for (int currentLine = 0; currentLine < fixDates.Length - 4; currentLine++)
-                            {
-                                int temp = 0;
-                                if (fixDates[currentLine].Contains("class "))
-                                {
-                                    className = FindBetween(fixDates[currentLine], "class ", ":");
-                                    if (fixDates[currentLine].Contains("class downloadQoarri"))
-                                    {
-                                        temp = currentLine;
-                                    }
-                                }
-                                if (fixDates[currentLine].Contains("class downloadQoarri"))
-                                {
-                                    while (!fixDates[currentLine + 1].Contains("class "))
-                                    {
-                                        if (currentLine == temp + 3)
-                                        {
-                                            writer.WriteLine("\t\t# 2 | storeEval");
-                                            writer.WriteLine("\t\tStoreEvalDB.vars[\"allText\"] = \"\"");
-                                            writer.WriteLine("\t\t# Description: None");
-                                        }
-                                        if (fixDates[currentLine].Contains(" | sendKeys"))
-                                        {
-                                            string element = FindBetween(fixDates[currentLine + 1], " = ", ")") + ")";
-                                            string elementValue;
-                                            elementValue = FindBetween(fixDates[currentLine + 3], "send_keys(", ")");
-                                            if (elementValue.Contains("Keys.ENTER"))
-                                            {
-                                                writer.WriteLine("\t\t# 5 | runScript");
-                                                writer.WriteLine("\t\tdriver.execute_script('var ele=arguments[0]; ele.innerHTML += \"\\\\r\"; ', " + element + ")");
-                                                writer.WriteLine("\t\t# Description: None");
-                                            }
-                                            else
-                                            {
-                                                writer.WriteLine("\t\t# 5 | runScript");
-                                                writer.WriteLine("\t\tdriver.execute_script('var ele=arguments[0]; ele.innerHTML += " + elementValue.Replace("\'", "\"").Replace("\" + str(", "' + str(").Replace("]) + \"", "]) + '").Replace(")) + \"", ")) + '")/**/ + "; ', " + element + ")");
-                                                writer.WriteLine("\t\t# Description: None");
-                                            }
-                                            currentLine += 5;
-                                        }
-                                        else
-                                        {
-                                            writer.WriteLine(fixDates[currentLine].Replace("highlight", "# highlight"));
-                                            currentLine++;
-                                        }
-                                    }
-                                    writer.WriteLine(fixDates[currentLine]);
-                                }
-
-                                if (fixDates[currentLine].Contains("| type") && fixDates[currentLine + 4].Contains("/"))
-                                {
-                                    string element = FindBetween(fixDates[currentLine + 1], " = ", ")") + ")";
-                                    string elementValue;
-                                    if (fixDates[currentLine + 4].Contains("'"))
-                                    {
-                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys('", "')").Replace("\"", "\\\"");
-                                    }
-                                    else
-                                    {
-                                        elementValue = FindBetween(fixDates[currentLine + 4], "send_keys(\"", "\")").Replace("\"", "\\\"");
-                                    }
-                                    writer.WriteLine("\t\t# 5 | runScript");
-                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].focus();', " + element + ")");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 2 | pause");
-                                    writer.WriteLine("\t\ttime.sleep(3)");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 5 | runScript");
-                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].removeAttribute(\"value\");', " + element + ")");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 2 | pause");
-                                    writer.WriteLine("\t\ttime.sleep(3)");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 5 | runScript");
-                                    writer.WriteLine("\t\tdriver.execute_script('arguments[0].setAttribute(\"value\", \"" + elementValue.Replace("[\\\"", "[\"").Replace("\\\"])", "\"])") + "\");', " + element + ")");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 2 | pause");
-                                    writer.WriteLine("\t\ttime.sleep(2)");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    writer.WriteLine("\t\t# 5 | runScript");
-                                    writer.WriteLine("\t\tdriver.execute_script(\"arguments[0].click();\", " + element + ")");
-                                    writer.WriteLine("\t\t# Description: None");
-                                    currentLine += 6;
-                                }
-                                else if (fixDates[currentLine].Contains("number_of_windows_to_be") || (fixDates[currentLine].Contains("window_handles") && fixDates[currentLine + 3].Contains("document.querySelector('print-preview-app').shadowRoot"))
-                                     || (fixDates[currentLine].Contains("window_handles") && fixDates[currentLine - 9].Contains("document.querySelector('print-preview-app').shadowRoot")) || fixDates[currentLine].Contains("document.querySelector('print-preview-app').shadowRoot"))
-                                {
-                                    writer.WriteLine(fixDates[currentLine].Replace("\t\t", "\t\t# "));
-                                }
-                                else if (fixDates[currentLine].Contains("\thighlight"))
-                                {
-                                    writer.WriteLine(fixDates[currentLine].Replace("highlight", "# highlight"));
-                                }
-                                else
-                                {
-                                    writer.WriteLine(fixDates[currentLine]);
-                                }
-                                _currentLine = currentLine;
-                            }
-                            writer.WriteLine(fixDates[_currentLine + 1]);
-                            writer.WriteLine(fixDates[_currentLine + 2]);
-                            writer.WriteLine(fixDates[_currentLine + 3]);
-                            writer.WriteLine(fixDates[_currentLine + 4]);
-                        }
-                        indexError = i;
-                        Application.Current.Dispatcher.Invoke(new Action(() => { PBar.Value += step; }));
-                    }
-                    Application.Current.Dispatcher.Invoke(new Action(() =>
-                    {
-                        Log.Items.Add("Successfully updated");
-                    }));
-                    updateAck = false;
+                    CurrentCommand = (Commands)listView.SelectedItems[0];
+                    ListViewItem CurrentContainer = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
+                    if (CurrentContainer != null && CurrentContainer.Background != System.Windows.Media.Brushes.LightGreen && CurrentContainer.Background != System.Windows.Media.Brushes.LightPink) CurrentContainer.Background = System.Windows.Media.Brushes.Lavender;
+                    _commandCounter = CurrentCommand.Number;
+                    CommandsComboBox.Text = CurrentCommand.Command.Replace("\t", "");
+                    tabInCommandForEdit = CurrentCommand.Command.Replace(CommandsComboBox.Text, "");
+                    TargetTB.Text = CurrentCommand.Target;
+                    ValueTB.Text = CurrentCommand.Value;
+                    DescriptionTB.Text = CurrentCommand.Description;
+                    HandleComboBox();
+                    edit = true;
                 }
             }
-            catch (Exception ex)
-            {
-                Log.Items.Add("Update_Click ---> Failed Because of error : " + ex.ToString());
-            }
         }
-
-        public List<string> TestCase(string suit, bool wich)
+        private void listView_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            string[] temp = null;
-            if (suit.Contains("</b></td></tr>\r\n"))
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                suit = FindBetween(suit, "</b></td></tr>\r\n", "\r\n</tbody></table>");
-                temp = suit.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-            }
-            else if (suit.Contains("</b></td></tr>\n"))
-            {
-                suit = FindBetween(suit, "</b></td></tr>\n", "\n</tbody></table>");
-                temp = suit.Split(new string[] { "\n" }, StringSplitOptions.None);
-            }
-            int lines = suit.Split(new string[] { "\n" }, StringSplitOptions.None).Length;
-            List<string> temp2 = new List<string>();
-            List<string> temp3 = new List<string>();
-            if (wich)
-            {
-                for (int i = 0; i < lines; i++)
+                if (listView.SelectedItems.Count != 0)
                 {
-                    string temp4 = FindBetween(temp[i], "<tr><td><a href=\"../../", "\">").Replace(".html", "").Replace(".htm", "");
-                    if (temp4.Contains("setGeneralPort") && temp4.Contains("setUploadPath") && temp4.Contains("pause2s"))
-                        continue;
-                    else
-                    {
-                        if (notConvertedTest)
-                            temp2.Add(temp4.Replace("/", "\\"));
-                        else
-                            temp2.Add(temp4.Replace(".", "_").Replace("/", "\\"));
-                    }
-                    if (temp4.Contains("ezharPishAzVorud3"))
-                    {
-
-                    }
+                    CurrentCommand = (Commands)listView.SelectedItems[0];
+                    ListViewItem CurrentContainer = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
+                    if (CurrentContainer != null) CurrentContainer.Background = System.Windows.Media.Brushes.White;
                 }
-                return temp2;
-            }
-            else
-            {
-                _testCaseNameCount = 32;
-                for (int i = 0; i < lines; i++)
-                {
-                    string temp5 = FindBetween(temp[i], "\">", "</a></td></tr>");
-                    if (temp5.Contains("setGeneralPort") && temp5.Contains("setUploadPath") && temp5.Contains("pause2s"))
-                        continue;
-                    else
-                    {
-                        if (notConvertedTest)
-                            temp3.Add(temp5);
-                        else
-                            temp3.Add(temp5.Replace(".", "_"));
-                    }
-                    if (temp5.Contains("ezharPishAzVorud3"))
-                    {
-
-                    }
-                    _testCaseNameCount = (temp3[i].Length > _testCaseNameCount) ? temp3[i].Length : _testCaseNameCount;
-                }
-                return temp3;
             }
         }
 
-        private void CopyLogItem_Click(object sender, RoutedEventArgs e)
+        private void TestCaseListView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            try
-            {
-                multiplication = Multiplication.copy;
-                CopiedLogItem = Log.SelectedItems[0].ToString();
-                Clipboard.SetText(CopiedLogItem);
-            }
-            catch (Exception ex)
-            {
-                Log.Items.Add("CopiedLogItem ---> Failed Because of error : " + ex.ToString());
-            }
+
         }
 
-        private void CopyStoredItem_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                multiplication = Multiplication.copy;
-                CopiedLogItem = Stored.SelectedItems[0].ToString();
-                Clipboard.SetText(CopiedLogItem);
-            }
-            catch (Exception ex)
-            {
-                Log.Items.Add("CopyStoredItem ---> Failed Because of error : " + ex.ToString());
-            }
-        }
         #endregion
 
         /////////OldIDEConverter///////
@@ -4773,6 +4809,8 @@ namespace FirstTry_app_1
                         tempCommand = "open";
                     if (tempCommand == "clickAndWait" || tempCommand == "clickAt")
                         tempCommand = "click";
+                    if (tempCommand == "fireEvent")
+                        tempCommand = "runScript";
                     App.Current.Dispatcher.Invoke(delegate
                     {
                         ListDB.Add(new Commands(CommandCounter1, tempCommand, FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter1 + 1), "None", false));
@@ -4918,46 +4956,13 @@ namespace FirstTry_app_1
         }
         #endregion
 
-        private void listView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Released)
-            {
-                if (listView.SelectedItems.Count != 0)
-                {
-                    CurrentCommand = (Commands)listView.SelectedItems[0];
-                    ListViewItem CurrentContainer = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
-                    if (CurrentContainer != null && CurrentContainer.Background != System.Windows.Media.Brushes.LightGreen && CurrentContainer.Background != System.Windows.Media.Brushes.LightPink) CurrentContainer.Background = System.Windows.Media.Brushes.Lavender;
-                    _commandCounter = CurrentCommand.Number;
-                    CommandsComboBox.Text = CurrentCommand.Command.Replace("\t", "");
-                    tabInCommandForEdit = CurrentCommand.Command.Replace(CommandsComboBox.Text, "");
-                    TargetTB.Text = CurrentCommand.Target;
-                    ValueTB.Text = CurrentCommand.Value;
-                    DescriptionTB.Text = CurrentCommand.Description;
-                    HandleComboBox();
-                    edit = true;
-                }
-            }
-        }
-        private void listView_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (listView.SelectedItems.Count != 0)
-                {
-                    CurrentCommand = (Commands)listView.SelectedItems[0];
-                    ListViewItem CurrentContainer = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
-                    if (CurrentContainer != null) CurrentContainer.Background = System.Windows.Media.Brushes.White;
-                }
-            }
-        }
-
-        private void TestCaseListView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-
-        }
         /////////Runner///////
         ListViewItem lvitem;
         #region Runner
+        public static Dictionary<int, bool> runnerInWhile = new Dictionary<int, bool>();
+        public static Dictionary<int, bool> runnerInIf = new Dictionary<int, bool>();
+        public static Dictionary<int, bool> runnerEnd = new Dictionary<int, bool>();
+
         public async Task runCommand(Commands thisCommand, int caseIndex, int commandIndex)
         {
             try
@@ -4972,12 +4977,30 @@ namespace FirstTry_app_1
                 try
                 {
                     if (driver == null)
+                    {
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            loadDriverProgress.Visibility = Visibility.Visible;
+                        }));
                         driver = new ChromeDriver(chromeservice, options);
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            loadDriverProgress.Visibility = Visibility.Hidden;
+                        }));
+                    }
                     string temp = driver.Url;
                 }
                 catch
                 {
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        loadDriverProgress.Visibility = Visibility.Visible;
+                    }));
                     driver = new ChromeDriver(chromeservice, options);
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        loadDriverProgress.Visibility = Visibility.Hidden;
+                    }));
                 }
 
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
@@ -7870,7 +7893,7 @@ namespace FirstTry_app_1
 
                         #region ===> while
                         case "while":
-
+                            runnerInWhile.Add(thisCommand.Number, true);
                             break;
                         #endregion
 
@@ -7882,13 +7905,14 @@ namespace FirstTry_app_1
 
                         #region ===> if
                         case "if":
-
+                            runnerInIf.Add(thisCommand.Number, true);
                             break;
                         #endregion
 
                         #region ===> end
                         case "end":
 
+                            runnerEnd.Add(thisCommand.Number, true);
                             break;
                         #endregion
 
@@ -8131,6 +8155,47 @@ namespace FirstTry_app_1
                 for (int i = index; TestList.ElementAt(testCaseNumber - 1).TestValue.Count > i; i++)
                 {
                     waitType = WaitType._case;
+
+                    ///////Check loops
+                    if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Command == "while")
+                        runnerInWhile.Add(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Number - 1, true);
+
+                    if (runnerInWhile.Count(x => x.Value == true) > 0)
+                    {
+                        int startOfWhile = i;
+                        int endOfWhile = TestList.ElementAt(testCaseNumber - 1).TestValue.FirstOrDefault(x => x.Number > TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Number &&
+                            x.Command.Contains("end") && 
+                            Regex.Matches(x.Command, "\t").Count == Regex.Matches(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Command, "\t").Count).Number - 1;
+                        i++;
+                        while (true)
+                        {
+                            if (i - 1 == startOfWhile)
+                                await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
+                            else
+                            {
+                                if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass)
+                                    await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
+                                else
+                                {
+                                    passed = false;
+                                    break;
+                                }
+                            }
+                            i++;
+                            if (i == endOfWhile)
+                            {
+                                
+                            }
+                        }
+                    }
+
+                    ///////Check conditions
+                    if (runnerInIf.Count(x => x.Value == true) > 0)
+                    {
+                        //thisCommand = ListDB.ElementAt(runnerInIf.LastOrDefault(x => x.Value == true).Key);
+
+                    }
+
                     if (i == 0)
                         await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
                     else
@@ -8176,6 +8241,7 @@ namespace FirstTry_app_1
                 return false;
             }
         }
+
         public async Task runSuit(int index)
         {
             try
@@ -8189,7 +8255,7 @@ namespace FirstTry_app_1
                         await Task.Run(() => runCase(i, 0));
                     else
                     {
-                        if (TestList.ElementAt(i - 2).IsPassed)
+                        if (TestList.ElementAt(i - 2).IsPassed || RunFromMiddle)
                             await Task.Run(() => runCase(i, 0));
                         else
                         {

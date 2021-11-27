@@ -1,14 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "aX1lnhiqaLlgbJSPRm9o0INh+itEkMEIfXWdb2hmZpdbwi2XnCaAZXSYLgaCmBAi/+EnXihC9xGbMYXwwQzSMw==",
+  "dgSpecHash": "RVKbn57rJ+g/WPC5J6IOOwFIJztDnbGGW4aPPeJ9SCWbdKEM30ms0ntEbos+FA/em6B7IwCV3k/dMBuDbACiSA==",
   "success": true,
   "projectFilePath": "C:\\webdriver-ide-source\\FirstTry app 1\\FirstTry app 1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\AmirReza\\.nuget\\packages\\commonservicelocator\\2.0.2\\commonservicelocator.2.0.2.nupkg.sha512",
     "C:\\Users\\AmirReza\\.nuget\\packages\\dynamiclanguageruntime\\1.2.3\\dynamiclanguageruntime.1.2.3.nupkg.sha512",
     "C:\\Users\\AmirReza\\.nuget\\packages\\libuv\\1.9.1\\libuv.1.9.1.nupkg.sha512",
-    "C:\\Users\\AmirReza\\.nuget\\packages\\materialdesigncolors\\1.2.6\\materialdesigncolors.1.2.6.nupkg.sha512",
-    "C:\\Users\\AmirReza\\.nuget\\packages\\materialdesignthemes\\3.1.3\\materialdesignthemes.3.1.3.nupkg.sha512",
+    "C:\\Users\\AmirReza\\.nuget\\packages\\materialdesigncolors\\1.2.5\\materialdesigncolors.1.2.5.nupkg.sha512",
+    "C:\\Users\\AmirReza\\.nuget\\packages\\materialdesignthemes\\3.1.2\\materialdesignthemes.3.1.2.nupkg.sha512",
     "C:\\Users\\AmirReza\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\5.0.0\\microsoft.bcl.asyncinterfaces.5.0.0.nupkg.sha512",
     "C:\\Users\\AmirReza\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\1.1.0\\microsoft.codeanalysis.analyzers.1.1.0.nupkg.sha512",
     "C:\\Users\\AmirReza\\.nuget\\packages\\microsoft.codeanalysis.common\\1.3.0\\microsoft.codeanalysis.common.1.3.0.nupkg.sha512",

@@ -116,7 +116,6 @@ C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\runtimes\win\lib
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.Data.OleDb.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
-C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.Diagnostics.EventLog.Messages.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.Diagnostics.EventLog.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.Diagnostics.PerformanceCounter.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.DirectoryServices.dll
@@ -174,3 +173,4 @@ C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\WebDriverIDE.dll
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\ref\WebDriverIDE.dll
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\WebDriverIDE.pdb
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.genruntimeconfig.cache
+C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.csproj.AssemblyReference.cache

@@ -629,7 +629,7 @@
                                                     <MenuItem Name="CopyTestCM" Header="Copy" Click="CopyItemTestCaseList_Click"/>
                                                     <MenuItem Name="CutTestCM" Header="Cut" Click="CutItemTestCaseList_Click"/>
                                                     <MenuItem Name="PasteTestCM" Header="Paste" Click="PasteItemTestCaseList_Click"/>
-                                                    <MenuItem Name="EditTestCM" Header="Edit" Click="EditItemTestCaseList_Click"/>
+                                                    <MenuItem Name="RunFromHereCM" Header="Run From here" Click="RunFromHereCM_Click"/>
                                                     <MenuItem Name="RenameTestCM" Header="Rename" Click="RenameItemTestCaseList_Click"/>
                                                     <MenuItem Name="RemoveTestCM" Header="Delete" Click="RemoveItemTestCaseList_Click"/>
                                                 </ContextMenu>
@@ -659,6 +659,7 @@
                                     <Border VerticalAlignment="Top" Margin="0,0,0.2,0" BorderThickness="0 0 0 1" BorderBrush="#FFE5E5E5" Grid.Row="0" Height="30">
                                         <Grid Margin="0 0 0 0" HorizontalAlignment="Stretch">
                                             <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="40"/>
                                                 <ColumnDefinition Width="40"/>
                                                 <ColumnDefinition Width="40"/>
                                                 <ColumnDefinition Width="40"/>
@@ -815,16 +816,26 @@
                                                     Speed
                                                 </materialDesign:PopupBox.ToolTip>
                                             </materialDesign:PopupBox>
-                                            <Border Grid.Column="4">
+                                            <Border Grid.Column="4" HorizontalAlignment="Center" Width="40">
+                                                <ProgressBar
+                                                    x:Name="loadDriverProgress"
+                                                    ToolTip="Creating Driver"
+                                                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                                    Value="50"
+                                                    IsIndeterminate="True"
+                                                    Visibility="Hidden"/>
+                                            </Border>
+                                            <Border Grid.Column="5">
                                                 <Grid HorizontalAlignment="Right" Margin="0,0,0.2,-0.4" Width="847">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="25*"/>
-                                                        <ColumnDefinition Width="822*"/>
+                                                        <ColumnDefinition Width="198*"/>
+                                                        <ColumnDefinition Width="624*"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <Label HorizontalAlignment="Right" Content="Test Case :" x:Name="TestCaseCounterLB" FontSize="10" FontFamily="Roboto" Margin="0,5,122,5" Foreground="#FF3F3F3F" Grid.Column="1"/>
-                                                    <TextBlock HorizontalAlignment="Right" Text="0" x:Name="TestCaseCounterTB" FontSize="10" FontFamily="Roboto" Margin="0,9,95,10" Width="28" Foreground="#FF3F3F3F" Grid.Column="1"/>
-                                                    <Label HorizontalAlignment="Right" Content="Commands :" x:Name="CommandCounterLB" FontSize="10" FontFamily="Roboto" Margin="0,5,31,5" Foreground="#FF3F3F3F" Grid.Column="1"/>
-                                                    <TextBlock HorizontalAlignment="Right" Text="0" x:Name="CommandCounterTB" FontSize="10" FontFamily="Roboto" Margin="0,9,5,10" Width="28" Foreground="#FF3F3F3F" Grid.Column="1"/>
+                                                    <Label HorizontalAlignment="Left" Content="Test Case :" x:Name="TestCaseCounterLB" FontSize="10" FontFamily="Roboto" Margin="448,5,0,5" Foreground="#FF3F3F3F" Grid.Column="2"/>
+                                                    <TextBlock HorizontalAlignment="Left" Text="0" x:Name="TestCaseCounterTB" FontSize="10" FontFamily="Roboto" Margin="501,9,0,10" Width="28" Foreground="#FF3F3F3F" Grid.Column="2"/>
+                                                    <Label HorizontalAlignment="Left" Content="Commands :" x:Name="CommandCounterLB" FontSize="10" FontFamily="Roboto" Margin="530,5,0,5" Foreground="#FF3F3F3F" Grid.Column="2"/>
+                                                    <TextBlock HorizontalAlignment="Left" Text="0" x:Name="CommandCounterTB" FontSize="10" FontFamily="Roboto" Margin="591,9,0,10" Width="28" Foreground="#FF3F3F3F" Grid.Column="2"/>
                                                 </Grid>
                                             </Border>
                                         </Grid>

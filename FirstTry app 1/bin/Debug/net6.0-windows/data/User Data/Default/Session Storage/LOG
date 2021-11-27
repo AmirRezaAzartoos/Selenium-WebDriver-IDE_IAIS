@@ -1,2 +1,3 @@
-2021/11/15-13:07:08.169 2f68 Creating DB C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\data\User Data\Default\Session Storage since it was missing.
-2021/11/15-13:07:08.174 2f68 Reusing MANIFEST C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\data\User Data\Default\Session Storage/MANIFEST-000001
+2021/10/31-16:28:15.928 1efc Reusing MANIFEST C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\data\User Data\Default\Session Storage/MANIFEST-000001
+2021/10/31-16:28:15.929 1efc Recovering log #3
+2021/10/31-16:28:15.929 1efc Reusing old log C:\Users\AmirReza\Source\Repos\webdriver-ide-source\FirstTry app 1\FirstTry app 1\bin\Debug\data\User Data\Default\Session Storage/000003.log 
