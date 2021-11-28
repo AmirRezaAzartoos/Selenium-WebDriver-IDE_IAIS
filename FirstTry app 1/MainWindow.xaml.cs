@@ -3090,6 +3090,7 @@ namespace FirstTry_app_1
                 CommandCounter--;
                 CommandCounterTB.Text = Convert.ToString(CommandCounter);
                 var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                if (obj1 != null) obj1.TestValue = new ObservableCollection<Commands>(ListDB);
                 if (obj1 != null) obj1.IsSaved = false;
                 var bc = new BrushConverter();
                 SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
@@ -3645,10 +3646,80 @@ namespace FirstTry_app_1
 
         public string ConvertPythonToCSharp(string IN)
         {
-            IN.Replace("and", "&&");
-            IN.Replace("or", "||");
-            
-            return "0";
+            try
+            {
+                string OUT = "";
+                string _out = "";
+                //IN = IN.Replace(" and ", " && ").Replace(" or ", " || ").Replace("StoreEvalDB.vars", "StoreEvalDB");
+                var tmp = IN.Split(" and ");
+                for (int i = 0; i <= Regex.Matches(IN, " and ").Count; i++)
+                {
+                    if (!tmp[i].Contains(" or "))
+                    {
+                        _out = "";
+                        if (tmp[i].Contains(" not in "))
+                        {
+                            var _not_in = tmp[i].Split(" not in ");
+                            string tmpstr1 = _not_in[0].Contains('(') ? _not_in[0].Substring(_not_in[0].LastIndexOf('(') + 1, _not_in[0].Length - 1) : _not_in[0];
+                            _not_in[0] = _not_in[0].Replace(tmpstr1, "");
+                            string tmpstr2 = _not_in[1].Contains(')') ? _not_in[1].Substring(0, _not_in[1].IndexOf(')')) : _not_in[1];
+                            _not_in[1] = _not_in[1].Replace(tmpstr2, "");
+                            tmp[i] = _not_in[0] + " !" + tmpstr2 + ".Contains(" + tmpstr1 + ")" + _not_in[1];
+                        }
+                        else if (tmp[i].Contains(" in "))
+                        {
+                            var _in = tmp[i].Split(" in ");
+                            string tmpstr1 = _in[0].Contains('(') ? _in[0].Substring(_in[0].LastIndexOf('(') + 1, _in[0].Length - 1) : _in[0];
+                            _in[0] = _in[0].Replace(tmpstr1, "");
+                            string tmpstr2 = _in[1].Contains(')') ? _in[1].Substring(_in[1].IndexOf(')'), _in[1].Length - 1) : _in[1];
+                            _in[1] = _in[1].Replace(tmpstr2, "");
+                            tmp[i] = _in[0] + tmpstr2 + ".Contains(" + tmpstr1 + ")" + _in[1];
+                        }
+                        _out = i < tmp.Length - 1 ? tmp[i] + " && " : tmp[i];
+                    }
+                    else
+                    {
+                        _out = "";
+                        var count = Regex.Matches(tmp[i], " or ").Count;
+                        var tmp1 = tmp[i].Split(" or ");
+                        for (int j = 0; j <= Regex.Matches(tmp[i], " or ").Count; j++)
+                        {
+                            if (tmp1[j].Contains(" not in "))
+                            {
+                                var _not_in = tmp1[j].Split(" not in ");
+                                string tmpstr1 = _not_in[0].Contains('(') ? _not_in[0].Substring(_not_in[0].LastIndexOf('(') + 1, _not_in[0].Length - 1) : _not_in[0];
+                                _not_in[0] = _not_in[0].Replace(tmpstr1, "");
+                                string tmpstr2 = _not_in[1].Contains(')') ? _not_in[1].Substring(0, _not_in[1].IndexOf(')')) : _not_in[1];
+                                _not_in[1] = _not_in[1].Replace(tmpstr2, "");
+                                tmp1[j] = _not_in[0] + " !" + tmpstr2 + ".Contains(" + tmpstr1 + ")" + _not_in[1];
+                            }
+                            else if (tmp1[j].Contains(" in "))
+                            {
+                                var _in = tmp1[j].Split(" in ");
+                                string tmpstr1 = _in[0].Contains('(') ? _in[0].Substring(_in[0].LastIndexOf('(') + 1, _in[0].Length - 1) : _in[0];
+                                _in[0] = _in[0].Replace(tmpstr1, "");
+                                string tmpstr2 = _in[1].Contains(')') ? _in[1].Substring(_in[1].IndexOf(')'), _in[1].Length - 1) : _in[1];
+                                _in[1] = _in[1].Replace(tmpstr2, "");
+                                tmp1[j] = _in[0] + tmpstr2 + ".Contains(" + tmpstr1 + ")" + _in[1];
+                            }
+                            _out += j < tmp1.Length - 1 ? tmp1[j] + " || " : tmp1[j];
+                            _out += (i < tmp.Length - 1) && (j == tmp1.Length - 1) ? " && " : "";
+                        }
+                    }
+                    OUT += _out.Replace("not ", "!").Replace("StoreEvalDB.vars", "StoreEvalDB");
+                }
+
+                return OUT;
+            }
+            catch (Exception ex)
+            {
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("ConvertPythonToCSharp ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                return "none";
+            }
         }
         #endregion
 
@@ -3690,20 +3761,20 @@ namespace FirstTry_app_1
         private void Maximize_Click(object sender, RoutedEventArgs e)
         {
 
-        try
-        {
-            if (WindowState == WindowState.Normal)
+            try
             {
-                WindowState = WindowState.Maximized;
+                if (WindowState == WindowState.Normal)
+                {
+                    WindowState = WindowState.Maximized;
+                }
+                else
+                    this.WindowState = WindowState.Normal;
             }
-            else
-                this.WindowState = WindowState.Normal;
+            catch (Exception ex)
+            {
+                Log.Items.Add("Maximize_Click ---> Failed Because of error : " + ex.ToString());
+            }
         }
-        catch (Exception ex)
-        {
-            Log.Items.Add("Maximize_Click ---> Failed Because of error : " + ex.ToString());
-        }
-    }
 
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
@@ -3981,9 +4052,9 @@ namespace FirstTry_app_1
                 pause = false;
                 await Task.Run(() =>
                 {
-                    for(int i = 0; i < 2; i++)
+                    for (int i = 0; i < 2; i++)
                     {
-                        if(i == 0)
+                        if (i == 0)
                         {
                             runCase(pausedCaseIndex + 1, pausedCommandIndex);
                         }
@@ -8164,9 +8235,10 @@ namespace FirstTry_app_1
                     {
                         int startOfWhile = i;
                         int endOfWhile = TestList.ElementAt(testCaseNumber - 1).TestValue.FirstOrDefault(x => x.Number > TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Number &&
-                            x.Command.Contains("end") && 
-                            Regex.Matches(x.Command, "\t").Count == Regex.Matches(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Command, "\t").Count).Number - 1;
+                                x.Command.Contains("end") &&
+                                Regex.Matches(x.Command, "\t").Count == Regex.Matches(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Command, "\t").Count).Number - 1;
                         i++;
+
                         while (true)
                         {
                             if (i - 1 == startOfWhile)
@@ -8184,7 +8256,12 @@ namespace FirstTry_app_1
                             i++;
                             if (i == endOfWhile)
                             {
-                                
+                                string cond = ConvertPythonToCSharp(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(startOfWhile).Target);
+                                bool condition = Convert.ToBoolean(cond);
+                                if (condition)
+                                {
+
+                                }
                             }
                         }
                     }

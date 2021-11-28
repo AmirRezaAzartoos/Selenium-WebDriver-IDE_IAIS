@@ -168,9 +168,9 @@ C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry_app_1.P
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.csproj.GenerateResource.cache
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.GeneratedMSBuildEditorConfig.editorconfig
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.csproj.CoreCompileInputs.cache
-C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.csproj.CopyComplete
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\WebDriverIDE.dll
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\ref\WebDriverIDE.dll
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\WebDriverIDE.pdb
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.genruntimeconfig.cache
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.csproj.AssemblyReference.cache
+C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.Diagnostics.EventLog.Messages.dll
