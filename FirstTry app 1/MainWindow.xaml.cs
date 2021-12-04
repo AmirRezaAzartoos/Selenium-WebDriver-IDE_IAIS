@@ -4574,13 +4574,25 @@ namespace FirstTry_app_1
                     {
                         ListDB.Move(startIndex, index);
                         var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                        if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
+                        if (obj != null)
+                        {
+                            obj.TestValue = new ObservableCollection<Commands>(ListDB);
+                        }
+
                     }
                     //startIndex = -1;         //Done!
                     for (int i = 1; i <= ListDB.Count; i++)
                     {
                         var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                        if (obj != null) obj.TestValue.ElementAt(i - 1).Number = i;
+                        if (obj != null)
+                        {
+                            obj.TestValue.ElementAt(i - 1).Number = i;
+                            int tabsNeeded = ListDB.Skip(0).Take(i - 1).Count(x => x.Command.Contains("while") || x.Command.Contains("if")) -
+                                ListDB.Skip(0).Take(i - 1).Count(x => x.Command.Contains("end"));
+                            obj.TestValue.ElementAt(i - 1).Command = obj.TestValue.ElementAt(i - 1).Command.Contains("end") ?
+                                String.Concat(Enumerable.Repeat("\t", tabsNeeded - 1)) + obj.TestValue.ElementAt(i - 1).Command.Replace("\t", "") :
+                                String.Concat(Enumerable.Repeat("\t", tabsNeeded)) + obj.TestValue.ElementAt(i - 1).Command.Replace("\t", "");
+                        }
                     }
                     var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     ListDB = new ObservableCollection<Commands>(obj1.TestValue);
@@ -4595,7 +4607,10 @@ namespace FirstTry_app_1
             }
             catch (Exception ex)
             {
-                Log.Items.Add("ListView_Drop ---> Failed Because of error : " + ex.ToString());
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("ListView_Drop ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
 
