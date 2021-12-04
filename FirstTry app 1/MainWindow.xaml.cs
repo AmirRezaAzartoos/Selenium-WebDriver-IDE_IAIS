@@ -3660,7 +3660,7 @@ namespace FirstTry_app_1
                         if (tmp[i].Contains(" not in "))
                         {
                             var _not_in = tmp[i].Split(" not in ");
-                            string tmpstr1 = _not_in[0].Contains('(') ? _not_in[0].Substring(_not_in[0].LastIndexOf('(') + 1, _not_in[0].Length - 1) : _not_in[0];
+                            string tmpstr1 = _not_in[0].Contains('(') ? _not_in[0].Substring(_not_in[0].LastIndexOf('(') + 1, _not_in[0].Length - _not_in[0].LastIndexOf('(') - 1) : _not_in[0];
                             _not_in[0] = _not_in[0].Replace(tmpstr1, "");
                             string tmpstr2 = _not_in[1].Contains(')') ? _not_in[1].Substring(0, _not_in[1].IndexOf(')')) : _not_in[1];
                             _not_in[1] = _not_in[1].Replace(tmpstr2, "");
@@ -3669,7 +3669,7 @@ namespace FirstTry_app_1
                         else if (tmp[i].Contains(" in "))
                         {
                             var _in = tmp[i].Split(" in ");
-                            string tmpstr1 = _in[0].Contains('(') ? _in[0].Substring(_in[0].LastIndexOf('(') + 1, _in[0].Length - 1) : _in[0];
+                            string tmpstr1 = _in[0].Contains('(') ? _in[0].Substring(_in[0].LastIndexOf('(') + 1, _in[0].Length - _in[0].LastIndexOf('(') - 1) : _in[0];
                             _in[0] = _in[0].Replace(tmpstr1, "");
                             string tmpstr2 = _in[1].Contains(')') ? _in[1].Substring(_in[1].IndexOf(')'), _in[1].Length - 1) : _in[1];
                             _in[1] = _in[1].Replace(tmpstr2, "");
@@ -3687,7 +3687,7 @@ namespace FirstTry_app_1
                             if (tmp1[j].Contains(" not in "))
                             {
                                 var _not_in = tmp1[j].Split(" not in ");
-                                string tmpstr1 = _not_in[0].Contains('(') ? _not_in[0].Substring(_not_in[0].LastIndexOf('(') + 1, _not_in[0].Length - 1) : _not_in[0];
+                                string tmpstr1 = _not_in[0].Contains('(') ? _not_in[0].Substring(_not_in[0].LastIndexOf('(') + 1, _not_in[0].Length - _not_in[0].LastIndexOf('(') - 1) : _not_in[0];
                                 _not_in[0] = _not_in[0].Replace(tmpstr1, "");
                                 string tmpstr2 = _not_in[1].Contains(')') ? _not_in[1].Substring(0, _not_in[1].IndexOf(')')) : _not_in[1];
                                 _not_in[1] = _not_in[1].Replace(tmpstr2, "");
@@ -3696,7 +3696,7 @@ namespace FirstTry_app_1
                             else if (tmp1[j].Contains(" in "))
                             {
                                 var _in = tmp1[j].Split(" in ");
-                                string tmpstr1 = _in[0].Contains('(') ? _in[0].Substring(_in[0].LastIndexOf('(') + 1, _in[0].Length - 1) : _in[0];
+                                string tmpstr1 = _in[0].Contains('(') ? _in[0].Substring(_in[0].LastIndexOf('(') + 1, _in[0].Length - _in[0].LastIndexOf('(') - 1) : _in[0];
                                 _in[0] = _in[0].Replace(tmpstr1, "");
                                 string tmpstr2 = _in[1].Contains(')') ? _in[1].Substring(_in[1].IndexOf(')'), _in[1].Length - 1) : _in[1];
                                 _in[1] = _in[1].Replace(tmpstr2, "");
@@ -3720,6 +3720,323 @@ namespace FirstTry_app_1
                 Log.Items.Add("ConvertPythonToCSharp ---> Failed in line " + line + " Because of error : " + ex.ToString());
                 return "none";
             }
+        }
+
+        public bool ConditionParser(string IN)
+        {
+            bool tempBool;
+            IN = IN.Replace("not in", "notIn");
+            //IN = IN.Replace(" not ", " not ");
+            string[] oprators = new string[10] {" < ", " <= ", " > ", " >= ", " == ", " != ", " in ", " notIn ", " and ", " or " };
+            //get inside condition
+            for (int i = 0; i < IN.Split('(').Length; i++)
+            {
+                bool _insideCond;
+                List<int> startIndexes = new List<int>();
+                List<int> finalIndexes = new List<int>();
+                foreach (var c in IN.Select((value, index) => new { value, index }))
+                {
+                    if (c.value == '(')
+                    {
+                        startIndexes.Add(c.index);
+                    }
+                    else if (c.value == ')')
+                    {
+                        finalIndexes.Add(c.index);
+                    }
+                }
+                int startIndex = startIndexes.LastOrDefault();
+                int finalIndex = finalIndexes.FirstOrDefault(x => x >  startIndex);
+                string insideCond = IN.Substring(startIndex + 1, finalIndex - startIndex - 1);
+                //check inside Condition
+                SortedDictionary<int, string> opPos = new SortedDictionary<int, string>();
+                //export ops
+                foreach (var x in oprators)
+                { 
+                    if (insideCond.Contains(x))
+                    {
+                        opPos.Add(insideCond.IndexOf(x), x);
+                    }
+                }
+                //get inside cond result
+                string[] separatedOps = new string[2];
+                for (int j = 0; j < opPos.Count; j++)
+                {
+                    if (opPos.ElementAt(j).Value != " or " && opPos.ElementAt(j).Value != " and ")
+                    {
+                        separatedOps = insideCond.Split(new[] { opPos.ElementAt(j).Value }, StringSplitOptions.None);
+                        separatedOps[1] = j != opPos.Count - 1 ? separatedOps[1].Split(new[] { opPos.ElementAt(j + 1).Value }, StringSplitOptions.None)[0] :
+                            separatedOps[1];
+                        //check if it contains DB data
+                        bool DBdata0 = false;
+                        bool DBdata1 = false;
+                        if (separatedOps[0].Contains("StoreEvalDB.vars"))
+                        {
+                            separatedOps[0] = FindBetween(separatedOps[0], "StoreEvalDB.vars[\"", "\"]");
+                        }
+                        if (separatedOps[1].Contains("StoreEvalDB.vars"))
+                        {
+                            separatedOps[1] = FindBetween(separatedOps[1], "StoreEvalDB.vars[\"", "\"]");
+                        }
+                        //check true or false
+                        switch (opPos.ElementAt(j).Value)
+                        {
+                            case " < ":
+                                if (DBdata0 && DBdata1)
+                                {
+                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) < Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if(!DBdata0 && !DBdata1)
+                                {
+                                    if (Convert.ToInt32(separatedOps[0]) < Convert.ToInt32(separatedOps[1]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && DBdata1)
+                                {
+                                    if (Convert.ToInt32(separatedOps[0]) < Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (DBdata0 && !DBdata1)
+                                {
+                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) < Convert.ToInt32(separatedOps[1]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                break;
+
+                            case " <= ":
+                                if (DBdata0 && DBdata1)
+                                {
+                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) <= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && !DBdata1)
+                                {
+                                    if (Convert.ToInt32(separatedOps[0]) <= Convert.ToInt32(separatedOps[1]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && DBdata1)
+                                {
+                                    if (Convert.ToInt32(separatedOps[0]) <= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (DBdata0 && !DBdata1)
+                                {
+                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) <= Convert.ToInt32(separatedOps[1]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                break;
+
+                            case " > ":
+                                if (DBdata0 && DBdata1)
+                                {
+                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) > Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && !DBdata1)
+                                {
+                                    if (Convert.ToInt32(separatedOps[0]) > Convert.ToInt32(separatedOps[1]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && DBdata1)
+                                {
+                                    if (Convert.ToInt32(separatedOps[0]) > Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (DBdata0 && !DBdata1)
+                                {
+                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) > Convert.ToInt32(separatedOps[1]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                break;
+
+                            case " >= ":
+                                if (DBdata0 && DBdata1)
+                                {
+                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) >= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && !DBdata1)
+                                {
+                                    if (Convert.ToInt32(separatedOps[0]) >= Convert.ToInt32(separatedOps[1]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && DBdata1)
+                                {
+                                    if (Convert.ToInt32(separatedOps[0]) >= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (DBdata0 && !DBdata1)
+                                {
+                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) >= Convert.ToInt32(separatedOps[1]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                break;
+
+                            case " == ":
+                                if (DBdata0 && DBdata1)
+                                {
+                                    if (StoreEvalDB[separatedOps[0]] == StoreEvalDB[separatedOps[1]])
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && !DBdata1)
+                                {
+                                    if (separatedOps[0] == separatedOps[1])
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && DBdata1)
+                                {
+                                    if (separatedOps[0] == StoreEvalDB[separatedOps[1]])
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (DBdata0 && !DBdata1)
+                                {
+                                    if (StoreEvalDB[separatedOps[0]] == separatedOps[1])
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                break;
+
+                            case " != ":
+                                if (DBdata0 && DBdata1)
+                                {
+                                    if (StoreEvalDB[separatedOps[0]] != StoreEvalDB[separatedOps[1]])
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && !DBdata1)
+                                {
+                                    if (separatedOps[0] != separatedOps[1])
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && DBdata1)
+                                {
+                                    if (separatedOps[0] != StoreEvalDB[separatedOps[1]])
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (DBdata0 && !DBdata1)
+                                {
+                                    if (StoreEvalDB[separatedOps[0]] != separatedOps[1])
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                break;
+
+                            case " in ":
+                                if (DBdata0 && DBdata1)
+                                {
+                                    if (StoreEvalDB[separatedOps[1]].Contains(StoreEvalDB[separatedOps[0]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && !DBdata1)
+                                {
+                                    if (separatedOps[1].Contains(separatedOps[0]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && DBdata1)
+                                {
+                                    if (StoreEvalDB[separatedOps[1]].Contains(separatedOps[0]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (DBdata0 && !DBdata1)
+                                {
+                                    if (separatedOps[1].Contains(StoreEvalDB[separatedOps[0]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                break;
+
+                            case " notIn ":
+                                if (DBdata0 && DBdata1)
+                                {
+                                    if (StoreEvalDB[separatedOps[1]].Contains(StoreEvalDB[separatedOps[0]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && !DBdata1)
+                                {
+                                    if (separatedOps[1].Contains(separatedOps[0]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (!DBdata0 && DBdata1)
+                                {
+                                    if (StoreEvalDB[separatedOps[1]].Contains(separatedOps[0]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                else if (DBdata0 && !DBdata1)
+                                {
+                                    if (separatedOps[1].Contains(StoreEvalDB[separatedOps[0]]))
+                                        tempBool = true;
+                                    else
+                                        tempBool = false;
+                                }
+                                break;
+                        }
+                        insideCond = insideCond.Replace(insideCond.Split(new[] { opPos.ElementAt(j + 1).Value }, StringSplitOptions.None)[0], "true");
+                    }
+                }
+
+                IN = IN.Replace(insideCond, "true");
+                //IN = IN.Remove(startIndex + 1, finalIndex - startIndex);
+            }
+            return true;
         }
         #endregion
 
@@ -8272,8 +8589,7 @@ namespace FirstTry_app_1
                             if (i == endOfWhile)
                             {
                                 string cond = ConvertPythonToCSharp(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(startOfWhile).Target);
-                                bool condition = Convert.ToBoolean(cond);
-                                if (condition)
+                                if (ConditionParser(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(startOfWhile).Target))
                                 {
 
                                 }
