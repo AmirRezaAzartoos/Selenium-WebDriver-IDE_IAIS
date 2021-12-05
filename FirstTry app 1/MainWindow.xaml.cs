@@ -3724,319 +3724,526 @@ namespace FirstTry_app_1
 
         public bool ConditionParser(string IN)
         {
-            bool tempBool;
-            IN = IN.Replace("not in", "notIn");
-            //IN = IN.Replace(" not ", " not ");
-            string[] oprators = new string[10] {" < ", " <= ", " > ", " >= ", " == ", " != ", " in ", " notIn ", " and ", " or " };
-            //get inside condition
-            for (int i = 0; i < IN.Split('(').Length; i++)
+            try
             {
-                bool _insideCond;
-                List<int> startIndexes = new List<int>();
-                List<int> finalIndexes = new List<int>();
-                foreach (var c in IN.Select((value, index) => new { value, index }))
+                bool tempBool = false;
+                IN = IN.Replace("not in", "notIn");
+                string insideCond = IN;
+                int counter = insideCond.Split('(').Length - 1;
+                //IN = IN.Replace(" not ", " not ");
+                string[] oprators = new string[10] { " < ", " <= ", " > ", " >= ", " == ", " != ", " in ", " notIn ", " and ", " or " };
+                //get inside condition
+                for (int i = 0; counter > i; i++)
                 {
-                    if (c.value == '(')
+                    string insideCondtemp;
+                    List<int> startIndexes = new List<int>();
+                    List<int> finalIndexes = new List<int>();
+                    foreach (var c in insideCond.Select((value, index) => new { value, index }))
                     {
-                        startIndexes.Add(c.index);
+                        if (c.value == '(')
+                        {
+                            startIndexes.Add(c.index);
+                        }
+                        else if (c.value == ')')
+                        {
+                            finalIndexes.Add(c.index);
+                        }
                     }
-                    else if (c.value == ')')
+                    int startIndex = startIndexes.LastOrDefault();
+                    int finalIndex = finalIndexes.FirstOrDefault(x => x > startIndex);
+                    insideCondtemp = insideCond.Substring(startIndex + 1, finalIndex - startIndex - 1);
+                    string insideCondtemp2 = insideCond.Substring(startIndex, finalIndex - startIndex + 1);
+                    //check inside Condition
+                    SortedDictionary<int, string> opPos = new SortedDictionary<int, string>();
+                    //export ops
+                    foreach (var x in oprators)
                     {
-                        finalIndexes.Add(c.index);
+                        if (insideCondtemp.Contains(x))
+                        {
+                            opPos.Add(insideCondtemp.IndexOf(x), x);
+                        }
                     }
+                    //get inside cond result
+                    string[] separatedOps = new string[2];
+
+                    for (int j = 0; j < opPos.Count; j++)
+                    {
+                        if (opPos.ElementAt(j).Value != " or " && opPos.ElementAt(j).Value != " and ")
+                        {
+                            //separate ops
+                            separatedOps = insideCondtemp.Split(new[] { opPos.ElementAt(j).Value }, StringSplitOptions.None);
+                            separatedOps[1] = j != opPos.Count - 1 ? separatedOps[1].Split(new[] { opPos.ElementAt(j + 1).Value }, StringSplitOptions.None)[0] :
+                                separatedOps[1];
+                            if (j != 0 && separatedOps[0].Contains(opPos.ElementAt(j - 1).Value))
+                                separatedOps[0] = separatedOps[0].Split(opPos.ElementAt(j - 1).Value)[1];
+                            //check if it contains DB data
+                            bool DBdata0 = false;
+                            bool DBdata1 = false;
+                            if (separatedOps[0].Contains("StoreEvalDB.vars"))
+                            {
+                                separatedOps[0] = FindBetween(separatedOps[0], "StoreEvalDB.vars[\"", "\"]");
+                            }
+                            if (separatedOps[1].Contains("StoreEvalDB.vars"))
+                            {
+                                separatedOps[1] = FindBetween(separatedOps[1], "StoreEvalDB.vars[\"", "\"]");
+                            }
+                            //check true or false
+                            switch (opPos.ElementAt(j).Value)
+                            {
+                                case " < ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) < Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToInt32(separatedOps[0]) < Convert.ToInt32(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToInt32(separatedOps[0]) < Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) < Convert.ToInt32(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+
+                                case " <= ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) <= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToInt32(separatedOps[0]) <= Convert.ToInt32(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToInt32(separatedOps[0]) <= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) <= Convert.ToInt32(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+
+                                case " > ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) > Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToInt32(separatedOps[0]) > Convert.ToInt32(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToInt32(separatedOps[0]) > Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) > Convert.ToInt32(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+
+                                case " >= ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) >= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToInt32(separatedOps[0]) >= Convert.ToInt32(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToInt32(separatedOps[0]) >= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) >= Convert.ToInt32(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+
+                                case " == ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (StoreEvalDB[separatedOps[0]] == StoreEvalDB[separatedOps[1]])
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (separatedOps[0] == separatedOps[1])
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (separatedOps[0] == StoreEvalDB[separatedOps[1]])
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (StoreEvalDB[separatedOps[0]] == separatedOps[1])
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+
+                                case " != ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (StoreEvalDB[separatedOps[0]] != StoreEvalDB[separatedOps[1]])
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (separatedOps[0] != separatedOps[1])
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (separatedOps[0] != StoreEvalDB[separatedOps[1]])
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (StoreEvalDB[separatedOps[0]] != separatedOps[1])
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+
+                                case " in ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (StoreEvalDB[separatedOps[1]].Contains(StoreEvalDB[separatedOps[0]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (separatedOps[1].Contains(separatedOps[0]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (StoreEvalDB[separatedOps[1]].Contains(separatedOps[0]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (separatedOps[1].Contains(StoreEvalDB[separatedOps[0]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+
+                                case " notIn ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (StoreEvalDB[separatedOps[1]].Contains(StoreEvalDB[separatedOps[0]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (separatedOps[1].Contains(separatedOps[0]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (StoreEvalDB[separatedOps[1]].Contains(separatedOps[0]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (separatedOps[1].Contains(StoreEvalDB[separatedOps[0]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+                            }
+                            insideCondtemp = insideCondtemp.Replace(separatedOps[0] + opPos.ElementAt(j).Value + separatedOps[1], tempBool.ToString());
+                        }
+                    }
+
+                    for (int j = 0; j < opPos.Count; j++)
+                    {
+                        if (opPos.ElementAt(j).Value == " or " || opPos.ElementAt(j).Value == " and ")
+                        {
+                            //separate ops
+                            separatedOps = insideCondtemp.Split(new[] { opPos.ElementAt(j).Value }, StringSplitOptions.None);
+                            separatedOps[1] = j != opPos.Count - 1 ? separatedOps[1].Split(new[] { opPos.ElementAt(j + 1).Value }, StringSplitOptions.None)[0] :
+                                separatedOps[1];
+                            if (j != 0 && separatedOps[0].Contains(opPos.ElementAt(j - 1).Value))
+                                separatedOps[0] = separatedOps[0].Split(opPos.ElementAt(j - 1).Value)[1];
+                            //check if it contains DB data
+                            bool DBdata0 = false;
+                            bool DBdata1 = false;
+                            if (separatedOps[0].Contains("StoreEvalDB.vars"))
+                            {
+                                separatedOps[0] = FindBetween(separatedOps[0], "StoreEvalDB.vars[\"", "\"]");
+                            }
+                            if (separatedOps[1].Contains("StoreEvalDB.vars"))
+                            {
+                                separatedOps[1] = FindBetween(separatedOps[1], "StoreEvalDB.vars[\"", "\"]");
+                            }
+                            //Not effect
+                            if (separatedOps[0].Contains("not "))
+                            {
+                                if (separatedOps[0].Contains("True") || separatedOps[0].Contains("true"))
+                                {
+                                    insideCondtemp = insideCondtemp.Replace(separatedOps[0], "False");
+                                    separatedOps[0] = "False";
+                                }
+                                else
+                                {
+                                    insideCondtemp = insideCondtemp.Replace(separatedOps[0], "True");
+                                    separatedOps[0] = "True";
+                                }
+                            }
+                            if (separatedOps[1].Contains("not "))
+                            {
+                                if (separatedOps[1].Contains("True") || separatedOps[1].Contains("true"))
+                                {
+                                    insideCondtemp = insideCondtemp.Replace(separatedOps[1], "False");
+                                    separatedOps[1] = "False";
+                                }
+                                else
+                                {
+                                    insideCondtemp = insideCondtemp.Replace(separatedOps[1], "True");
+                                    separatedOps[1] = "True";
+                                }
+                            }
+                            //check true or false
+                            switch (opPos.ElementAt(j).Value)
+                            {
+                                case " or ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToBoolean(StoreEvalDB[separatedOps[0]]) || Convert.ToBoolean(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToBoolean(separatedOps[0]) || Convert.ToBoolean(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToBoolean(separatedOps[0]) || Convert.ToBoolean(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToBoolean(StoreEvalDB[separatedOps[0]]) || Convert.ToBoolean(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+
+                                case " and ":
+                                    if (DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToBoolean(StoreEvalDB[separatedOps[0]]) && Convert.ToBoolean(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToBoolean(separatedOps[0]) && Convert.ToBoolean(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (!DBdata0 && DBdata1)
+                                    {
+                                        if (Convert.ToBoolean(separatedOps[0]) && Convert.ToBoolean(StoreEvalDB[separatedOps[1]]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    else if (DBdata0 && !DBdata1)
+                                    {
+                                        if (Convert.ToBoolean(StoreEvalDB[separatedOps[0]]) && Convert.ToBoolean(separatedOps[1]))
+                                            tempBool = true;
+                                        else
+                                            tempBool = false;
+                                    }
+                                    break;
+                            }
+                            insideCondtemp = insideCondtemp.Replace(separatedOps[0] + opPos.ElementAt(j).Value + separatedOps[1], tempBool.ToString());
+                        }
+                    }
+
+                    insideCond = insideCond.Replace(insideCondtemp2, insideCondtemp);
                 }
-                int startIndex = startIndexes.LastOrDefault();
-                int finalIndex = finalIndexes.FirstOrDefault(x => x >  startIndex);
-                string insideCond = IN.Substring(startIndex + 1, finalIndex - startIndex - 1);
-                //check inside Condition
-                SortedDictionary<int, string> opPos = new SortedDictionary<int, string>();
-                //export ops
-                foreach (var x in oprators)
-                { 
-                    if (insideCond.Contains(x))
-                    {
-                        opPos.Add(insideCond.IndexOf(x), x);
-                    }
-                }
-                //get inside cond result
-                string[] separatedOps = new string[2];
-                for (int j = 0; j < opPos.Count; j++)
+
+                if (insideCond.Contains(" and ") || insideCond.Contains(" or "))
                 {
-                    if (opPos.ElementAt(j).Value != " or " && opPos.ElementAt(j).Value != " and ")
+                    string insideCondtemp = insideCond;
+                    string[] separatedOps = new string[2];
+
+                    SortedDictionary<int, string> opPos = new SortedDictionary<int, string>();
+                    //export ops
+                    foreach (var x in oprators)
                     {
-                        separatedOps = insideCond.Split(new[] { opPos.ElementAt(j).Value }, StringSplitOptions.None);
+                        if (insideCondtemp.Contains(x))
+                        {
+                            opPos.Add(insideCondtemp.IndexOf(x), x);
+                        }
+                    }
+                    for (int j = 0; j < opPos.Count; j++)
+                    {
+                        //separate ops
+                        separatedOps = insideCondtemp.Split(new[] { opPos.ElementAt(j).Value }, StringSplitOptions.None);
                         separatedOps[1] = j != opPos.Count - 1 ? separatedOps[1].Split(new[] { opPos.ElementAt(j + 1).Value }, StringSplitOptions.None)[0] :
                             separatedOps[1];
-                        //check if it contains DB data
-                        bool DBdata0 = false;
-                        bool DBdata1 = false;
-                        if (separatedOps[0].Contains("StoreEvalDB.vars"))
+                        if (j != 0 && separatedOps[0].Contains(opPos.ElementAt(j - 1).Value))
+                            separatedOps[0] = separatedOps[0].Split(opPos.ElementAt(j - 1).Value)[1];
+                        //Not effect
+                        if (separatedOps[0].Contains("not "))
                         {
-                            separatedOps[0] = FindBetween(separatedOps[0], "StoreEvalDB.vars[\"", "\"]");
+                            if (separatedOps[0].Contains("True") || separatedOps[0].Contains("true"))
+                            {
+                                insideCondtemp = insideCondtemp.Replace(separatedOps[0], "False");
+                                separatedOps[0] = "False";
+                            }
+                            else
+                            {
+                                insideCondtemp = insideCondtemp.Replace(separatedOps[0], "True");
+                                separatedOps[0] = "True";
+                            }
                         }
-                        if (separatedOps[1].Contains("StoreEvalDB.vars"))
+                        if (separatedOps[1].Contains("not "))
                         {
-                            separatedOps[1] = FindBetween(separatedOps[1], "StoreEvalDB.vars[\"", "\"]");
+                            if (separatedOps[1].Contains("True") || separatedOps[1].Contains("true"))
+                            {
+                                insideCondtemp = insideCondtemp.Replace(separatedOps[1], "False");
+                                separatedOps[1] = "False";
+                            }
+                            else
+                            {
+                                insideCondtemp = insideCondtemp.Replace(separatedOps[1], "True");
+                                separatedOps[1] = "True";
+                            }
                         }
                         //check true or false
                         switch (opPos.ElementAt(j).Value)
                         {
-                            case " < ":
-                                if (DBdata0 && DBdata1)
-                                {
-                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) < Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if(!DBdata0 && !DBdata1)
-                                {
-                                    if (Convert.ToInt32(separatedOps[0]) < Convert.ToInt32(separatedOps[1]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && DBdata1)
-                                {
-                                    if (Convert.ToInt32(separatedOps[0]) < Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (DBdata0 && !DBdata1)
-                                {
-                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) < Convert.ToInt32(separatedOps[1]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
+                            case " or ":
+                                if (Convert.ToBoolean(separatedOps[0]) || Convert.ToBoolean(separatedOps[1]))
+                                    tempBool = true;
+                                else
+                                    tempBool = false;
                                 break;
 
-                            case " <= ":
-                                if (DBdata0 && DBdata1)
-                                {
-                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) <= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && !DBdata1)
-                                {
-                                    if (Convert.ToInt32(separatedOps[0]) <= Convert.ToInt32(separatedOps[1]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && DBdata1)
-                                {
-                                    if (Convert.ToInt32(separatedOps[0]) <= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (DBdata0 && !DBdata1)
-                                {
-                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) <= Convert.ToInt32(separatedOps[1]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                break;
-
-                            case " > ":
-                                if (DBdata0 && DBdata1)
-                                {
-                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) > Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && !DBdata1)
-                                {
-                                    if (Convert.ToInt32(separatedOps[0]) > Convert.ToInt32(separatedOps[1]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && DBdata1)
-                                {
-                                    if (Convert.ToInt32(separatedOps[0]) > Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (DBdata0 && !DBdata1)
-                                {
-                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) > Convert.ToInt32(separatedOps[1]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                break;
-
-                            case " >= ":
-                                if (DBdata0 && DBdata1)
-                                {
-                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) >= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && !DBdata1)
-                                {
-                                    if (Convert.ToInt32(separatedOps[0]) >= Convert.ToInt32(separatedOps[1]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && DBdata1)
-                                {
-                                    if (Convert.ToInt32(separatedOps[0]) >= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (DBdata0 && !DBdata1)
-                                {
-                                    if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) >= Convert.ToInt32(separatedOps[1]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                break;
-
-                            case " == ":
-                                if (DBdata0 && DBdata1)
-                                {
-                                    if (StoreEvalDB[separatedOps[0]] == StoreEvalDB[separatedOps[1]])
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && !DBdata1)
-                                {
-                                    if (separatedOps[0] == separatedOps[1])
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && DBdata1)
-                                {
-                                    if (separatedOps[0] == StoreEvalDB[separatedOps[1]])
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (DBdata0 && !DBdata1)
-                                {
-                                    if (StoreEvalDB[separatedOps[0]] == separatedOps[1])
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                break;
-
-                            case " != ":
-                                if (DBdata0 && DBdata1)
-                                {
-                                    if (StoreEvalDB[separatedOps[0]] != StoreEvalDB[separatedOps[1]])
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && !DBdata1)
-                                {
-                                    if (separatedOps[0] != separatedOps[1])
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && DBdata1)
-                                {
-                                    if (separatedOps[0] != StoreEvalDB[separatedOps[1]])
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (DBdata0 && !DBdata1)
-                                {
-                                    if (StoreEvalDB[separatedOps[0]] != separatedOps[1])
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                break;
-
-                            case " in ":
-                                if (DBdata0 && DBdata1)
-                                {
-                                    if (StoreEvalDB[separatedOps[1]].Contains(StoreEvalDB[separatedOps[0]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && !DBdata1)
-                                {
-                                    if (separatedOps[1].Contains(separatedOps[0]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && DBdata1)
-                                {
-                                    if (StoreEvalDB[separatedOps[1]].Contains(separatedOps[0]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (DBdata0 && !DBdata1)
-                                {
-                                    if (separatedOps[1].Contains(StoreEvalDB[separatedOps[0]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                break;
-
-                            case " notIn ":
-                                if (DBdata0 && DBdata1)
-                                {
-                                    if (StoreEvalDB[separatedOps[1]].Contains(StoreEvalDB[separatedOps[0]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && !DBdata1)
-                                {
-                                    if (separatedOps[1].Contains(separatedOps[0]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (!DBdata0 && DBdata1)
-                                {
-                                    if (StoreEvalDB[separatedOps[1]].Contains(separatedOps[0]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
-                                else if (DBdata0 && !DBdata1)
-                                {
-                                    if (separatedOps[1].Contains(StoreEvalDB[separatedOps[0]]))
-                                        tempBool = true;
-                                    else
-                                        tempBool = false;
-                                }
+                            case " and ":
+                                if (Convert.ToBoolean(separatedOps[0]) && Convert.ToBoolean(separatedOps[1]))
+                                    tempBool = true;
+                                else
+                                    tempBool = false;
                                 break;
                         }
-                        insideCond = insideCond.Replace(insideCond.Split(new[] { opPos.ElementAt(j + 1).Value }, StringSplitOptions.None)[0], "true");
+                        insideCondtemp = insideCondtemp.Replace(separatedOps[0] + opPos.ElementAt(j).Value + separatedOps[1], tempBool.ToString());
                     }
-                }
 
-                IN = IN.Replace(insideCond, "true");
-                //IN = IN.Remove(startIndex + 1, finalIndex - startIndex);
+                    insideCond = insideCondtemp;
+                }
+                return Convert.ToBoolean(insideCond);
             }
-            return true;
+            catch (Exception ex)
+            {
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("ConditionParser ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                return false;
+            }
         }
         #endregion
 
@@ -5365,16 +5572,25 @@ namespace FirstTry_app_1
         public static Dictionary<int, bool> runnerInWhile = new Dictionary<int, bool>();
         public static Dictionary<int, bool> runnerInIf = new Dictionary<int, bool>();
         public static Dictionary<int, bool> runnerEnd = new Dictionary<int, bool>();
-
+        //
+        int startOfWhile = 0;
+        int commandCounterWhile;
+        bool _break = false;
+        Commands currentWhile;
+        int endPos;
+        ListViewItem lvitemWhile;
+        ListViewItem lvitemIf;
         public async Task runCommand(Commands thisCommand, int caseIndex, int commandIndex)
         {
             try
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
-                    string itemBackGround2 = lvitem.Background.ToString();
-
+                    if(lvitem != null)
+                    {
+                        lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                        string itemBackGround2 = lvitem.Background.ToString();
+                    }
                 }));
                 ListView temp2 = listView;
                 try
@@ -5479,7 +5695,7 @@ namespace FirstTry_app_1
                 Thread.Sleep(Convert.ToInt16(tempSpeed * 3));
 
                 if (!pause)
-                    switch (thisCommand.Command)
+                    switch (thisCommand.Command.Replace("\t", ""))
                     {
                         #region ===> open
                         case "open":
@@ -7993,7 +8209,7 @@ namespace FirstTry_app_1
                                     var st = new StackTrace(ex, true);
                                     var frame = st.GetFrame(st.FrameCount - 1);
                                     var line = frame.GetFileLineNumber();
-                                    Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                                    Log.Items.Add("replace " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
 
@@ -8053,7 +8269,7 @@ namespace FirstTry_app_1
                                     var st = new StackTrace(ex, true);
                                     var frame = st.GetFrame(st.FrameCount - 1);
                                     var line = frame.GetFileLineNumber();
-                                    Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                                    Log.Items.Add("runScript " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
 
@@ -8142,7 +8358,7 @@ namespace FirstTry_app_1
                                     var st = new StackTrace(ex, true);
                                     var frame = st.GetFrame(st.FrameCount - 1);
                                     var line = frame.GetFileLineNumber();
-                                    Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                                    Log.Items.Add("switch " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
 
@@ -8296,26 +8512,250 @@ namespace FirstTry_app_1
 
                         #region ===> while
                         case "while":
-                            runnerInWhile.Add(thisCommand.Number, true);
+                            try
+                            {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
+                                lvitemWhile = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.Yellow;
+
+                                }));
+
+                                //runnerInWhile.Add(thisCommand.Number, true);
+                                //currentWhile = thisCommand;
+                                _break = false;
+                                startOfWhile = thisCommand.Number;
+                                commandCounterWhile = startOfWhile;
+                                endPos = TestList.ElementAt(caseIndex).TestValue.FirstOrDefault(x => x.Number > TestList.ElementAt(caseIndex).TestValue.ElementAt(thisCommand.Number - 1).Number &&
+                                    x.Command.Contains("end") &&
+                                    Regex.Matches(x.Command, "\t").Count == Regex.Matches(TestList.ElementAt(caseIndex).TestValue.ElementAt(thisCommand.Number - 1).Command, "\t").Count).Number - 1;
+                                thisCommand.Pass = true;
+                                while (!_break && ConditionParser(thisCommand.Target))
+                                {
+                                    runCommand(TestList.ElementAt(caseIndex).TestValue.ElementAt(commandCounterWhile), caseIndex, commandCounterWhile);
+                                    commandCounterWhile++;
+                                }
+                                //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+
+                                }));
+                                return;
+                            }
+                            catch (Exception ex)
+                            {
+
+                                thisCommand.Pass = false;
+
+                                //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
+                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                    // Get the line number from the stack frame
+                                    var st = new StackTrace(ex, true);
+                                    var frame = st.GetFrame(st.FrameCount - 1);
+                                    var line = frame.GetFileLineNumber();
+                                    Log.Items.Add("while " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
+                                }));
+                            }
                             break;
                         #endregion
 
                         #region ===> break
                         case "break":
+                            try
+                            {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
+                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.Yellow;
 
+                                }));
+
+                                _break = true;
+
+                                thisCommand.Pass = true;
+
+                                //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+
+                                }));
+                            }
+                            catch (Exception ex)
+                            {
+
+                                thisCommand.Pass = false;
+
+                                //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
+                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                    // Get the line number from the stack frame
+                                    var st = new StackTrace(ex, true);
+                                    var frame = st.GetFrame(st.FrameCount - 1);
+                                    var line = frame.GetFileLineNumber();
+                                    Log.Items.Add("break " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
+                                }));
+                            }
                             break;
                         #endregion
 
                         #region ===> if
                         case "if":
-                            runnerInIf.Add(thisCommand.Number, true);
+                            try
+                            {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
+                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                lvitemIf = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.Yellow;
+                                }));
+
+                                //runnerInWhile.Add(thisCommand.Number, true);
+                                //currentWhile = thisCommand;
+                                endPos = TestList.ElementAt(caseIndex).TestValue.FirstOrDefault(x => x.Number > TestList.ElementAt(caseIndex).TestValue.ElementAt(thisCommand.Number - 1).Number &&
+                                    x.Command.Contains("end") &&
+                                    Regex.Matches(x.Command, "\t").Count == Regex.Matches(TestList.ElementAt(caseIndex).TestValue.ElementAt(thisCommand.Number - 1).Command, "\t").Count).Number - 1;
+
+                                _break = false;
+                                thisCommand.Pass = true;
+                                if (!_break && ConditionParser(thisCommand.Target))
+                                {
+                                    return;
+                                }
+                                //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                }));
+                            }
+                            catch (Exception ex)
+                            {
+
+                                thisCommand.Pass = false;
+
+                                //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
+                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                    // Get the line number from the stack frame
+                                    var st = new StackTrace(ex, true);
+                                    var frame = st.GetFrame(st.FrameCount - 1);
+                                    var line = frame.GetFileLineNumber();
+                                    Log.Items.Add("if " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
+                                }));
+                            }
                             break;
                         #endregion
 
                         #region ===> end
                         case "end":
+                            try
+                            {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
+                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.Yellow;
 
-                            runnerEnd.Add(thisCommand.Number, true);
+                                }));
+
+                                commandCounterWhile = 0;
+                                //inWhile = true;
+                                _break = false;
+
+                                thisCommand.Pass = true;
+
+                                //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.LightGreen;
+
+                                }));
+
+                                //change command color in lvitem While
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    if (lvitemWhile != null) lvitemWhile.Background = System.Windows.Media.Brushes.LightGreen;
+
+                                }));
+
+                                //change command color in lvitem If
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    if (lvitemIf != null) lvitemIf.Background = System.Windows.Media.Brushes.LightGreen;
+
+                                }));
+
+                                //return;
+                            }
+                            catch (Exception ex)
+                            {
+
+                                thisCommand.Pass = false;
+
+                                //change command color in listveiw
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    listView.SelectedIndex = thisCommand.Number - 1;
+                                    listView.ScrollIntoView(listView.SelectedItem);
+                                }));
+                                lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    lvitem.Background = System.Windows.Media.Brushes.LightPink;
+                                    // Get the line number from the stack frame
+                                    var st = new StackTrace(ex, true);
+                                    var frame = st.GetFrame(st.FrameCount - 1);
+                                    var line = frame.GetFileLineNumber();
+                                    Log.Items.Add("end " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
+
+                                }));
+                            }
                             break;
                         #endregion
 
@@ -8555,10 +8995,12 @@ namespace FirstTry_app_1
                     switchTestCase(testCaseNumber - 1);
                 }));
                 bool passed = true;
+                _break = false;
                 for (int i = index; TestList.ElementAt(testCaseNumber - 1).TestValue.Count > i; i++)
                 {
                     waitType = WaitType._case;
-
+                    /*
+                    #region loops and If
                     ///////Check loops
                     if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Command == "while")
                         runnerInWhile.Add(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Number - 1, true);
@@ -8569,46 +9011,37 @@ namespace FirstTry_app_1
                         int endOfWhile = TestList.ElementAt(testCaseNumber - 1).TestValue.FirstOrDefault(x => x.Number > TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Number &&
                                 x.Command.Contains("end") &&
                                 Regex.Matches(x.Command, "\t").Count == Regex.Matches(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Command, "\t").Count).Number - 1;
+                        TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Pass = true;
                         i++;
 
-                        while (true)
+                        do
                         {
-                            if (i - 1 == startOfWhile)
+                            if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass)
                                 await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
                             else
                             {
-                                if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass)
-                                    await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
-                                else
-                                {
-                                    passed = false;
-                                    break;
-                                }
+                                passed = false;
+                                break;
                             }
                             i++;
-                            if (i == endOfWhile)
-                            {
-                                string cond = ConvertPythonToCSharp(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(startOfWhile).Target);
-                                if (ConditionParser(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(startOfWhile).Target))
-                                {
-
-                                }
-                            }
                         }
+                        while (i == endOfWhile && ConditionParser(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(startOfWhile).Target));
                     }
 
-                    ///////Check conditions
+                    ///////Check IF conditions
                     if (runnerInIf.Count(x => x.Value == true) > 0)
                     {
                         //thisCommand = ListDB.ElementAt(runnerInIf.LastOrDefault(x => x.Value == true).Key);
 
                     }
-
+                    #endregion
+                    */
+                    //normal commands
                     if (i == 0)
                         await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
                     else
                     {
-                        if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass)
+                        if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass || _break)
                             await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
                         else
                         {
@@ -8616,7 +9049,10 @@ namespace FirstTry_app_1
                             break;
                         }
                     }
+                    if (_break)
+                        i = endPos - 1;
                 }
+                    
                 if (passed)
                 {
                     caseFinished = true;
