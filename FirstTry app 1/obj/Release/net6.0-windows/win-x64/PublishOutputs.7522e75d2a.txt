@@ -1,0 +1,9 @@
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\WebDriverIDE.pdb
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\WebDriverIDE.dll.config
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\D3DCompiler_47_cor3.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\PenImc_cor3.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\PresentationNative_cor3.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\vcruntime140_cor3.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\wpfgfx_cor3.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\sni.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\WebDriverIDE.exe

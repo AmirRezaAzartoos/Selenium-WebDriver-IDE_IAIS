@@ -621,7 +621,7 @@
                                     <Border Grid.Row="2">
                                         <ListView MouseRightButtonDown="TestCaseListView_MouseRightButtonDown" HorizontalAlignment="Stretch" x:Name="TestCaseListView"
                                                   FontSize="14" FontFamily="Roboto" MouseDoubleClick="TestCaseListView_MouseDoubleClick" Margin="0,0,-0.4,5.2" SizeChanged="TestCaseListView_SizeChanged"
-                                                  KeyDown="TestCaseListView_KeyDown" PreviewMouseLeftButtonDown="TestCaseListView_PreviewMouseLeftButtonDown" AllowDrop="True"
+                                                  KeyDown="TestCaseListView_KeyDown" PreviewMouseLeftButtonDown="TestCaseListView_PreviewMouseLeftButtonDown" AllowDrop="True" SelectionChanged="TestCaseListView_SelectionChanged"
                                                   MouseMove="TestCaseListView_MouseMove" DragEnter="TestCaseListView_DragEnter" Drop="TestCaseListView_Drop" VirtualizingPanel.IsVirtualizing="False"
                                                   ScrollViewer.CanContentScroll="False" VirtualizingPanel.ScrollUnit="Pixel" SelectionMode="Single" Foreground="#FF1C1C1C" PreviewMouseUp="TestCaseListView_PreviewMouseUp">
                                             <ListView.ContextMenu>

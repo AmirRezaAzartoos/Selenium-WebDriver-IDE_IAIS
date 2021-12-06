@@ -135,6 +135,7 @@ namespace FirstTry_app_1
         enum WaitType { _single, _case };
         WaitType waitType;
 
+        public enum Pass { noExe, passed, failed };
 
 
         ChromeDriver driver;
@@ -207,7 +208,7 @@ namespace FirstTry_app_1
             chromeservice.HideCommandPromptWindow = true; //hide console window
             options.AddArguments("start-maximized");
             options.AddExtension(startupPath + "\\data\\extention-test.crx");
-            options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
+            //options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
             //var temp124 = ConfigurationManager.AppSettings.Get("IAIS");
         }
         ///////BUILD
@@ -1714,13 +1715,13 @@ namespace FirstTry_app_1
                                 continue;
                         }
                         _commandCounter++;
-                        ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                        ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
                     }
 
                     else if (lines.ElementAt(_counter).Contains("# end"))
                     {
                         _commandCounter++;
-                        ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                        ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
                         if (sumTrue == 0)
                             throw new Exception("Unvalid Command : No operations exist");
                         else
@@ -1743,12 +1744,7 @@ namespace FirstTry_app_1
                 _commandCounter = CommandCounter = _commandCounter;
                 CommandCounterTB.Text = Convert.ToString(CommandCounter);
                 TestList.Add(new TestSuit() { TestNumber = testCaseCounter, TestName = _openFileName, TestValue = new ObservableCollection<Commands>(ListDB), TestFolder = FolderName, SavedPath = C, IsSaved = true });
-                TestCaseListView.ItemsSource = TestList;
-                listView.ItemsSource = ListDB;
-                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                view.Refresh();
-                ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                view2.Refresh();
+                RefreshLists(true, true);
             }
         }
 
@@ -2200,13 +2196,13 @@ namespace FirstTry_app_1
                                     continue;
                             }
                             _commandCounter++;
-                            ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                            ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
                         }
 
                         else if (lines.ElementAt(_counter).Contains("# end"))
                         {
                             _commandCounter++;
-                            ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                            ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
                             if (sumTrue == 0)
                                 throw new Exception("Unvalid Command : No operations exist");
                             else
@@ -2230,12 +2226,7 @@ namespace FirstTry_app_1
                     ListDB.Clear();
                 }
                 _testCaseCounter = testCaseCounter;
-                TestCaseListView.ItemsSource = TestList;
-                listView.ItemsSource = ListDB;
-                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                view.Refresh();
-                ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                view2.Refresh();
+                RefreshLists(true, true);
             }
         }
         #endregion
@@ -2740,7 +2731,7 @@ namespace FirstTry_app_1
                                     }
 
                                 CommandCounterTB.Text = Convert.ToString(CommandCounter);
-                                ListDB.Add(new Commands(CommandCounter, tabNeeded + CommandsComboBox.Text, TargetTB.Text, ValueTB.Text, CommandsComboBox.Text + Convert.ToString(CommandCounter + 1), DescriptionTB.Text, false));
+                                ListDB.Add(new Commands(CommandCounter, tabNeeded + CommandsComboBox.Text, TargetTB.Text, ValueTB.Text, CommandsComboBox.Text + Convert.ToString(CommandCounter + 1), DescriptionTB.Text, Pass.noExe));
                                 var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                                 if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
                                 CommandsComboBox.Focus();
@@ -2906,10 +2897,33 @@ namespace FirstTry_app_1
                             item.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                         }
                     }
-                    if (0 != _testCaseCounter)
+                    if (testCaseCounter != 0 && TestList.Where(x => x.IsPassed != Pass.noExe).ToList().Count > 0)
                     {
-                        ListViewItem CurrentTestCaseitem = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
-                        if (CurrentTestCaseitem != null && CurrentTestCaseitem.Background != System.Windows.Media.Brushes.LightGreen && CurrentTestCaseitem.Background != System.Windows.Media.Brushes.LightPink) CurrentTestCaseitem.Background = System.Windows.Media.Brushes.Lavender;
+                        foreach (TestSuit item in TestCaseListView.Items)
+                        {
+                            ListViewItem CurrentTestCaseitem = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(item.TestNumber - 1) as ListViewItem;
+                            if (CurrentTestCaseitem != null)
+                            {
+                                if (item.IsPassed == Pass.passed)
+                                    CurrentTestCaseitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                else if ( item.IsPassed == Pass.failed)
+                                    CurrentTestCaseitem.Background = System.Windows.Media.Brushes.LightPink;
+                            }
+                        }
+                    }
+                    if (CommandCounter != 0 && ListDB.Where(x => x.Pass != Pass.noExe).ToList().Count > 0)
+                    {
+                        foreach (Commands item in listView.Items)
+                        {
+                            ListViewItem CurrentTestCaseitem = listView.ItemContainerGenerator.ContainerFromIndex(item.Number - 1) as ListViewItem;
+                            if (CurrentTestCaseitem != null)
+                            {
+                                if (item.Pass == Pass.passed)
+                                    CurrentTestCaseitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                else if (item.Pass == Pass.failed)
+                                    CurrentTestCaseitem.Background = System.Windows.Media.Brushes.LightPink;
+                            }
+                        }
                     }
                 }
             }
@@ -3023,7 +3037,7 @@ namespace FirstTry_app_1
                 {
                     CommandCounter++;
                     CommandCounterTB.Text = Convert.ToString(CommandCounter);
-                    ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description, false));
+                    ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description, Pass.noExe));
                     var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
                     HandleComboBox();
@@ -3038,14 +3052,12 @@ namespace FirstTry_app_1
                         var obj2 = ListDB.FirstOrDefault(x => x.Number == i);
                         if (obj2 != null) obj2.Number = i - 1;
                     }
-                    listView.ItemsSource = ListDB;
-                    ICollectionView view1 = CollectionViewSource.GetDefaultView(ListDB);
-                    view1.Refresh();
+                    RefreshLists(false, true);
                     _commandCounter--;
                     CommandCounter--;
 
                     CommandCounterTB.Text = Convert.ToString(CommandCounter);
-                    ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description, false));
+                    ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description, Pass.noExe));
                     var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
                     CommandsComboBox.Focus();
@@ -3058,9 +3070,7 @@ namespace FirstTry_app_1
                         if (obj1 != null) obj1.TestValue.ElementAt(i - 1).Number = i;
                     }
                 }
-                listView.ItemsSource = ListDB;
-                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                view.Refresh();
+                RefreshLists(false, true);
                 var obj3 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                 if (obj3 != null) obj3.IsSaved = false;
                 var bc = new BrushConverter();
@@ -3083,9 +3093,7 @@ namespace FirstTry_app_1
                     var obj = ListDB.FirstOrDefault(x => x.Number == i);
                     if (obj != null) obj.Number = i - 1;
                 }
-                listView.ItemsSource = ListDB;
-                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                view.Refresh();
+                RefreshLists(false, true);
                 _commandCounter--;
                 CommandCounter--;
                 CommandCounterTB.Text = Convert.ToString(CommandCounter);
@@ -3124,21 +3132,14 @@ namespace FirstTry_app_1
                     var obj = TestList.FirstOrDefault(x => x.TestNumber == i);
                     if (obj != null) obj.TestNumber = i - 1;
                 }
-                TestCaseListView.ItemsSource = TestList;
-                ICollectionView view = CollectionViewSource.GetDefaultView(TestList);
-                view.Refresh();
-                listView.ItemsSource = ListDB;
-                ICollectionView view1 = CollectionViewSource.GetDefaultView(ListDB);
-                view1.Refresh();
+                RefreshLists(true, true);
                 _testCaseCounter--;
                 testCaseCounter--;
                 TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
                 if (removed.TestValue == CurrentTestCase.TestValue || TestList.Count == 0)
                 {
                     ListDB.Clear();
-                    listView.ItemsSource = ListDB;
-                    ICollectionView view2 = CollectionViewSource.GetDefaultView(ListDB);
-                    view2.Refresh();
+                    RefreshLists(false, true);
                 }
             }
             catch (Exception ex)
@@ -3310,16 +3311,9 @@ namespace FirstTry_app_1
                         CommandCounter = _commandCounter = 0;
                         CommandCounterTB.Text = Convert.ToString(CommandCounter);
                         ListDB.Clear();
-                        listView.ItemsSource = ListDB;
-                        ICollectionView view3 = CollectionViewSource.GetDefaultView(ListDB);
-                        view3.Refresh();
+                        RefreshLists(false, true);
                     }
-                    TestCaseListView.ItemsSource = TestList;
-                    listView.ItemsSource = ListDB;
-                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                    view.Refresh();
-                    ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                    view2.Refresh();
+                    RefreshLists(true, true);
                     if (testCaseCounter != 0)
                     {
                         if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
@@ -4399,12 +4393,7 @@ namespace FirstTry_app_1
                                 for (int j = mystring.Length; j > 0; j--)
                                     mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
                                 FolderName = mystring;
-                                TestCaseListView.ItemsSource = TestList;
-                                listView.ItemsSource = ListDB;
-                                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                                view.Refresh();
-                                ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                                view2.Refresh();
+                                RefreshLists(true, true);
                                 if (_openFileAddress != null)
                                     OpenTestCase(_openFileAddress);
                                 break;
@@ -4417,12 +4406,7 @@ namespace FirstTry_app_1
                                 for (int j = mystring1.Length; j > 0; j--)
                                     mystring1 = mystring1.Substring(mystring1.IndexOf("\\") + 1);
                                 FolderName = mystring1;
-                                TestCaseListView.ItemsSource = TestList;
-                                listView.ItemsSource = ListDB;
-                                ICollectionView view1 = CollectionViewSource.GetDefaultView(ListDB);
-                                view1.Refresh();
-                                ICollectionView view21 = CollectionViewSource.GetDefaultView(TestList);
-                                view21.Refresh();
+                                RefreshLists(true, true);
                                 if (_openFileAddress != null)
                                     openOldTestCase(_openFileAddress);
                                 break;
@@ -4462,12 +4446,7 @@ namespace FirstTry_app_1
                                 for (int j = mystring1.Length; j > 0; j--)
                                     mystring1 = mystring1.Substring(mystring1.IndexOf("\\") + 1);
                                 FolderName = mystring1;
-                                TestCaseListView.ItemsSource = TestList;
-                                listView.ItemsSource = ListDB;
-                                ICollectionView view1 = CollectionViewSource.GetDefaultView(ListDB);
-                                view1.Refresh();
-                                ICollectionView view21 = CollectionViewSource.GetDefaultView(TestList);
-                                view21.Refresh();
+                                RefreshLists(true, true);
                                 OpenTestSuit(_openFileAddress);
                                 TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
                                 break;
@@ -4481,12 +4460,7 @@ namespace FirstTry_app_1
                                 for (int j = mystring.Length; j > 0; j--)
                                     mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
                                 FolderName = mystring;
-                                TestCaseListView.ItemsSource = TestList;
-                                listView.ItemsSource = ListDB;
-                                ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                                view.Refresh();
-                                ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                                view2.Refresh();
+                                RefreshLists(true, true);
                                 openNewTestSuit(_openFileAddress);
                                 TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
                                 break;
@@ -4506,12 +4480,7 @@ namespace FirstTry_app_1
                         for (int j = mystring.Length; j > 0; j--)
                             mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
                         FolderName = mystring;
-                        TestCaseListView.ItemsSource = TestList;
-                        listView.ItemsSource = ListDB;
-                        ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                        view.Refresh();
-                        ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                        view2.Refresh();
+                        RefreshLists(true, true);
                         openOldTestSuit(_openFileAddress);
                         TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
                     }
@@ -4791,6 +4760,11 @@ namespace FirstTry_app_1
 
         private void TestCaseListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+
+        }
+
+        private void TestCaseListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
             try
             {
                 HandleTestList();
@@ -4812,17 +4786,9 @@ namespace FirstTry_app_1
                         CommandCounter = _commandCounter = 0;
                         CommandCounterTB.Text = Convert.ToString(CommandCounter);
                         ListDB.Clear();
-                        listView.ItemsSource = ListDB;
-                        ICollectionView view3 = CollectionViewSource.GetDefaultView(ListDB);
-                        view3.Refresh();
+                        RefreshLists(false, true);
                     }
-                    TestCaseListView.ItemsSource = TestList;
-
-                    listView.ItemsSource = ListDB;
-                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                    view.Refresh();
-                    ICollectionView view2 = CollectionViewSource.GetDefaultView(TestList);
-                    view2.Refresh();
+                    RefreshLists(true, true);
                     if (testCaseCounter != 0)
                     {
                         if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
@@ -4845,10 +4811,9 @@ namespace FirstTry_app_1
             }
             catch (Exception ex)
             {
-                Log.Items.Add("TestCaseListView_MouseDoubleClick ---> Failed Because of error : " + ex.ToString());
+                Log.Items.Add("TestCaseListView_SelectionChanged ---> Failed Because of error : " + ex.ToString());
             }
         }
-
         private void CommandsComboBox_MouseLeave(object sender, MouseEventArgs e)
         {
             HandleComboBox();
@@ -5120,12 +5085,7 @@ namespace FirstTry_app_1
                     }
                     var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     ListDB = new ObservableCollection<Commands>(obj1.TestValue);
-                    listView.ItemsSource = ListDB;
-                    TestCaseListView.ItemsSource = TestList;
-                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                    view.Refresh();
-                    ICollectionView view1 = CollectionViewSource.GetDefaultView(ListDB);
-                    view1.Refresh();
+                    RefreshLists(true, true);
                     listView.SelectedIndex = index;
                 }
             }
@@ -5249,12 +5209,7 @@ namespace FirstTry_app_1
                     SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                     HandleTestList();
                     edit = false;
-                    listView.ItemsSource = ListDB;
-                    TestCaseListView.ItemsSource = TestList;
-                    ICollectionView view = CollectionViewSource.GetDefaultView(ListDB);
-                    view.Refresh();
-                    ICollectionView view1 = CollectionViewSource.GetDefaultView(ListDB);
-                    view1.Refresh();
+                    RefreshLists(true, true);
                 }
             }
             catch (Exception ex)
@@ -5312,7 +5267,6 @@ namespace FirstTry_app_1
             }
         }
 
-
         private void listView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Released)
@@ -5349,6 +5303,35 @@ namespace FirstTry_app_1
         private void TestCaseListView_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        public void RefreshLists(bool testList, bool commandList)
+        {
+            try
+            {
+
+                if (testList)
+                {
+                    TestCaseListView.ItemsSource = TestList;
+                    ICollectionView view = CollectionViewSource.GetDefaultView(TestList);
+                    view.Refresh();
+
+                }
+                if (commandList)
+                {
+                    listView.ItemsSource = ListDB;
+                    ICollectionView view2 = CollectionViewSource.GetDefaultView(ListDB);
+                    view2.Refresh();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Get the line number from the stack frame
+                var st = new StackTrace(ex, true);
+                var frame = st.GetFrame(st.FrameCount - 1);
+                var line = frame.GetFileLineNumber();
+                Log.Items.Add("RefreshLists ---> Failed in line " + line + " Because of error : " + ex.ToString());
+            }
         }
 
         #endregion
@@ -5423,7 +5406,7 @@ namespace FirstTry_app_1
                         tempCommand = "runScript";
                     App.Current.Dispatcher.Invoke(delegate
                     {
-                        ListDB.Add(new Commands(CommandCounter1, tempCommand, FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter1 + 1), "None", false));
+                        ListDB.Add(new Commands(CommandCounter1, tempCommand, FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter1 + 1), "None", Pass.noExe));
                     });
                     i += 4;
                 }
@@ -5549,7 +5532,7 @@ namespace FirstTry_app_1
 
                     App.Current.Dispatcher.Invoke(delegate
                     {
-                        tempCommands.Add(new Commands(CommandCounter1, myCurrentCommand, myCurrentTarget, myCurrentValue, myCurrentCommand + Convert.ToString(CommandCounter1 + 1), "None", false));
+                        tempCommands.Add(new Commands(CommandCounter1, myCurrentCommand, myCurrentTarget, myCurrentValue, myCurrentCommand + Convert.ToString(CommandCounter1 + 1), "None", Pass.noExe));
                     });
                 }
                 mainList.Add(new NewIDEType(TestCaseID, TestCaseNAME, tempCommands));
@@ -5586,7 +5569,7 @@ namespace FirstTry_app_1
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    if(lvitem != null)
+                    if (lvitem != null)
                     {
                         lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
                         string itemBackGround2 = lvitem.Background.ToString();
@@ -5713,7 +5696,7 @@ namespace FirstTry_app_1
                                 }));
                                 driver.Navigate().GoToUrl(thisCommand.Target);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -5725,7 +5708,7 @@ namespace FirstTry_app_1
                             {
 
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -5809,7 +5792,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForElementPresent);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -5821,7 +5804,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -5906,7 +5889,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForElementVisible);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -5918,7 +5901,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -5999,7 +5982,7 @@ namespace FirstTry_app_1
                                         break;
                                 }
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6011,7 +5994,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6092,7 +6075,7 @@ namespace FirstTry_app_1
                                         break;
                                 }
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6104,7 +6087,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6190,7 +6173,7 @@ namespace FirstTry_app_1
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForText);
 
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6202,7 +6185,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6288,7 +6271,7 @@ namespace FirstTry_app_1
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForValue);
 
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6300,7 +6283,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6380,7 +6363,7 @@ namespace FirstTry_app_1
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_waitForAttribute);
 
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6392,7 +6375,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6434,7 +6417,7 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.Yellow;
 
                                 }));
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6446,7 +6429,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6489,7 +6472,7 @@ namespace FirstTry_app_1
 
                                 }));
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6501,7 +6484,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6599,7 +6582,7 @@ namespace FirstTry_app_1
                                 }
                                 //el_type.Submit();
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6611,7 +6594,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6689,7 +6672,7 @@ namespace FirstTry_app_1
                                 el_sendKeys.SendKeys(thisCommand.Value);
                                 //el_sendKeys.Submit();
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6701,7 +6684,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6778,7 +6761,7 @@ namespace FirstTry_app_1
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_clearText);
                                 el_clearText.Clear();
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6790,7 +6773,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6867,7 +6850,7 @@ namespace FirstTry_app_1
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_click);
                                 el_click.Click();
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6879,7 +6862,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6920,7 +6903,7 @@ namespace FirstTry_app_1
 
                                 }));
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -6932,7 +6915,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7010,7 +6993,7 @@ namespace FirstTry_app_1
                                 select.SelectByText(thisCommand.Value);
 
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7028,7 +7011,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7106,7 +7089,7 @@ namespace FirstTry_app_1
                                 SelectElement select2 = new SelectElement(el_selectByValue);
                                 select2.SelectByValue(thisCommand.Value);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7118,7 +7101,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7198,7 +7181,7 @@ namespace FirstTry_app_1
                                 select3.SelectByIndex(Convert.ToInt32(thisCommand.Value));
 
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7210,7 +7193,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7288,7 +7271,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeText);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7301,7 +7284,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7380,7 +7363,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeValue);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7393,7 +7376,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7471,7 +7454,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeWicketPath);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7484,7 +7467,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7562,7 +7545,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeInnerHTML);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7575,7 +7558,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7653,7 +7636,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeName);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7666,7 +7649,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7744,7 +7727,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeId);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7757,7 +7740,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7835,7 +7818,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeHref);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7848,7 +7831,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -7889,7 +7872,7 @@ namespace FirstTry_app_1
 
                                 }));
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
                                 StoreEvalDB[thisCommand.Value] = thisCommand.Target;
@@ -7905,7 +7888,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8070,7 +8053,7 @@ namespace FirstTry_app_1
                                             throw new Exception("Element is not active"); break;
                                 }
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8083,7 +8066,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8126,7 +8109,7 @@ namespace FirstTry_app_1
                                 IAlert a = driver.SwitchTo().Alert();
                                 a.Accept();
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8138,7 +8121,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8181,7 +8164,7 @@ namespace FirstTry_app_1
                                 /*if (!StoreEvalDB.ContainsKey(thisCommand.Value))*/
                                 StoreEvalDB[thisCommand.Value] = thisCommand.Target;
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8193,7 +8176,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8241,7 +8224,7 @@ namespace FirstTry_app_1
                                     jsExecutor.ExecuteScript(thisCommand.Value, thisCommand.Target);
                                 }
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8253,7 +8236,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8330,7 +8313,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_switch);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8342,7 +8325,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8384,7 +8367,7 @@ namespace FirstTry_app_1
                                 }));
                                 driver.SwitchTo().DefaultContent();
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 //lvitem = listView.ItemContainerGenerator.ContainerFromIndex(thisCommand.Number - 1) as ListViewItem;
@@ -8397,7 +8380,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8473,7 +8456,7 @@ namespace FirstTry_app_1
                                 Thread.Sleep(150);
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_scrollInto);
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8485,7 +8468,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8535,7 +8518,7 @@ namespace FirstTry_app_1
                                 endPos = TestList.ElementAt(caseIndex).TestValue.FirstOrDefault(x => x.Number > TestList.ElementAt(caseIndex).TestValue.ElementAt(thisCommand.Number - 1).Number &&
                                     x.Command.Contains("end") &&
                                     Regex.Matches(x.Command, "\t").Count == Regex.Matches(TestList.ElementAt(caseIndex).TestValue.ElementAt(thisCommand.Number - 1).Command, "\t").Count).Number - 1;
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
                                 while (!_break && ConditionParser(thisCommand.Target))
                                 {
                                     runCommand(TestList.ElementAt(caseIndex).TestValue.ElementAt(commandCounterWhile), caseIndex, commandCounterWhile);
@@ -8552,7 +8535,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8593,7 +8576,7 @@ namespace FirstTry_app_1
 
                                 _break = true;
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8605,7 +8588,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8651,7 +8634,7 @@ namespace FirstTry_app_1
                                     Regex.Matches(x.Command, "\t").Count == Regex.Matches(TestList.ElementAt(caseIndex).TestValue.ElementAt(thisCommand.Number - 1).Command, "\t").Count).Number - 1;
 
                                 _break = false;
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
                                 if (!_break && ConditionParser(thisCommand.Target))
                                 {
                                     return;
@@ -8665,7 +8648,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8708,7 +8691,7 @@ namespace FirstTry_app_1
                                 //inWhile = true;
                                 _break = false;
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8736,7 +8719,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8776,7 +8759,7 @@ namespace FirstTry_app_1
                                 }));
                                 driver.Navigate().Refresh();
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8788,7 +8771,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8829,7 +8812,7 @@ namespace FirstTry_app_1
                                 }));
                                 driver.Quit();
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8841,7 +8824,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8880,7 +8863,7 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.Yellow;
 
                                 }));
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8892,7 +8875,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8933,7 +8916,7 @@ namespace FirstTry_app_1
                                 }));
                                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Convert.ToInt32(thisCommand.Target));
 
-                                thisCommand.Pass = true;
+                                thisCommand.Pass = Pass.passed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8945,7 +8928,7 @@ namespace FirstTry_app_1
                             catch (Exception ex)
                             {
 
-                                thisCommand.Pass = false;
+                                thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -8999,49 +8982,13 @@ namespace FirstTry_app_1
                 for (int i = index; TestList.ElementAt(testCaseNumber - 1).TestValue.Count > i; i++)
                 {
                     waitType = WaitType._case;
-                    /*
-                    #region loops and If
-                    ///////Check loops
-                    if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Command == "while")
-                        runnerInWhile.Add(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Number - 1, true);
 
-                    if (runnerInWhile.Count(x => x.Value == true) > 0)
-                    {
-                        int startOfWhile = i;
-                        int endOfWhile = TestList.ElementAt(testCaseNumber - 1).TestValue.FirstOrDefault(x => x.Number > TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Number &&
-                                x.Command.Contains("end") &&
-                                Regex.Matches(x.Command, "\t").Count == Regex.Matches(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Command, "\t").Count).Number - 1;
-                        TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i).Pass = true;
-                        i++;
-
-                        do
-                        {
-                            if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass)
-                                await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
-                            else
-                            {
-                                passed = false;
-                                break;
-                            }
-                            i++;
-                        }
-                        while (i == endOfWhile && ConditionParser(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(startOfWhile).Target));
-                    }
-
-                    ///////Check IF conditions
-                    if (runnerInIf.Count(x => x.Value == true) > 0)
-                    {
-                        //thisCommand = ListDB.ElementAt(runnerInIf.LastOrDefault(x => x.Value == true).Key);
-
-                    }
-                    #endregion
-                    */
                     //normal commands
                     if (i == 0)
                         await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
                     else
                     {
-                        if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass || _break)
+                        if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass == Pass.passed || _break)
                             await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
                         else
                         {
@@ -9052,11 +8999,11 @@ namespace FirstTry_app_1
                     if (_break)
                         i = endPos - 1;
                 }
-                    
+
                 if (passed)
                 {
                     caseFinished = true;
-                    TestList.ElementAt(testCaseNumber - 1).IsPassed = true;
+                    TestList.ElementAt(testCaseNumber - 1).IsPassed = Pass.passed;
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
                         ListViewItem lvitem1 = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
@@ -9066,7 +9013,7 @@ namespace FirstTry_app_1
                 else
                 {
                     caseFinished = false;
-                    TestList.ElementAt(testCaseNumber - 1).IsPassed = false;
+                    TestList.ElementAt(testCaseNumber - 1).IsPassed = Pass.failed;
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
                         ListViewItem lvitem1 = TestCaseListView.ItemContainerGenerator.ContainerFromIndex(_testCaseCounter - 1) as ListViewItem;
@@ -9099,7 +9046,7 @@ namespace FirstTry_app_1
                         await Task.Run(() => runCase(i, 0));
                     else
                     {
-                        if (TestList.ElementAt(i - 2).IsPassed || RunFromMiddle)
+                        if (TestList.ElementAt(i - 2).IsPassed == Pass.passed || RunFromMiddle)
                             await Task.Run(() => runCase(i, 0));
                         else
                         {
@@ -9122,9 +9069,6 @@ namespace FirstTry_app_1
                 Log.Items.Add("runSuit ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
-
         #endregion
-
-
     }
 }

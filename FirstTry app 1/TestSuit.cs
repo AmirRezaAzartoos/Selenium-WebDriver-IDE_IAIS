@@ -15,7 +15,7 @@ namespace FirstTry_app_1
         private ObservableCollection<Commands> _testValue;
         private string _savedPath;
         private bool _isSaved;
-        private bool _isPassed;
+        private MainWindow.Pass _isPassed;
 
         public int TestNumber
         {
@@ -98,7 +98,7 @@ namespace FirstTry_app_1
                 OnPropertyChanged("IsSaved");
             }
         }
-        public bool IsPassed
+        public MainWindow.Pass IsPassed
         {
             get
             {

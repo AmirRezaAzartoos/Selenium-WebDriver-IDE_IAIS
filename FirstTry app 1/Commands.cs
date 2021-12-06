@@ -23,7 +23,7 @@ namespace FirstTry_app_1
         private string _value;
         private string _variableName;
         private string _description;
-        private bool _pass;
+        private MainWindow.Pass _pass;
 
         public int Number
         {
@@ -117,7 +117,7 @@ namespace FirstTry_app_1
             }
         }
 
-        public bool Pass
+        public MainWindow.Pass Pass
         {
             get
             {
@@ -140,7 +140,7 @@ namespace FirstTry_app_1
             throw new NotImplementedException();
         }
 
-        public Commands(int number, string command, string target, string value, string variableName, string description, bool pass)
+        public Commands(int number, string command, string target, string value, string variableName, string description, MainWindow.Pass pass)
         {
             this.Number = number;
             this.Command = command;

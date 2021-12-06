@@ -7,7 +7,7 @@ using System.Linq;
 using System.Windows.Data;
 
 namespace FirstTry_app_1.BL
-{
+{/*
     class NewIDEConverter
     {
         MainWindow _mainWindow = new MainWindow();
@@ -77,4 +77,4 @@ namespace FirstTry_app_1.BL
             }
         }
     }
-}
+*/}

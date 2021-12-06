@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace FirstTry_app_1.BL
-{
+{/*
     class OldIDEConverter
     {
         public void openOldTestCase(string caseAddress)
@@ -95,4 +95,4 @@ namespace FirstTry_app_1.BL
             }
         }
     }
-}
+*/}

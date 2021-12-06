@@ -1,0 +1,20 @@
+﻿WebDriverIDE
+
+
+winexe
+C#
+.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Release\net6.0-windows\
+FirstTry_app_1
+none
+false
+TRACE;RELEASE;NET;NET6_0;NETCOREAPP
+C:\webdriver-ide-source\FirstTry app 1\App.xaml
+111163389010
+
+25-1350451341
+236-1651463294
+AddTestCase.xaml;CreateNewProject.xaml;MainWindow.xaml;MessageBox\AddTestFirst.xaml;MessageBox\EmptyField.xaml;MessageBox\TestSuitNameWarn.xaml;MessageBox\UnsavedContent.xaml;MessageBox\UnvalidCommand.xaml;MessageBox\UpdateAck.xaml;RenameTestCase.xaml;StartUpMessage.xaml;
+
+False
+

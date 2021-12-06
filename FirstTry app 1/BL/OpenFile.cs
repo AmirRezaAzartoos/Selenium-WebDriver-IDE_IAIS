@@ -27,7 +27,7 @@ using System.Windows.Media.Animation;
 using System.Xml.Linq;
 
 namespace FirstTry_app_1.BL
-{
+{/*
     class OpenFile
     {
         MainWindow _mainWindow = new MainWindow();
@@ -431,7 +431,7 @@ namespace FirstTry_app_1.BL
 
                             #region ===> end
                             /*case "end":
-                                break;*/
+                                break;
                             #endregion
 
                             #region ===> refresh
@@ -460,13 +460,13 @@ namespace FirstTry_app_1.BL
                                 #endregion
                         }
                         _commandCounter++;
-                        MainWindow.ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                        MainWindow.ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
                     }
 
                     else if (lines.ElementAt(_counter).Contains("# end"))
                     {
                         _commandCounter++;
-                        MainWindow.ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, false));
+                        MainWindow.ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
                         if (MainWindow.sumTrue == 0)
                             throw new Exception("Unvalid Command : No operations exist");
                         else
@@ -912,7 +912,7 @@ namespace FirstTry_app_1.BL
 
                                 #region ===> end
                                 /*case "end":
-                                    break;*/
+                                    break;
                                 #endregion
 
                                 #region ===> refresh
@@ -980,7 +980,8 @@ namespace FirstTry_app_1.BL
             }
         }
         #endregion
-
+        
 
     }
+*/
 }
