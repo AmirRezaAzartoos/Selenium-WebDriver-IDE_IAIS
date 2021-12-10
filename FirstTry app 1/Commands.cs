@@ -1,16 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
-using System.Windows.Media.Effects;
 using System.Collections.ObjectModel;
 
 namespace FirstTry_app_1
@@ -27,10 +15,7 @@ namespace FirstTry_app_1
 
         public int Number
         {
-            get
-            {
-                return _number;
-            }
+            get => _number;
             set
             {
                 _number = value;
@@ -44,7 +29,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_command))
+                {
                     return "None";
+                }
 
                 return _command;
             }
@@ -59,7 +46,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_target))
+                {
                     return "None";
+                }
 
                 return _target;
             }
@@ -75,7 +64,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_value))
+                {
                     return "None";
+                }
 
                 return _value;
             }
@@ -90,7 +81,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_variableName))
+                {
                     return "None";
+                }
 
                 return _variableName;
             }
@@ -106,7 +99,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_description))
+                {
                     return "None";
+                }
 
                 return _description;
             }
@@ -119,10 +114,7 @@ namespace FirstTry_app_1
 
         public MainWindow.Pass Pass
         {
-            get
-            {
-                return _pass;
-            }
+            get => _pass;
             set
             {
                 _pass = value;
@@ -132,7 +124,7 @@ namespace FirstTry_app_1
 
         public override string ToString()
         {
-            return this.Number + this.Command + this.Target + this.Value + this.VariableName + this.Description;
+            return Number + Command + Target + Value + VariableName + Description;
         }
 
         public static implicit operator Commands(ObservableCollection<Commands> v)
@@ -142,12 +134,12 @@ namespace FirstTry_app_1
 
         public Commands(int number, string command, string target, string value, string variableName, string description, MainWindow.Pass pass)
         {
-            this.Number = number;
-            this.Command = command;
-            this.Target = target;
-            this.Value = value;
-            this.VariableName = variableName;
-            this.Pass = pass;
+            Number = number;
+            Command = command;
+            Target = target;
+            Value = value;
+            VariableName = variableName;
+            Pass = pass;
         }
     }
 }

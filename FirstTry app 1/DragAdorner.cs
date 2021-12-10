@@ -1,132 +1,129 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Shapes;
-using System.Windows;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace DragListViewSample
 {
-    class DragAdorner : Adorner
+    internal class DragAdorner : Adorner
     {
-        private Rectangle child = null;
+        private readonly Rectangle child = null;
         private double offsetLeft = 0;
         private double offsetTop = 0;
-     
+
         /// <summary>
         /// Initializes a new instance of DragVisualAdorner.
         /// </summary>
         /// <param name="adornedElement">The element being adorned.</param>
         /// <param name="size">The size of the adorner.</param>
         /// <param name="brush">A brush to with which to paint the adorner.</param>
-        public DragAdorner( UIElement adornedElement, Size size, Brush brush )
-            : base( adornedElement )
+        public DragAdorner(UIElement adornedElement, Size size, Brush brush)
+            : base(adornedElement)
         {
-            Rectangle rect = new Rectangle();
-            rect.Fill = brush;
-            rect.Width = size.Width;
-            rect.Height = size.Height;
-            rect.IsHitTestVisible = false;
-            this.child = rect;
+            Rectangle rect = new Rectangle
+            {
+                Fill = brush,
+                Width = size.Width,
+                Height = size.Height,
+                IsHitTestVisible = false
+            };
+            child = rect;
         }
-  
-        public override GeneralTransform GetDesiredTransform( GeneralTransform transform )
+
+        public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
         {
             GeneralTransformGroup result = new GeneralTransformGroup();
-            result.Children.Add( base.GetDesiredTransform( transform ) );
-            result.Children.Add( new TranslateTransform( this.offsetLeft, this.offsetTop ) );
+            result.Children.Add(base.GetDesiredTransform(transform));
+            result.Children.Add(new TranslateTransform(offsetLeft, offsetTop));
             return result;
         }
-      
-  
+
+
         /// <summary>
         /// Gets/sets the horizontal offset of the adorner.
         /// </summary>
         public double OffsetLeft
         {
-            get { return this.offsetLeft; }
+            get => offsetLeft;
             set
             {
-                this.offsetLeft = value;
+                offsetLeft = value;
                 UpdateLocation();
             }
         }
-  
-   
+
+
         /// <summary>
         /// Updates the location of the adorner.
         /// </summary>
         /// <param name="left"></param>
         /// <param name="top"></param>
-        public void SetOffsets( double left, double top )
+        public void SetOffsets(double left, double top)
         {
-            this.offsetLeft = left;
-            this.offsetTop = top;
-            this.UpdateLocation();
+            offsetLeft = left;
+            offsetTop = top;
+            UpdateLocation();
         }
-   
-  
+
+
         /// <summary>
         /// Gets/sets the vertical offset of the adorner.
         /// </summary>
         public double OffsetTop
         {
-            get { return this.offsetTop; }
+            get => offsetTop;
             set
             {
-                this.offsetTop = value;
+                offsetTop = value;
                 UpdateLocation();
             }
         }
-  
+
         /// <summary>
         /// Override.
         /// </summary>
         /// <param name="constraint"></param>
         /// <returns></returns>
-        protected override Size MeasureOverride( Size constraint )
+        protected override Size MeasureOverride(Size constraint)
         {
-            this.child.Measure( constraint );
-            return this.child.DesiredSize;
+            child.Measure(constraint);
+            return child.DesiredSize;
         }
-  
+
         /// <summary>
         /// Override.
         /// </summary>
         /// <param name="finalSize"></param>
         /// <returns></returns>
-        protected override Size ArrangeOverride( Size finalSize )
+        protected override Size ArrangeOverride(Size finalSize)
         {
-            this.child.Arrange( new Rect( finalSize ) );
+            child.Arrange(new Rect(finalSize));
             return finalSize;
         }
-  
+
         /// <summary>
         /// Override.
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        protected override Visual GetVisualChild( int index )
+        protected override Visual GetVisualChild(int index)
         {
-            return this.child;
+            return child;
         }
-  
+
         /// <summary>
         /// Override.  Always returns 1.
         /// </summary>
-        protected override int VisualChildrenCount
-        {
-            get { return 1; }
-        }
-  
- 
+        protected override int VisualChildrenCount => 1;
+
+
         private void UpdateLocation()
         {
-            AdornerLayer adornerLayer = this.Parent as AdornerLayer;
-            if( adornerLayer != null )
-                adornerLayer.Update( this.AdornedElement );
+            AdornerLayer adornerLayer = Parent as AdornerLayer;
+            if (adornerLayer != null)
+            {
+                adornerLayer.Update(AdornedElement);
+            }
         }
     }
 }

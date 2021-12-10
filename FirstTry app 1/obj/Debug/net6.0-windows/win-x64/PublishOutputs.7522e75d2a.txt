@@ -1,0 +1,9 @@
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\WebDriverIDE.pdb
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\Data\extention-test.crx
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\Data\StaticCode-Case.py
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\Data\StaticCode.py
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\Data\StaticCode_ubuntu-Case.py
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\Data\StaticCode_ubuntu.py
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\WebDriverIDE.dll.config
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\sni.dll
+C:\webdriver-ide-source\FirstTry app 1\bin\publish\WebDriverIDE.exe

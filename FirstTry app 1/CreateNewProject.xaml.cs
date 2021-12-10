@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace FirstTry_app_1
 {
@@ -36,7 +27,7 @@ namespace FirstTry_app_1
         {
             MainBorder.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _emptyFieldDialog = new MessageBox.EmptyField();
+            MessageBox.EmptyField _emptyFieldDialog = new MessageBox.EmptyField();
             _emptyFieldDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainBorder.Effect = null;
@@ -46,7 +37,7 @@ namespace FirstTry_app_1
         {
             MainBorder.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _unsavedContentDialog = new MessageBox.UnsavedContent();
+            MessageBox.UnsavedContent _unsavedContentDialog = new MessageBox.UnsavedContent();
             _unsavedContentDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainBorder.Effect = null;
@@ -64,8 +55,10 @@ namespace FirstTry_app_1
                         if (MainWindow.Continue == true)
                         {
                             MainWindow mainWindow = Owner as MainWindow;
-                            CreateNewProject createNewProject = new CreateNewProject();
-                            createNewProject.Owner = this;
+                            CreateNewProject createNewProject = new CreateNewProject
+                            {
+                                Owner = this
+                            };
                             MainWindow.ProjectName = ProjectNameTB.Text;
                             MainWindow.gPath = null;
                             MainWindow.ListDB.Clear();
@@ -94,13 +87,17 @@ namespace FirstTry_app_1
                             Close();
                         }
                         else
+                        {
                             Close();
+                        }
                     }
                     else
                     {
                         MainWindow mainWindow = Owner as MainWindow;
-                        CreateNewProject createNewProject = new CreateNewProject();
-                        createNewProject.Owner = this;
+                        CreateNewProject createNewProject = new CreateNewProject
+                        {
+                            Owner = this
+                        };
                         MainWindow.ProjectName = ProjectNameTB.Text;
                         MainWindow.gPath = null;
                         MainWindow.ListDB.Clear();

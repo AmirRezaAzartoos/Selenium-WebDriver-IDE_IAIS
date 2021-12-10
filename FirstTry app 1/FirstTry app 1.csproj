@@ -29,18 +29,23 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>false</Optimize>
+    <Optimize>True</Optimize>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <DebugSymbols>true</DebugSymbols>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>FirstTry_app_1.App</StartupObject>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>WebDriverIDE.ico</ApplicationIcon>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Optimize>True</Optimize>
   </PropertyGroup>
   <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
+    <ApplicationIcon>WebDriverIDE.ico</ApplicationIcon>
+    <Nullable>warnings</Nullable>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -220,9 +225,6 @@
     <Resource Include="Images\Update2.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="WebDriverIDE.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\StaticCode.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -230,7 +232,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.255803">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -238,16 +239,57 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommonServiceLocator" Version="2.0.2" />
-    <PackageReference Include="DynamicLanguageRuntime" Version="1.2.3" />
     <PackageReference Include="MaterialDesignThemes" Version="3.1.2" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="95.0.4638.1700" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="MessageBox\ProgressBar.xaml.cs" />
+    <None Remove="Data\chromedriver.exe" />
+    <None Remove="Data\extention-test.crx" />
+    <None Remove="Data\StaticCode-Case.py" />
+    <None Remove="Data\StaticCode.py" />
+    <None Remove="Data\StaticCode_ubuntu-Case.py" />
+    <None Remove="Data\StaticCode_ubuntu.py" />
+    <None Remove="WebDriverIDE.ico" />
     <Page Remove="DictionaryContainingScrollbarStyle.xaml" />
     <Page Remove="MainWindow - Copy.xaml" />
     <Page Remove="MessageBox\ProgressBar.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\chromedriver.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\extention-test.crx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\StaticCode-Case.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\StaticCode.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\StaticCode_ubuntu-Case.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\StaticCode_ubuntu.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebDriverIDE.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

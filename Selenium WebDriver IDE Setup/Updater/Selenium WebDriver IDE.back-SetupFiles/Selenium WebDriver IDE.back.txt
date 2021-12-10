@@ -1,0 +1,19 @@
+;aiu;
+
+[General]
+MessageTitle = Notification Title
+MessageBody = Notification Message
+MessageExpirationDate = 07/12/2021
+
+[Update]
+Name = Selenium WebDriver IDE
+Category = IAIS
+ProductVersion = 0.1.1.0
+URL = http://172.16.111.229/Selenium-WebDriver-IDE/Selenium-WebDriver-IDE.exe
+Size = 65359598
+ReleaseDate = 07/12/2021
+SHA256 = BC7D18E5EFFBF08817FB3893A5191FDAB5F3B1FA2D47AFACE3FF148B9FEED2AB
+MD5 = 613e3428ef498850d23a4e0d5bdd2856
+ServerFileName = Selenium-WebDriver-IDE.exe
+RegistryKey = HKUD\Software\IAIS\Selenium WebDriver IDE\Version
+Version = 0.1.1.0

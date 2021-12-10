@@ -1,34 +1,30 @@
-﻿using System;
-using System.Configuration;
-using System.Collections.Specialized;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Resources;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
-using System.IO;
-using System.Windows.Controls.Primitives;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Media.Animation;
-using System.Xml.Linq;
-using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Remote;
-using System.Threading;
-using OpenQA.Selenium.Interactions;
-using System.Drawing;
 
 namespace FirstTry_app_1
 {
@@ -39,12 +35,12 @@ namespace FirstTry_app_1
     {
 
         ///////variables///////
-        System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+        private readonly System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
 
         public static string ProjectName;
         public static int CommandCounter = 0;
         public static int _commandCounter = 0;
-        string TestName;
+        private readonly string TestName;
         public static int testCaseCounter = 0;
         public static int _testCaseCounter = 0;
         public static string sPath;
@@ -59,15 +55,15 @@ namespace FirstTry_app_1
         public static string _openFileAddress;
         public static int _openedFiles;
         public static string openTestCaseContent;
-        string BaseDiractory = "C:\\Selenium\\";
+        private readonly string BaseDiractory = "C:\\Selenium\\";
         public static string CopiedLogItem;
         public static Commands CopiedItem;
         public static Commands SelectedItem;
         public static TestSuit SelectedTest = new TestSuit() { };
-        bool edit;
-        bool ok = false;
-        bool RunFromMiddle = false;
-        bool saveUbuntu = false;
+        private bool edit;
+        private bool ok = false;
+        private bool RunFromMiddle = false;
+        private readonly bool saveUbuntu = false;
         public static bool TestSuitSaved = false;
         public static bool Continue = false;
         public static bool updateAck = false;
@@ -125,32 +121,33 @@ namespace FirstTry_app_1
             {"waitForWindowPresent" , "gg" } ,
             {"while" , "gg" }
         };
+        string startupPath = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\WebDriverIDE.dll", "");
 
         //runner
-        IDictionary<string, dynamic> StoreEvalDB = new Dictionary<string, dynamic>();
-        int[] storedCounter;
-        int[] logCounter;
-        BindingList<string> LoggerList = new BindingList<string>();
+        private readonly IDictionary<string, dynamic> StoreEvalDB = new Dictionary<string, dynamic>();
+        private readonly int[] storedCounter;
+        private readonly int[] logCounter;
+        private readonly BindingList<string> LoggerList = new BindingList<string>();
 
-        enum WaitType { _single, _case };
-        WaitType waitType;
+        private enum WaitType { _single, _case };
+
+        private WaitType waitType;
 
         public enum Pass { noExe, passed, failed };
 
+        private ChromeDriver driver;
+        //ChromeDriver driver;
+        private readonly ChromeDriverService chromeservice;
+        private readonly ChromeOptions options;
+        private readonly DesiredCapabilities capabilities;
+        private int index;
+        private bool handleRightClickBugListview = true;
+        private bool handleRightClickBugTestlist = true;
 
-        ChromeDriver driver;
-        ChromeDriverService chromeservice;
-        ChromeOptions options;
-        DesiredCapabilities capabilities;
+        private enum Multiplication { copy, cut };
 
-        int index;
-        bool handleRightClickBugListview = true;
-        bool handleRightClickBugTestlist = true;
-        enum Multiplication { copy, cut };
-        Multiplication multiplication;
-
-
-        Commands CurrentCommand;
+        private Multiplication multiplication;
+        private Commands CurrentCommand;
         public TestSuit CurrentTestCase = new TestSuit { };
 
         public static ObservableCollection<Commands> ListDB = new ObservableCollection<Commands>();
@@ -158,58 +155,79 @@ namespace FirstTry_app_1
 
         public Commands Command { get; private set; }
 
-        sealed class ViewModel : INotifyPropertyChanged
+        private sealed class ViewModel : INotifyPropertyChanged
         {
             #region INotifyPropertyChanged
             public event PropertyChangedEventHandler PropertyChanged;
 
-            void SetField<X>(ref X field, X value, [CallerMemberName] string propertyCommand = null)
+            private void SetField<X>(ref X field, X value, [CallerMemberName] string propertyCommand = null)
             {
-                if (EqualityComparer<X>.Default.Equals(field, value)) return;
+                if (EqualityComparer<X>.Default.Equals(field, value))
+                {
+                    return;
+                }
 
                 field = value;
 
-                var h = PropertyChanged;
-                if (h != null) h(this, new PropertyChangedEventArgs(propertyCommand));
+                PropertyChangedEventHandler h = PropertyChanged;
+                if (h != null)
+                {
+                    h(this, new PropertyChangedEventArgs(propertyCommand));
+                }
             }
             #endregion
 
-            long? selectedValue;
+            private long? selectedValue;
             public long? SelectedValue
             {
-                get { return selectedValue; }
-                set { SetField(ref selectedValue, value); }
+                get => selectedValue;
+                set => SetField(ref selectedValue, value);
             }
         }
-
+        
         public MainWindow()
         {
-            InitializeComponent();
-            DataContext = new ViewModel();
-            MainGrid.Focus();
-            this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
-            this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
-            //listView.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(Thumb_DragDelta), true);
-            TestCaseListView.ItemsSource = TestList;
-            listView.ItemsSource = ListDB;
-            //listView.DataContext = ListDB;
-            Resources["StoreEvalDB"] = StoreEvalDB;
-            Resources["storedCounter"] = storedCounter;
-            Resources["LoggerList"] = LoggerList;
-            //Resources["Logger"] = Logger;
+            try
+            {
+                InitializeComponent();
+                DataContext = new ViewModel();
+                MainGrid.Focus();
+                MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+                MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
 
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(TestCaseListView.ItemsSource);
-            view.Filter = UserFilter;
-            Refrence.Text = "  Selenium WebDriver IDE\n  Version : 0.3.8";
+                //listView.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(Thumb_DragDelta), true);
+                TestCaseListView.ItemsSource = TestList;
+                listView.ItemsSource = ListDB;
+                //listView.DataContext = ListDB;
+                Resources["StoreEvalDB"] = StoreEvalDB;
+                Resources["storedCounter"] = storedCounter;
+                Resources["LoggerList"] = LoggerList;
+                //Resources["Logger"] = Logger;
+                CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(TestCaseListView.ItemsSource);
+                view.Filter = UserFilter;
+                Refrence.Text = "  Selenium WebDriver IDE\n  Version : 0.3.8";
 
-            string startupPath = Environment.CurrentDirectory;
-            options = new ChromeOptions();
-            chromeservice = ChromeDriverService.CreateDefaultService();
-            chromeservice.HideCommandPromptWindow = true; //hide console window
-            options.AddArguments("start-maximized");
-            options.AddExtension(startupPath + "\\data\\extention-test.crx");
-            //options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
-            //var temp124 = ConfigurationManager.AppSettings.Get("IAIS");
+                options = new ChromeOptions();
+                chromeservice = ChromeDriverService.CreateDefaultService(startupPath + "\\Data");
+                chromeservice.HideCommandPromptWindow = true; //hide console window
+                options.AddArguments("start-maximized");
+                options.AddExtension(startupPath + "\\Data\\extention-test.crx");
+                //options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
+                //var temp124 = ConfigurationManager.AppSettings.Get("IAIS");
+            }
+            catch (Exception ex)
+            {
+                // Get the line number from the stack frame
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
+                Log.Items.Add("runSuit ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                StringBuilder sb = new StringBuilder();
+                sb.Append(ex.ToString());
+                // flush every 20 seconds as you do it
+                File.AppendAllText(startupPath + "\\logger.log", sb.ToString());
+                sb.Clear();
+            }
         }
         ///////BUILD
         #region Save
@@ -221,10 +239,10 @@ namespace FirstTry_app_1
                 //FileInfo file = new FileInfo(@A);
                 //file.Create();
                 //StreamWriter TestFile = file.CreateText();
-                string mainString_testCase = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode-Case.py") : File.ReadAllText(@"data\StaticCode_ubuntu-Case.py");
+                string mainString_testCase = (ubuntuIsEnable) ? File.ReadAllText(startupPath + "\\Data\\StaticCode-Case.py") : File.ReadAllText(startupPath + "\\Data\\StaticCode_ubuntu-Case.py");
                 //int mainStringSplitterIndex = mainString_testCase.IndexOf("#bodyCode#");
                 string mainString = mainString_testCase;
-                mainString += "\r\n\r\nclass StoreEvalDB:\r\n\tvars = {}\r\n";
+                //mainString += "\r\n\r\nclass StoreEvalDB:\r\n\tvars = {}\r\n";
                 mainString += "\nclass " + TestList.ElementAt(_testCaseCounter - 1).TestName + ":\n";
                 string tabNeededTemp = "";
                 while (ListDB.Count > _counter)
@@ -234,9 +252,14 @@ namespace FirstTry_app_1
                     ///////specifyTarget
                     string targetType = "";
                     if (ListDB.ElementAt(_counter).Target.Contains('=') && !ListDB.ElementAt(_counter).Target.Contains("//"))
+                    {
                         targetType = ListDB.ElementAt(_counter).Target.Split('=')[0];
+                    }
                     else if (!ListDB.ElementAt(_counter).Target.Contains('=') || ListDB.ElementAt(_counter).Target.Contains("//"))
+                    {
                         targetType = "xpath";
+                    }
+
                     string tempTarget = "";
                     switch (targetType)
                     {
@@ -437,7 +460,10 @@ namespace FirstTry_app_1
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | select\n";
                             string tempLabel = ListDB.ElementAt(_counter).Value;
                             if (tempLabel.Contains("label="))
+                            {
                                 tempLabel = tempLabel.Replace("label=", "");
+                            }
+
                             string _select = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                             _select += tabNeededTemp + "\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                             _select += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + "_2 = " + ListDB.ElementAt(_counter).VariableName + ".find_element_by_" + targetType.Replace(" ", "_") + "(\"option[. = '" + ConvertTextToIdeFormat(tempLabel, false, true) + "']\")\n";
@@ -453,7 +479,10 @@ namespace FirstTry_app_1
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | selectByVisibleText\n";
                             string tempLabel1 = ListDB.ElementAt(_counter).Value;
                             if (tempLabel1.Contains("label="))
+                            {
                                 tempLabel1 = tempLabel1.Replace("label=", "");
+                            }
+
                             string _selectByVisibleText = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                             _selectByVisibleText += tabNeededTemp + "\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                             _selectByVisibleText += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_visible_text(" + ConvertTextToIdeFormat(tempLabel1, false, true) + ")\n";
@@ -467,7 +496,10 @@ namespace FirstTry_app_1
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | selectByValue\n";
                             string tempLabel2 = ListDB.ElementAt(_counter).Value;
                             if (tempLabel2.Contains("label="))
+                            {
                                 tempLabel2 = tempLabel2.Replace("label=", "");
+                            }
+
                             string _selectByValue = tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                             _selectByValue += tabNeededTemp + "\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                             _selectByValue += tabNeededTemp + "\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_value(" + ConvertTextToIdeFormat(tempLabel2, false, true) + ")\n";
@@ -586,7 +618,6 @@ namespace FirstTry_app_1
                         case "storeElementPresent":
                             mainString += tabNeededTemp + "\t# " + (_counter + 1) + " | storeElementPresent\n";
                             string _storeElementPresent = tabNeededTemp + "\ttry:\n";
-                            string exist;
                             _storeElementPresent += tabNeededTemp + "\t\tWebDriverWait(driver, 30).until(EC.visibility_of_element_located((\"" + targetType + "\", \"" + tempTarget + "\")))\n";
                             _storeElementPresent += tabNeededTemp + "\t\tStoreEvalDB.vars[\"" + ListDB.ElementAt(_counter).Value + "\"] = True\n";
                             _storeElementPresent += tabNeededTemp + "\texcept TimeoutException:\n";
@@ -747,8 +778,8 @@ namespace FirstTry_app_1
                 int _counter = 0;
                 //FileInfo file = new FileInfo(@B);
                 //StreamWriter TestFile = file.CreateText();
-                string StaticCodeNew = (ubuntuIsEnable) ? File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString()) :
-                     File.ReadAllText(@"data\StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString());
+                string StaticCodeNew = (ubuntuIsEnable) ? File.ReadAllText(startupPath + "\\Data\\StaticCode.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString()) :
+                     File.ReadAllText(startupPath + "\\Data\\StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", ProjectName).Replace("tableWidth", (_testCaseNameCount).ToString());
                 int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
                 string mainString = StaticCodeNew.Substring(0, splitterIndex);
                 string mainString_Last = StaticCodeNew.Remove(0, splitterIndex + 11);
@@ -757,7 +788,7 @@ namespace FirstTry_app_1
                 while (testCaseCounter > _counter1)
                 {
 
-                    var obj = TestList.FirstOrDefault(x => x.TestNumber == _counter1 + 1);
+                    TestSuit obj = TestList.FirstOrDefault(x => x.TestNumber == _counter1 + 1);
                     if (obj != null)
                     {
                         ListDB = new ObservableCollection<Commands>(obj.TestValue);
@@ -773,9 +804,14 @@ namespace FirstTry_app_1
                         ///////specifyTarget
                         string targetType = "";
                         if (ListDB.ElementAt(_counter).Target.Contains('=') && !ListDB.ElementAt(_counter).Target.Contains("//"))
+                        {
                             targetType = ListDB.ElementAt(_counter).Target.Split('=')[0];
+                        }
                         else if (!ListDB.ElementAt(_counter).Target.Contains('=') || ListDB.ElementAt(_counter).Target.Contains("//"))
+                        {
                             targetType = "xpath";
+                        }
+
                         string tempTarget = "";
                         switch (targetType)
                         {
@@ -976,7 +1012,10 @@ namespace FirstTry_app_1
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | select\n";
                                 string tempLabel = ListDB.ElementAt(_counter).Value;
                                 if (tempLabel.Contains("label="))
+                                {
                                     tempLabel = tempLabel.Replace("label=", "");
+                                }
+
                                 string _select = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\")\n";
                                 _select += tabNeededTemp + "\t\thighlight(" + ListDB.ElementAt(_counter).VariableName + ")\n";
                                 _select += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + "_2 = " + ListDB.ElementAt(_counter).VariableName + ".find_element_by_" + targetType.Replace(" ", "_") + "(\"option[. = '" + ConvertTextToIdeFormat(tempLabel, false, true) + "']\")\n";
@@ -992,7 +1031,10 @@ namespace FirstTry_app_1
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | selectByVisibleText\n";
                                 string tempLabel1 = ListDB.ElementAt(_counter).Value;
                                 if (tempLabel1.Contains("label="))
+                                {
                                     tempLabel1 = tempLabel1.Replace("label=", "");
+                                }
+
                                 string _selectByVisibleText = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByVisibleText += tabNeededTemp + "\t\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByVisibleText += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_visible_text(" + ConvertTextToIdeFormat(tempLabel1, false, true) + ")\n";
@@ -1006,7 +1048,10 @@ namespace FirstTry_app_1
                                 mainString += tabNeededTemp + "\t\t# " + (_counter + 1) + " | selectByValue\n";
                                 string tempLabel2 = ListDB.ElementAt(_counter).Value;
                                 if (tempLabel2.Contains("label="))
+                                {
                                     tempLabel2 = tempLabel2.Replace("label=", "");
+                                }
+
                                 string _selectByValue = tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + " = Select(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByValue += tabNeededTemp + "\t\thighlight(driver.find_element_by_" + targetType.Replace(" ", "_") + "(\"" + tempTarget + "\"))\n";
                                 _selectByValue += tabNeededTemp + "\t\t" + ListDB.ElementAt(_counter).VariableName + ".select_by_value(" + ConvertTextToIdeFormat(tempLabel2, false, true) + ")\n";
@@ -1303,9 +1348,14 @@ namespace FirstTry_app_1
                 while (i < lines.Count)
                 {
                     if (lines.ElementAt(_counter).Contains("class ") && !lines.ElementAt(_counter).Contains("StoreEvalDB()"))
+                    {
                         break;
+                    }
                     else
+                    {
                         i++;
+                    }
+
                     _counter++;
                 }
                 _counter++;
@@ -1622,14 +1672,22 @@ namespace FirstTry_app_1
                                         _currentValue = _currentValue.Remove(_currentValue.LastIndexOf("\")"), 2);
                                     }
                                     if (lines.ElementAt(_counter + 1).Contains("execute_script('"))
+                                    {
                                         _currentValue = lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("execute_script('") + 16).Remove(lines.ElementAt(_counter + 1).LastIndexOf("')"), 2);
+                                    }
                                 }
                                 else
                                 {
                                     if (lines.ElementAt(_counter + 1).Contains("execute_script(\""))
+                                    {
                                         _currentValue = FindBetween(lines.ElementAt(_counter + 1), "execute_script(\"", "\", ");
+                                    }
+
                                     if (lines.ElementAt(_counter + 1).Contains("execute_script('"))
+                                    {
                                         _currentValue = FindBetween(lines.ElementAt(_counter + 1), "execute_script('", "', ");
+                                    }
+
                                     _currentTarget = temprunScript;
                                 }
                                 _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
@@ -1723,7 +1781,9 @@ namespace FirstTry_app_1
                         _commandCounter++;
                         ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
                         if (sumTrue == 0)
+                        {
                             throw new Exception("Unvalid Command : No operations exist");
+                        }
                         else
                         {
                             sumTrue--;
@@ -1767,9 +1827,13 @@ namespace FirstTry_app_1
                 while (_counter < lines.Count)
                 {
                     if (lines.ElementAt(_counter).Contains("try:"))
+                    {
                         break;
+                    }
                     else
+                    {
                         _counter++;
+                    }
                 }
                 while (j < lines.Count)
                 {
@@ -1779,7 +1843,9 @@ namespace FirstTry_app_1
                         _counter1++;
                     }
                     else
+                    {
                         j++;
+                    }
                 }
                 while (_counter1 > i)
                 {
@@ -2102,14 +2168,22 @@ namespace FirstTry_app_1
                                             _currentValue = _currentValue.Remove(_currentValue.LastIndexOf("\")"), 2);
                                         }
                                         if (lines.ElementAt(_counter + 1).Contains("execute_script('"))
+                                        {
                                             _currentValue = lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("execute_script('") + 16).Remove(lines.ElementAt(_counter + 1).LastIndexOf("')"), 2);
+                                        }
                                     }
                                     else
                                     {
                                         if (lines.ElementAt(_counter + 1).Contains("execute_script(\""))
+                                        {
                                             _currentValue = FindBetween(lines.ElementAt(_counter + 1), "execute_script(\"", "\", ");
+                                        }
+
                                         if (lines.ElementAt(_counter + 1).Contains("execute_script('"))
+                                        {
                                             _currentValue = FindBetween(lines.ElementAt(_counter + 1), "execute_script('", "', ");
+                                        }
+
                                         _currentTarget = temprunScript;
                                     }
                                     _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
@@ -2204,7 +2278,9 @@ namespace FirstTry_app_1
                             _commandCounter++;
                             ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
                             if (sumTrue == 0)
+                            {
                                 throw new Exception("Unvalid Command : No operations exist");
+                            }
                             else
                             {
                                 sumTrue--;
@@ -2250,7 +2326,7 @@ namespace FirstTry_app_1
             testNameRow.Width = listViewSize - 20;
         }
 
-        void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             Thumb senderAsThumb = e.OriginalSource as Thumb;
             GridViewColumnHeader header
@@ -2263,7 +2339,10 @@ namespace FirstTry_app_1
             {
                 header.Column.Width = 270;
             }*/
-            else;
+            else
+            {
+                ;
+            }
         }
 
         private void CommandBorder_KeyDown(object sender, KeyEventArgs e)
@@ -2292,7 +2371,9 @@ namespace FirstTry_app_1
             {
                 OpenDialog();
                 if (_openFileAddress != null)
+                {
                     OpenTestCase(_openFileAddress);
+                }
             }
         }
 
@@ -2315,29 +2396,29 @@ namespace FirstTry_app_1
 
         private void OpenFile_MouseEnter(object sender, MouseEventArgs e)
         {
-            var bc = new BrushConverter();
+            BrushConverter bc = new BrushConverter();
             OpenFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF00C6FF");
         }
 
         private void OpenFile_MouseLeave(object sender, MouseEventArgs e)
         {
-            var bc = new BrushConverter();
+            BrushConverter bc = new BrushConverter();
             OpenFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
         }
 
         private void SaveAsFile_MouseEnter(object sender, MouseEventArgs e)
         {
-            var bc = new BrushConverter();
+            BrushConverter bc = new BrushConverter();
             SaveAsFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF00C6FF");
         }
 
         private void SaveAsFile_MouseLeave(object sender, MouseEventArgs e)
         {
-            var bc = new BrushConverter();
+            BrushConverter bc = new BrushConverter();
             SaveAsFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
         }
 
-        ListViewItem GetListViewItem(int index)
+        private ListViewItem GetListViewItem(int index)
         {
             try
             {
@@ -2373,18 +2454,18 @@ namespace FirstTry_app_1
                 {
                     if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
                     {
-                        var bc = new BrushConverter();
+                        BrushConverter bc = new BrushConverter();
                         SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF00C6FF");
                     }
                     else
                     {
-                        var bc = new BrushConverter();
+                        BrushConverter bc = new BrushConverter();
                         SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF3B3B");
                     }
                 }
                 else
                 {
-                    var bc = new BrushConverter();
+                    BrushConverter bc = new BrushConverter();
                     SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF00C6FF");
                 }
             }
@@ -2402,18 +2483,18 @@ namespace FirstTry_app_1
                 {
                     if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
                     {
-                        var bc = new BrushConverter();
+                        BrushConverter bc = new BrushConverter();
                         SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                     }
                     else
                     {
-                        var bc = new BrushConverter();
+                        BrushConverter bc = new BrushConverter();
                         SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                     }
                 }
                 else
                 {
-                    var bc = new BrushConverter();
+                    BrushConverter bc = new BrushConverter();
                     SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                 }
             }
@@ -2448,9 +2529,11 @@ namespace FirstTry_app_1
         public void SaveDialog()
         {
             ProjectName = ProjectNameText.Text;
-            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            saveFileDialog.FileName = TestList.ElementAt(_testCaseCounter - 1).TestName;
-            saveFileDialog.Filter = "Python file (*.py)|*.py";
+            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog
+            {
+                FileName = TestList.ElementAt(_testCaseCounter - 1).TestName,
+                Filter = "Python file (*.py)|*.py"
+            };
             if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
             {
                 CurrentTestCase.SavedPath = null;
@@ -2462,12 +2545,22 @@ namespace FirstTry_app_1
                 testCaseFileName = System.IO.Path.GetFileName(@sPath);
                 string mystring = sPath.Replace("\\" + testCaseFileName, "");
                 for (int i = mystring.Length; i > 0; i--)
+                {
                     mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                }
+
                 FolderName = mystring;
-                var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                if (obj != null) obj.TestFolder = FolderName;
-                var obj2 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                if (obj2 != null) obj2.SavedPath = sPath;
+                TestSuit obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                if (obj != null)
+                {
+                    obj.TestFolder = FolderName;
+                }
+
+                TestSuit obj2 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                if (obj2 != null)
+                {
+                    obj2.SavedPath = sPath;
+                }
             }
         }
 
@@ -2476,9 +2569,14 @@ namespace FirstTry_app_1
             ProjectName = ProjectNameText.Text;
             System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             if (ProjectName == "")
+            {
                 TestSuitNameWarnDialog();
+            }
             else
+            {
                 saveFileDialog.FileName = ProjectName;
+            }
+
             saveFileDialog.Filter = "Python file (*.py)|*.py";
             if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
             {
@@ -2511,7 +2609,7 @@ namespace FirstTry_app_1
         {
             MainGrid.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _emptyFieldDialog = new MessageBox.EmptyField();
+            MessageBox.EmptyField _emptyFieldDialog = new MessageBox.EmptyField();
             _emptyFieldDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainGrid.Effect = null;
@@ -2521,7 +2619,7 @@ namespace FirstTry_app_1
         {
             MainGrid.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _unvalidCommandDialog = new MessageBox.UnvalidCommand();
+            MessageBox.UnvalidCommand _unvalidCommandDialog = new MessageBox.UnvalidCommand();
             _unvalidCommandDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainGrid.Effect = null;
@@ -2531,7 +2629,7 @@ namespace FirstTry_app_1
         {
             MainGrid.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _addTestDialog = new MessageBox.AddTestFirst();
+            MessageBox.AddTestFirst _addTestDialog = new MessageBox.AddTestFirst();
             _addTestDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainGrid.Effect = null;
@@ -2551,8 +2649,10 @@ namespace FirstTry_app_1
         {
             MainGrid.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            AddTestCase addTestCase = new AddTestCase();
-            addTestCase.Owner = this;
+            AddTestCase addTestCase = new AddTestCase
+            {
+                Owner = this
+            };
             addTestCase.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainGrid.Effect = null;
@@ -2562,8 +2662,10 @@ namespace FirstTry_app_1
         {
             MainGrid.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var createproject = new CreateNewProject();
-            createproject.Owner = this;
+            CreateNewProject createproject = new CreateNewProject
+            {
+                Owner = this
+            };
             createproject.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainGrid.Effect = null;
@@ -2574,7 +2676,7 @@ namespace FirstTry_app_1
         {
             MainGrid.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _unsavedContentDialog = new MessageBox.UnsavedContent();
+            MessageBox.UnsavedContent _unsavedContentDialog = new MessageBox.UnsavedContent();
             _unsavedContentDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainGrid.Effect = null;
@@ -2584,7 +2686,7 @@ namespace FirstTry_app_1
         {
             MainGrid.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _testSuitNameWarnDialog = new MessageBox.TestSuitNameWarn();
+            MessageBox.TestSuitNameWarn _testSuitNameWarnDialog = new MessageBox.TestSuitNameWarn();
             _testSuitNameWarnDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainGrid.Effect = null;
@@ -2594,7 +2696,7 @@ namespace FirstTry_app_1
         {
             MainGrid.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _updateAckDialog = new MessageBox.UpdateAck();
+            MessageBox.UpdateAck _updateAckDialog = new MessageBox.UpdateAck();
             _updateAckDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainGrid.Effect = null;
@@ -2610,10 +2712,12 @@ namespace FirstTry_app_1
                 int pFrom = st.IndexOf(strat) + strat.Length;
                 int pTo = st.LastIndexOf(end);
                 if (pTo == -1)
+                {
                     return "empty";
+                }
                 else
                 {
-                    String result = st.Substring(pFrom, pTo - pFrom);
+                    string result = st.Substring(pFrom, pTo - pFrom);
                     return result;
                 }
             }
@@ -2667,10 +2771,14 @@ namespace FirstTry_app_1
 
         private bool UserFilter(object item)
         {
-            if (String.IsNullOrEmpty(SearchTB.Text))
+            if (string.IsNullOrEmpty(SearchTB.Text))
+            {
                 return true;
+            }
             else
+            {
                 return ((item as TestSuit).TestName.IndexOf(SearchTB.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
         }
 
         public void AddCommand()
@@ -2702,7 +2810,7 @@ namespace FirstTry_app_1
                         {
                             if (edit == true)
                             {
-                                var obj = ListDB.FirstOrDefault(x => x.Number == _commandCounter);
+                                Commands obj = ListDB.FirstOrDefault(x => x.Number == _commandCounter);
                                 if (obj != null)
                                 {
                                     obj.Command = tabInCommandForEdit + CommandsComboBox.Text;
@@ -2718,22 +2826,32 @@ namespace FirstTry_app_1
                                 CommandCounter++;
 
                                 if (CommandsComboBox.Text == "while" || CommandsComboBox.Text == "if")
+                                {
                                     inWhileOrIf.Add(CommandCounter, true);
+                                }
 
                                 if (CommandsComboBox.Text == "end")
+                                {
                                     if (sumTrue == 0)
+                                    {
                                         throw new Exception("Unvalid Command : No operation exist");
+                                    }
                                     else
                                     {
                                         sumTrue--;
                                         tabNeeded = string.Concat(Enumerable.Repeat("\t", sumTrue));
                                         inWhileOrIf.Remove(inWhileOrIf.Keys.LastOrDefault());
                                     }
+                                }
 
                                 CommandCounterTB.Text = Convert.ToString(CommandCounter);
                                 ListDB.Add(new Commands(CommandCounter, tabNeeded + CommandsComboBox.Text, TargetTB.Text, ValueTB.Text, CommandsComboBox.Text + Convert.ToString(CommandCounter + 1), DescriptionTB.Text, Pass.noExe));
-                                var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                                if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
+                                TestSuit obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                                if (obj != null)
+                                {
+                                    obj.TestValue = new ObservableCollection<Commands>(ListDB);
+                                }
+
                                 CommandsComboBox.Focus();
                                 HandleComboBox();
                                 _commandCounter = CommandCounter;
@@ -2744,9 +2862,13 @@ namespace FirstTry_app_1
                                 sumTrue = inWhileOrIf.Count(x => x.Value == true);
                                 tabNeeded = string.Concat(Enumerable.Repeat("\t", sumTrue));
                             }
-                            var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                            if (obj1 != null) obj1.IsSaved = false;
-                            var bc = new BrushConverter();
+                            TestSuit obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                            if (obj1 != null)
+                            {
+                                obj1.IsSaved = false;
+                            }
+
+                            BrushConverter bc = new BrushConverter();
                             SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                             HandleTestList();
                             edit = false;
@@ -2786,15 +2908,17 @@ namespace FirstTry_app_1
                     {
                         tempDiscription = CommandsList[i, 1];
                         for (int j = 0; j < CommandsList.Length / 2; j++)
+                        {
                             if (DescriptionTB.Text == "" || DescriptionTB.Text == "None" || CommandsList[j, 1] == DescriptionTB.Text)
                             {
                                 DescriptionTB.Text = tempDiscription;
                                 break;
                             }
+                        }
                     }
                 }
 
-                var bc = new BrushConverter();
+                BrushConverter bc = new BrushConverter();
 
                 switch (CommandsComboBox.Text)
                 {
@@ -2827,9 +2951,14 @@ namespace FirstTry_app_1
                         TargetTBBorder.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFFFFFF");
 
                         if (TargetTB.Text == "None")
+                        {
                             TargetTB.Text = "";
+                        }
+
                         if (ValueTB.Text == "None")
+                        {
                             ValueTB.Text = "";
+                        }
 
                         break;
 
@@ -2853,7 +2982,9 @@ namespace FirstTry_app_1
                         TargetTBBorder.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFFFFFF");
 
                         if (TargetTB.Text == "None")
+                        {
                             TargetTB.Text = "";
+                        }
 
                         break;
 
@@ -2893,7 +3024,7 @@ namespace FirstTry_app_1
                         ListViewItem item = GetListViewItem(i);
                         if (item != null)
                         {
-                            var bc = new BrushConverter();
+                            BrushConverter bc = new BrushConverter();
                             item.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                         }
                     }
@@ -2905,9 +3036,13 @@ namespace FirstTry_app_1
                             if (CurrentTestCaseitem != null)
                             {
                                 if (item.IsPassed == Pass.passed)
+                                {
                                     CurrentTestCaseitem.Background = System.Windows.Media.Brushes.LightGreen;
-                                else if ( item.IsPassed == Pass.failed)
+                                }
+                                else if (item.IsPassed == Pass.failed)
+                                {
                                     CurrentTestCaseitem.Background = System.Windows.Media.Brushes.LightPink;
+                                }
                             }
                         }
                     }
@@ -2919,9 +3054,13 @@ namespace FirstTry_app_1
                             if (CurrentTestCaseitem != null)
                             {
                                 if (item.Pass == Pass.passed)
+                                {
                                     CurrentTestCaseitem.Background = System.Windows.Media.Brushes.LightGreen;
+                                }
                                 else if (item.Pass == Pass.failed)
+                                {
                                     CurrentTestCaseitem.Background = System.Windows.Media.Brushes.LightPink;
+                                }
                             }
                         }
                     }
@@ -2936,14 +3075,11 @@ namespace FirstTry_app_1
 
         public void SaveTestCase(bool ubuntuIsEnable)
         {
-            bool a = false;
             bool b = false;
-            bool c = false;
             try
             {
                 if (_testCaseCounter == 0)
                 {
-                    a = true;
                     AddTestDialog();
                 }
                 else if (TestList.ElementAt(_testCaseCounter - 1).SavedPath != null)
@@ -2951,22 +3087,29 @@ namespace FirstTry_app_1
                     b = true;
                     TestMethod(TestList.ElementAt(_testCaseCounter - 1).SavedPath, ubuntuIsEnable);
                     Log.Items.Add(TestList.ElementAt(_testCaseCounter - 1).TestName + " TestCase Saved ---> Successfully");
-                    var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                    if (obj1 != null) obj1.IsSaved = true;
-                    var bc = new BrushConverter();
+                    TestSuit obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                    if (obj1 != null)
+                    {
+                        obj1.IsSaved = true;
+                    }
+
+                    BrushConverter bc = new BrushConverter();
                     SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                 }
                 else if (TestList.ElementAt(_testCaseCounter - 1).SavedPath == null)
                 {
-                    c = true;
                     SaveDialog();
                     if (sPath != null)
                     {
                         TestMethod(sPath, ubuntuIsEnable);
                         Log.Items.Add(TestList.ElementAt(_testCaseCounter - 1).TestName + " TestCase Saved ---> Successfully");
-                        var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                        if (obj1 != null) obj1.IsSaved = true;
-                        var bc = new BrushConverter();
+                        TestSuit obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                        if (obj1 != null)
+                        {
+                            obj1.IsSaved = true;
+                        }
+
+                        BrushConverter bc = new BrushConverter();
                         SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                     }
                 }
@@ -2975,9 +3118,13 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 if (b)
+                {
                     Log.Items.Add("SaveTestCase ---> Failed " + "Because of error: " + ex.ToString() + "(ERROR: select a test case first)");
+                }
                 else
+                {
                     Log.Items.Add("SaveTestCase ---> Failed Because of error : " + ex.ToString());
+                }
             }
         }
 
@@ -2986,7 +3133,9 @@ namespace FirstTry_app_1
             try
             {
                 if (testCaseCounter == 0)
+                {
                     AddTestDialog();
+                }
                 else
                 {
                     //BL.BuildFile _buildFile = new BL.BuildFile();
@@ -3038,8 +3187,12 @@ namespace FirstTry_app_1
                     CommandCounter++;
                     CommandCounterTB.Text = Convert.ToString(CommandCounter);
                     ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description, Pass.noExe));
-                    var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                    if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
+                    TestSuit obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                    if (obj != null)
+                    {
+                        obj.TestValue = new ObservableCollection<Commands>(ListDB);
+                    }
+
                     HandleComboBox();
                     _commandCounter = CommandCounter;
                 }
@@ -3049,8 +3202,11 @@ namespace FirstTry_app_1
                     ListDB.RemoveAt(CopiedItem.Number - 1);
                     for (int i = removed.Number + 1; i < CommandCounter + 1; i++)
                     {
-                        var obj2 = ListDB.FirstOrDefault(x => x.Number == i);
-                        if (obj2 != null) obj2.Number = i - 1;
+                        Commands obj2 = ListDB.FirstOrDefault(x => x.Number == i);
+                        if (obj2 != null)
+                        {
+                            obj2.Number = i - 1;
+                        }
                     }
                     RefreshLists(false, true);
                     _commandCounter--;
@@ -3058,22 +3214,33 @@ namespace FirstTry_app_1
 
                     CommandCounterTB.Text = Convert.ToString(CommandCounter);
                     ListDB.Add(new Commands(CommandCounter, CopiedItem.Command, CopiedItem.Target, CopiedItem.Value, CopiedItem.VariableName, CopiedItem.Description, Pass.noExe));
-                    var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                    if (obj != null) obj.TestValue = new ObservableCollection<Commands>(ListDB);
+                    TestSuit obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                    if (obj != null)
+                    {
+                        obj.TestValue = new ObservableCollection<Commands>(ListDB);
+                    }
+
                     CommandsComboBox.Focus();
                     HandleComboBox();
                     _commandCounter = CommandCounter;
 
                     for (int i = 1; i <= ListDB.Count; i++)
                     {
-                        var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                        if (obj1 != null) obj1.TestValue.ElementAt(i - 1).Number = i;
+                        TestSuit obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                        if (obj1 != null)
+                        {
+                            obj1.TestValue.ElementAt(i - 1).Number = i;
+                        }
                     }
                 }
                 RefreshLists(false, true);
-                var obj3 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                if (obj3 != null) obj3.IsSaved = false;
-                var bc = new BrushConverter();
+                TestSuit obj3 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                if (obj3 != null)
+                {
+                    obj3.IsSaved = false;
+                }
+
+                BrushConverter bc = new BrushConverter();
                 SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
             }
             catch (Exception ex)
@@ -3090,17 +3257,28 @@ namespace FirstTry_app_1
                 ListDB.RemoveAt(listView.Items.IndexOf(listView.SelectedItem));
                 for (int i = removed.Number + 1; i < CommandCounter + 1; i++)
                 {
-                    var obj = ListDB.FirstOrDefault(x => x.Number == i);
-                    if (obj != null) obj.Number = i - 1;
+                    Commands obj = ListDB.FirstOrDefault(x => x.Number == i);
+                    if (obj != null)
+                    {
+                        obj.Number = i - 1;
+                    }
                 }
                 RefreshLists(false, true);
                 _commandCounter--;
                 CommandCounter--;
                 CommandCounterTB.Text = Convert.ToString(CommandCounter);
-                var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                if (obj1 != null) obj1.TestValue = new ObservableCollection<Commands>(ListDB);
-                if (obj1 != null) obj1.IsSaved = false;
-                var bc = new BrushConverter();
+                TestSuit obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                if (obj1 != null)
+                {
+                    obj1.TestValue = new ObservableCollection<Commands>(ListDB);
+                }
+
+                if (obj1 != null)
+                {
+                    obj1.IsSaved = false;
+                }
+
+                BrushConverter bc = new BrushConverter();
                 SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
             }
             catch (Exception ex)
@@ -3129,8 +3307,11 @@ namespace FirstTry_app_1
                 TestList.Remove(removed);
                 for (int i = removed.TestNumber + 1; i < testCaseCounter + 1; i++)
                 {
-                    var obj = TestList.FirstOrDefault(x => x.TestNumber == i);
-                    if (obj != null) obj.TestNumber = i - 1;
+                    TestSuit obj = TestList.FirstOrDefault(x => x.TestNumber == i);
+                    if (obj != null)
+                    {
+                        obj.TestNumber = i - 1;
+                    }
                 }
                 RefreshLists(true, true);
                 _testCaseCounter--;
@@ -3148,15 +3329,23 @@ namespace FirstTry_app_1
             }
         }
 
-        bool needCotBefore = true;
-        bool needCotAfter = true;
+        private bool needCotBefore = true;
+        private bool needCotAfter = true;
 
         public string ConvertTextToIdeFormat(string IN, bool considerStar, bool considerDolar)
         {
             try
             {
-                if (IN == "None") return IN;
-                if (IN == "") return IN;
+                if (IN == "None")
+                {
+                    return IN;
+                }
+
+                if (IN == "")
+                {
+                    return IN;
+                }
+
                 string OUT = "";
                 if (IN.Contains("Math.floor"))
                 {
@@ -3200,9 +3389,15 @@ namespace FirstTry_app_1
                 if (IN.Contains("${") && considerDolar)
                 {
                     if (IN.Substring(0, 2) == "${")
+                    {
                         needCotBefore = false;
+                    }
+
                     if (IN.Substring(IN.Length - 1, 1) == "}")
+                    {
                         needCotAfter = false;
+                    }
+
                     string[] INDolar = IN.Split('$');
                     INDolar = INDolar.Where(val => val != "").ToArray();
                     for (int i = 0; i < INDolar.Length; i++)
@@ -3211,19 +3406,31 @@ namespace FirstTry_app_1
                         {
                             // start
                             if (i == 0)
+                            {
                                 INDolar[i] = INDolar[i].Replace("{", "str(StoreEvalDB.vars[\"");
+                            }
                             else
+                            {
                                 INDolar[i] = (INDolar[i - 1].Contains(" or ") && INDolar[i - 1].Substring(INDolar[i - 1].Length - 4, 4) == " or ") ?
                                     INDolar[i].Replace("{", "str(StoreEvalDB.vars[\"") : INDolar[i].Replace("{", "' + str(StoreEvalDB.vars[\"");
+                            }
 
                             if (INDolar[i].Contains(" or ") && INDolar[i].Substring(INDolar[i].IndexOf("}") + 1, 4) == " or ")
+                            {
                                 INDolar[i] = INDolar[i].Replace("}", "\"])");
+                            }
                             else if (INDolar[i].IndexOf('}') == INDolar[i].Length - 1 && i == INDolar.Length - 1)
+                            {
                                 INDolar[i] = INDolar[i].Replace("}", "\"])");
+                            }
                             else if (INDolar[i].IndexOf('}') == INDolar[i].Length - 1)
+                            {
                                 INDolar[i] = INDolar[i].Replace("}", "\"]) + ");
+                            }
                             else
+                            {
                                 INDolar[i] = INDolar[i].Replace("}", "\"]) + '");
+                            }
                             // end
                             INDolar[i] = INDolar[i].IndexOf('}') + 1 != null ? INDolar[i].Replace("}", "\"])") : INDolar[i].Replace("}", "\"]) + '");
                             OUT += INDolar[i];
@@ -3235,11 +3442,20 @@ namespace FirstTry_app_1
                     }
                 }
                 if (OUT == "")
+                {
                     OUT = IN;
+                }
+
                 if (needCotBefore)
+                {
                     OUT = "'" + OUT;
+                }
+
                 if (needCotAfter)
+                {
                     OUT = OUT + "'";
+                }
+
                 return OUT;
             }
             catch (Exception ex)
@@ -3300,14 +3516,18 @@ namespace FirstTry_app_1
                     edit = false;
                     if (CurrentTestCase.TestValue != null)
                     {
-                        var obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
-                        if (obj != null) ListDB = new ObservableCollection<Commands>(obj.TestValue);
+                        TestSuit obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
+                        if (obj != null)
+                        {
+                            ListDB = new ObservableCollection<Commands>(obj.TestValue);
+                        }
+
                         CommandCounter = _commandCounter = obj.TestValue.Count;
                         CommandCounterTB.Text = Convert.ToString(CommandCounter);
                     }
                     else
                     {
-                        var obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
+                        TestSuit obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
                         CommandCounter = _commandCounter = 0;
                         CommandCounterTB.Text = Convert.ToString(CommandCounter);
                         ListDB.Clear();
@@ -3318,18 +3538,18 @@ namespace FirstTry_app_1
                     {
                         if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
                         {
-                            var bc = new BrushConverter();
+                            BrushConverter bc = new BrushConverter();
                             SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                         }
                         else
                         {
-                            var bc = new BrushConverter();
+                            BrushConverter bc = new BrushConverter();
                             SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                         }
                     }
                     else
                     {
-                        var bc = new BrushConverter();
+                        BrushConverter bc = new BrushConverter();
                         SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                     }
                 }
@@ -3340,7 +3560,7 @@ namespace FirstTry_app_1
             }
         }
 
-        bool notConvertedTest = false;
+        private readonly bool notConvertedTest = false;
         private async Task updateMethod()
         {
             try
@@ -3391,12 +3611,12 @@ namespace FirstTry_app_1
 
                         //notConvertedTest = false;
 
-                        string StaticCodeNew = File.ReadAllText(@"data\StaticCode.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
+                        string StaticCodeNew = File.ReadAllText(startupPath + "\\Data\\StaticCode.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
                         int splitterIndex = StaticCodeNew.IndexOf("#bodyCode#");
                         string StaticCodeNew_First = StaticCodeNew.Substring(0, splitterIndex);
                         string StaticCodeNew_Last = StaticCodeNew.Remove(0, splitterIndex + 11);
 
-                        string StaticCodeNew_ubuntu = File.ReadAllText(@"data\StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
+                        string StaticCodeNew_ubuntu = File.ReadAllText(startupPath + "\\Data\\StaticCode_ubuntu.py").Replace("    ", "\t").Replace("testSuit", Suits[i]).Replace("tableWidth", (_testCaseNameCount).ToString());
                         int splitterIndex_ubuntu = StaticCodeNew_ubuntu.IndexOf("#bodyCode#");
                         string StaticCodeNew_First_ubuntu = StaticCodeNew_ubuntu.Substring(0, splitterIndex_ubuntu);
                         string StaticCodeNew_Last_ubuntu = StaticCodeNew_ubuntu.Remove(0, splitterIndex_ubuntu + 11);
@@ -3417,7 +3637,10 @@ namespace FirstTry_app_1
                             string tempSuit2 = File.ReadAllText(@temp3);
                             int classStartLine = tempSuit2.IndexOf(":\r\n\t#");
                             if (classStartLine == -1)
+                            {
                                 classStartLine = tempSuit2.IndexOf(":\n\t#");
+                            }
+
                             tempSuit2 = "\r\nclass " + testCaseName + ":" + tempSuit2.Remove(0, classStartLine + 1);
                             tempSuit += tempSuit2.Replace("\t", "\t\t").Replace("\r\nclass ", "\r\n\tclass ").Replace(testCaseName + ":", testCaseName + ":\r\n\t\tlog.debug(\"{:<8} {:<" + (_testCaseNameCount + 8) + "} {:<18}\".format('|  #" + (j + 1) + "', '|  " + testCaseName + "', '|  is running ...  |'))\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Failure'])");
                             tempSuit += "\t\tTestCases.del_row(-1)\r\n\t\tTestCases.add_row(['" + (j + 1) + "', '" + testCaseName + "', 'Success'])\r\n";
@@ -3598,13 +3821,19 @@ namespace FirstTry_app_1
                 {
                     string temp4 = FindBetween(temp[i], "<tr><td><a href=\"../../", "\">").Replace(".html", "").Replace(".htm", "");
                     if (temp4.Contains("setGeneralPort") && temp4.Contains("setUploadPath") && temp4.Contains("pause2s"))
+                    {
                         continue;
+                    }
                     else
                     {
                         if (notConvertedTest)
+                        {
                             temp2.Add(temp4.Replace("/", "\\"));
+                        }
                         else
+                        {
                             temp2.Add(temp4.Replace(".", "_").Replace("/", "\\"));
+                        }
                     }
                     if (temp4.Contains("ezharPishAzVorud3"))
                     {
@@ -3620,13 +3849,19 @@ namespace FirstTry_app_1
                 {
                     string temp5 = FindBetween(temp[i], "\">", "</a></td></tr>");
                     if (temp5.Contains("setGeneralPort") && temp5.Contains("setUploadPath") && temp5.Contains("pause2s"))
+                    {
                         continue;
+                    }
                     else
                     {
                         if (notConvertedTest)
+                        {
                             temp3.Add(temp5);
+                        }
                         else
+                        {
                             temp3.Add(temp5.Replace(".", "_"));
+                        }
                     }
                     if (temp5.Contains("ezharPishAzVorud3"))
                     {
@@ -3645,7 +3880,7 @@ namespace FirstTry_app_1
                 string OUT = "";
                 string _out = "";
                 //IN = IN.Replace(" and ", " && ").Replace(" or ", " || ").Replace("StoreEvalDB.vars", "StoreEvalDB");
-                var tmp = IN.Split(" and ");
+                string[] tmp = IN.Split(" and ");
                 for (int i = 0; i <= Regex.Matches(IN, " and ").Count; i++)
                 {
                     if (!tmp[i].Contains(" or "))
@@ -3653,7 +3888,7 @@ namespace FirstTry_app_1
                         _out = "";
                         if (tmp[i].Contains(" not in "))
                         {
-                            var _not_in = tmp[i].Split(" not in ");
+                            string[] _not_in = tmp[i].Split(" not in ");
                             string tmpstr1 = _not_in[0].Contains('(') ? _not_in[0].Substring(_not_in[0].LastIndexOf('(') + 1, _not_in[0].Length - _not_in[0].LastIndexOf('(') - 1) : _not_in[0];
                             _not_in[0] = _not_in[0].Replace(tmpstr1, "");
                             string tmpstr2 = _not_in[1].Contains(')') ? _not_in[1].Substring(0, _not_in[1].IndexOf(')')) : _not_in[1];
@@ -3662,7 +3897,7 @@ namespace FirstTry_app_1
                         }
                         else if (tmp[i].Contains(" in "))
                         {
-                            var _in = tmp[i].Split(" in ");
+                            string[] _in = tmp[i].Split(" in ");
                             string tmpstr1 = _in[0].Contains('(') ? _in[0].Substring(_in[0].LastIndexOf('(') + 1, _in[0].Length - _in[0].LastIndexOf('(') - 1) : _in[0];
                             _in[0] = _in[0].Replace(tmpstr1, "");
                             string tmpstr2 = _in[1].Contains(')') ? _in[1].Substring(_in[1].IndexOf(')'), _in[1].Length - 1) : _in[1];
@@ -3674,13 +3909,13 @@ namespace FirstTry_app_1
                     else
                     {
                         _out = "";
-                        var count = Regex.Matches(tmp[i], " or ").Count;
-                        var tmp1 = tmp[i].Split(" or ");
+                        int count = Regex.Matches(tmp[i], " or ").Count;
+                        string[] tmp1 = tmp[i].Split(" or ");
                         for (int j = 0; j <= Regex.Matches(tmp[i], " or ").Count; j++)
                         {
                             if (tmp1[j].Contains(" not in "))
                             {
-                                var _not_in = tmp1[j].Split(" not in ");
+                                string[] _not_in = tmp1[j].Split(" not in ");
                                 string tmpstr1 = _not_in[0].Contains('(') ? _not_in[0].Substring(_not_in[0].LastIndexOf('(') + 1, _not_in[0].Length - _not_in[0].LastIndexOf('(') - 1) : _not_in[0];
                                 _not_in[0] = _not_in[0].Replace(tmpstr1, "");
                                 string tmpstr2 = _not_in[1].Contains(')') ? _not_in[1].Substring(0, _not_in[1].IndexOf(')')) : _not_in[1];
@@ -3689,7 +3924,7 @@ namespace FirstTry_app_1
                             }
                             else if (tmp1[j].Contains(" in "))
                             {
-                                var _in = tmp1[j].Split(" in ");
+                                string[] _in = tmp1[j].Split(" in ");
                                 string tmpstr1 = _in[0].Contains('(') ? _in[0].Substring(_in[0].LastIndexOf('(') + 1, _in[0].Length - _in[0].LastIndexOf('(') - 1) : _in[0];
                                 _in[0] = _in[0].Replace(tmpstr1, "");
                                 string tmpstr2 = _in[1].Contains(')') ? _in[1].Substring(_in[1].IndexOf(')'), _in[1].Length - 1) : _in[1];
@@ -3708,9 +3943,9 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("ConvertPythonToCSharp ---> Failed in line " + line + " Because of error : " + ex.ToString());
                 return "none";
             }
@@ -3750,7 +3985,7 @@ namespace FirstTry_app_1
                     //check inside Condition
                     SortedDictionary<int, string> opPos = new SortedDictionary<int, string>();
                     //export ops
-                    foreach (var x in oprators)
+                    foreach (string x in oprators)
                     {
                         if (insideCondtemp.Contains(x))
                         {
@@ -3769,7 +4004,9 @@ namespace FirstTry_app_1
                             separatedOps[1] = j != opPos.Count - 1 ? separatedOps[1].Split(new[] { opPos.ElementAt(j + 1).Value }, StringSplitOptions.None)[0] :
                                 separatedOps[1];
                             if (j != 0 && separatedOps[0].Contains(opPos.ElementAt(j - 1).Value))
+                            {
                                 separatedOps[0] = separatedOps[0].Split(opPos.ElementAt(j - 1).Value)[1];
+                            }
                             //check if it contains DB data
                             bool DBdata0 = false;
                             bool DBdata1 = false;
@@ -3788,30 +4025,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) < Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToInt32(separatedOps[0]) < Convert.ToInt32(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToInt32(separatedOps[0]) < Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) < Convert.ToInt32(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
 
@@ -3819,30 +4072,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) <= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToInt32(separatedOps[0]) <= Convert.ToInt32(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToInt32(separatedOps[0]) <= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) <= Convert.ToInt32(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
 
@@ -3850,30 +4119,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) > Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToInt32(separatedOps[0]) > Convert.ToInt32(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToInt32(separatedOps[0]) > Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) > Convert.ToInt32(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
 
@@ -3881,30 +4166,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) >= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToInt32(separatedOps[0]) >= Convert.ToInt32(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToInt32(separatedOps[0]) >= Convert.ToInt32(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToInt32(StoreEvalDB[separatedOps[0]]) >= Convert.ToInt32(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
 
@@ -3912,30 +4213,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (StoreEvalDB[separatedOps[0]] == StoreEvalDB[separatedOps[1]])
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (separatedOps[0] == separatedOps[1])
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (separatedOps[0] == StoreEvalDB[separatedOps[1]])
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (StoreEvalDB[separatedOps[0]] == separatedOps[1])
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
 
@@ -3943,30 +4260,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (StoreEvalDB[separatedOps[0]] != StoreEvalDB[separatedOps[1]])
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (separatedOps[0] != separatedOps[1])
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (separatedOps[0] != StoreEvalDB[separatedOps[1]])
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (StoreEvalDB[separatedOps[0]] != separatedOps[1])
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
 
@@ -3974,30 +4307,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (StoreEvalDB[separatedOps[1]].Contains(StoreEvalDB[separatedOps[0]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (separatedOps[1].Contains(separatedOps[0]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (StoreEvalDB[separatedOps[1]].Contains(separatedOps[0]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (separatedOps[1].Contains(StoreEvalDB[separatedOps[0]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
 
@@ -4005,30 +4354,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (StoreEvalDB[separatedOps[1]].Contains(StoreEvalDB[separatedOps[0]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (separatedOps[1].Contains(separatedOps[0]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (StoreEvalDB[separatedOps[1]].Contains(separatedOps[0]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (separatedOps[1].Contains(StoreEvalDB[separatedOps[0]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
                             }
@@ -4045,7 +4410,9 @@ namespace FirstTry_app_1
                             separatedOps[1] = j != opPos.Count - 1 ? separatedOps[1].Split(new[] { opPos.ElementAt(j + 1).Value }, StringSplitOptions.None)[0] :
                                 separatedOps[1];
                             if (j != 0 && separatedOps[0].Contains(opPos.ElementAt(j - 1).Value))
+                            {
                                 separatedOps[0] = separatedOps[0].Split(opPos.ElementAt(j - 1).Value)[1];
+                            }
                             //check if it contains DB data
                             bool DBdata0 = false;
                             bool DBdata1 = false;
@@ -4091,30 +4458,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToBoolean(StoreEvalDB[separatedOps[0]]) || Convert.ToBoolean(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToBoolean(separatedOps[0]) || Convert.ToBoolean(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToBoolean(separatedOps[0]) || Convert.ToBoolean(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToBoolean(StoreEvalDB[separatedOps[0]]) || Convert.ToBoolean(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
 
@@ -4122,30 +4505,46 @@ namespace FirstTry_app_1
                                     if (DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToBoolean(StoreEvalDB[separatedOps[0]]) && Convert.ToBoolean(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToBoolean(separatedOps[0]) && Convert.ToBoolean(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (!DBdata0 && DBdata1)
                                     {
                                         if (Convert.ToBoolean(separatedOps[0]) && Convert.ToBoolean(StoreEvalDB[separatedOps[1]]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     else if (DBdata0 && !DBdata1)
                                     {
                                         if (Convert.ToBoolean(StoreEvalDB[separatedOps[0]]) && Convert.ToBoolean(separatedOps[1]))
+                                        {
                                             tempBool = true;
+                                        }
                                         else
+                                        {
                                             tempBool = false;
+                                        }
                                     }
                                     break;
                             }
@@ -4163,7 +4562,7 @@ namespace FirstTry_app_1
 
                     SortedDictionary<int, string> opPos = new SortedDictionary<int, string>();
                     //export ops
-                    foreach (var x in oprators)
+                    foreach (string x in oprators)
                     {
                         if (insideCondtemp.Contains(x))
                         {
@@ -4177,7 +4576,9 @@ namespace FirstTry_app_1
                         separatedOps[1] = j != opPos.Count - 1 ? separatedOps[1].Split(new[] { opPos.ElementAt(j + 1).Value }, StringSplitOptions.None)[0] :
                             separatedOps[1];
                         if (j != 0 && separatedOps[0].Contains(opPos.ElementAt(j - 1).Value))
+                        {
                             separatedOps[0] = separatedOps[0].Split(opPos.ElementAt(j - 1).Value)[1];
+                        }
                         //Not effect
                         if (separatedOps[0].Contains("not "))
                         {
@@ -4210,16 +4611,26 @@ namespace FirstTry_app_1
                         {
                             case " or ":
                                 if (Convert.ToBoolean(separatedOps[0]) || Convert.ToBoolean(separatedOps[1]))
+                                {
                                     tempBool = true;
+                                }
                                 else
+                                {
                                     tempBool = false;
+                                }
+
                                 break;
 
                             case " and ":
                                 if (Convert.ToBoolean(separatedOps[0]) && Convert.ToBoolean(separatedOps[1]))
+                                {
                                     tempBool = true;
+                                }
                                 else
+                                {
                                     tempBool = false;
+                                }
+
                                 break;
                         }
                         insideCondtemp = insideCondtemp.Replace(separatedOps[0] + opPos.ElementAt(j).Value + separatedOps[1], tempBool.ToString());
@@ -4232,9 +4643,9 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("ConditionParser ---> Failed in line " + line + " Because of error : " + ex.ToString());
                 return false;
             }
@@ -4247,11 +4658,14 @@ namespace FirstTry_app_1
         {
             bool a = false;
             for (int i = 0; i < testCaseCounter; i++)
+            {
                 if (!TestList.ElementAt(i).IsSaved)
                 {
                     a = true;
                     break;
                 }
+            }
+
             if (a)
             {
                 UnsavedContentDialog();
@@ -4260,7 +4674,10 @@ namespace FirstTry_app_1
                     Application.Current.Shutdown();
                     try
                     {
-                        if (driver != null) driver.Quit();
+                        if (driver != null)
+                        {
+                            driver.Quit();
+                        }
                     }
                     catch { }
                 }
@@ -4270,7 +4687,10 @@ namespace FirstTry_app_1
                 Application.Current.Shutdown();
                 try
                 {
-                    if (driver != null) driver.Quit();
+                    if (driver != null)
+                    {
+                        driver.Quit();
+                    }
                 }
                 catch { }
             }
@@ -4286,7 +4706,9 @@ namespace FirstTry_app_1
                     WindowState = WindowState.Maximized;
                 }
                 else
-                    this.WindowState = WindowState.Normal;
+                {
+                    WindowState = WindowState.Normal;
+                }
             }
             catch (Exception ex)
             {
@@ -4333,7 +4755,10 @@ namespace FirstTry_app_1
                     }
                 }
                 else if (testCaseCounter == 0)
+                {
                     AddTestDialog();
+                }
+
                 HandleTestList();
             }
             catch (Exception ex)
@@ -4362,7 +4787,10 @@ namespace FirstTry_app_1
                     }
                 }
                 else if (testCaseCounter == 0)
+                {
                     AddTestDialog();
+                }
+
                 HandleTestList();
             }
             catch (Exception ex)
@@ -4391,11 +4819,17 @@ namespace FirstTry_app_1
                                 _openFileName = _openFileName.Replace(".py", "");
                                 string mystring = _openFileAddress.Replace("\\" + _openFileName + ".py", "");
                                 for (int j = mystring.Length; j > 0; j--)
+                                {
                                     mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                                }
+
                                 FolderName = mystring;
                                 RefreshLists(true, true);
                                 if (_openFileAddress != null)
+                                {
                                     OpenTestCase(_openFileAddress);
+                                }
+
                                 break;
                             case "html":
                                 _openFileAddress = _openFileAddressArray[i];
@@ -4404,11 +4838,17 @@ namespace FirstTry_app_1
                                 _openFileName = _openFileName.Remove(_openFileName.IndexOf('.'), _openFileName.Length - _openFileName.IndexOf('.'));
                                 string mystring1 = _openFileAddress.Replace("\\" + _openFileNameArray[i], "");
                                 for (int j = mystring1.Length; j > 0; j--)
+                                {
                                     mystring1 = mystring1.Substring(mystring1.IndexOf("\\") + 1);
+                                }
+
                                 FolderName = mystring1;
                                 RefreshLists(true, true);
                                 if (_openFileAddress != null)
+                                {
                                     openOldTestCase(_openFileAddress);
+                                }
+
                                 break;
                             default:
                                 EmptyFieldtDialog();
@@ -4444,7 +4884,10 @@ namespace FirstTry_app_1
                                 _openFileName = _openFileName.Replace(".py", "");
                                 string mystring1 = _openFileAddress.Replace("\\" + _openFileName, "");
                                 for (int j = mystring1.Length; j > 0; j--)
+                                {
                                     mystring1 = mystring1.Substring(mystring1.IndexOf("\\") + 1);
+                                }
+
                                 FolderName = mystring1;
                                 RefreshLists(true, true);
                                 OpenTestSuit(_openFileAddress);
@@ -4458,7 +4901,10 @@ namespace FirstTry_app_1
                                 _openFileName = _openFileName.Replace(".side", "");
                                 string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
                                 for (int j = mystring.Length; j > 0; j--)
+                                {
                                     mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                                }
+
                                 FolderName = mystring;
                                 RefreshLists(true, true);
                                 openNewTestSuit(_openFileAddress);
@@ -4478,7 +4924,10 @@ namespace FirstTry_app_1
                         _openFileName = _openFileName;
                         string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
                         for (int j = mystring.Length; j > 0; j--)
+                        {
                             mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                        }
+
                         FolderName = mystring;
                         RefreshLists(true, true);
                         openOldTestSuit(_openFileAddress);
@@ -4490,9 +4939,9 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("OpenTestSuit_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
@@ -4510,9 +4959,9 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("RunTestSuit_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
@@ -4531,9 +4980,9 @@ namespace FirstTry_app_1
             {
 
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("RunCurrent_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
@@ -4560,7 +5009,9 @@ namespace FirstTry_app_1
                 });
             }
             else
+            {
                 pause = true;
+            }
         }
 
         public void AddTest_Click(object sender, RoutedEventArgs e)
@@ -4738,7 +5189,6 @@ namespace FirstTry_app_1
                 {
                     if (waitType == WaitType._case)
                     {
-                        bool passed = false;
                     }
                     CurrentCommand = (Commands)listView.SelectedItems[0];
                     waitType = WaitType._single;
@@ -4751,9 +5201,9 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("ListView_MouseDoubleClick ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
@@ -4775,14 +5225,18 @@ namespace FirstTry_app_1
                     edit = false;
                     if (CurrentTestCase.TestValue != null)
                     {
-                        var obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
-                        if (obj != null) ListDB = new ObservableCollection<Commands>(obj.TestValue);
+                        TestSuit obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
+                        if (obj != null)
+                        {
+                            ListDB = new ObservableCollection<Commands>(obj.TestValue);
+                        }
+
                         CommandCounter = _commandCounter = obj.TestValue.Count;
                         CommandCounterTB.Text = Convert.ToString(CommandCounter);
                     }
                     else
                     {
-                        var obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
+                        TestSuit obj = TestList.FirstOrDefault(x => x.TestName == CurrentTestCase.TestName);
                         CommandCounter = _commandCounter = 0;
                         CommandCounterTB.Text = Convert.ToString(CommandCounter);
                         ListDB.Clear();
@@ -4793,18 +5247,18 @@ namespace FirstTry_app_1
                     {
                         if (TestList.ElementAt(_testCaseCounter - 1).IsSaved)
                         {
-                            var bc = new BrushConverter();
+                            BrushConverter bc = new BrushConverter();
                             SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                         }
                         else
                         {
-                            var bc = new BrushConverter();
+                            BrushConverter bc = new BrushConverter();
                             SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                         }
                     }
                     else
                     {
-                        var bc = new BrushConverter();
+                        BrushConverter bc = new BrushConverter();
                         SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF1C1C1C");
                     }
                 }
@@ -5003,12 +5457,22 @@ namespace FirstTry_app_1
                     // Get the dragged ListViewItem
                     ListView listView = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    if (listViewItem != null && listViewItem.Background != System.Windows.Media.Brushes.LightGreen && listViewItem.Background != System.Windows.Media.Brushes.LightPink) listViewItem.Background = System.Windows.Media.Brushes.Lavender;
-                    if (listViewItem == null) return;            // Abort
-                                                                 // Find the data behind the ListViewItem
+                    if (listViewItem != null && listViewItem.Background != System.Windows.Media.Brushes.LightGreen && listViewItem.Background != System.Windows.Media.Brushes.LightPink)
+                    {
+                        listViewItem.Background = System.Windows.Media.Brushes.Lavender;
+                    }
+
+                    if (listViewItem == null)
+                    {
+                        return;            // Abort
+                    }
+                    // Find the data behind the ListViewItem
                     Commands item = (Commands)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
-                    if (item == null) return;                    // Abort
-                                                                 // Initialize the drag & drop operation
+                    if (item == null)
+                    {
+                        return;                    // Abort
+                    }
+                    // Initialize the drag & drop operation
                     startIndex = listView.SelectedIndex;
                     DataObject dragData = new DataObject("Commands", item);
                     DragDrop.DoDragDrop(listViewItem, dragData, DragDropEffects.Copy | DragDropEffects.Move);
@@ -5046,7 +5510,11 @@ namespace FirstTry_app_1
                     // Get the drop ListViewItem destination
                     ListView listView1 = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    if (listViewItem != null) listViewItem.Background = System.Windows.Media.Brushes.White;
+                    if (listViewItem != null)
+                    {
+                        listViewItem.Background = System.Windows.Media.Brushes.White;
+                    }
+
                     if (listViewItem == null)
                     {
                         // Abort
@@ -5062,7 +5530,7 @@ namespace FirstTry_app_1
                     if (startIndex >= 0 && index >= 0)
                     {
                         ListDB.Move(startIndex, index);
-                        var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                        TestSuit obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                         if (obj != null)
                         {
                             obj.TestValue = new ObservableCollection<Commands>(ListDB);
@@ -5072,18 +5540,18 @@ namespace FirstTry_app_1
                     //startIndex = -1;         //Done!
                     for (int i = 1; i <= ListDB.Count; i++)
                     {
-                        var obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                        TestSuit obj = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                         if (obj != null)
                         {
                             obj.TestValue.ElementAt(i - 1).Number = i;
                             int tabsNeeded = ListDB.Skip(0).Take(i - 1).Count(x => x.Command.Contains("while") || x.Command.Contains("if")) -
                                 ListDB.Skip(0).Take(i - 1).Count(x => x.Command.Contains("end"));
                             obj.TestValue.ElementAt(i - 1).Command = obj.TestValue.ElementAt(i - 1).Command.Contains("end") ?
-                                String.Concat(Enumerable.Repeat("\t", tabsNeeded - 1)) + obj.TestValue.ElementAt(i - 1).Command.Replace("\t", "") :
-                                String.Concat(Enumerable.Repeat("\t", tabsNeeded)) + obj.TestValue.ElementAt(i - 1).Command.Replace("\t", "");
+                                string.Concat(Enumerable.Repeat("\t", tabsNeeded - 1)) + obj.TestValue.ElementAt(i - 1).Command.Replace("\t", "") :
+                                string.Concat(Enumerable.Repeat("\t", tabsNeeded)) + obj.TestValue.ElementAt(i - 1).Command.Replace("\t", "");
                         }
                     }
-                    var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                    TestSuit obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
                     ListDB = new ObservableCollection<Commands>(obj1.TestValue);
                     RefreshLists(true, true);
                     listView.SelectedIndex = index;
@@ -5091,9 +5559,9 @@ namespace FirstTry_app_1
             }
             catch (Exception ex)
             {
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("ListView_Drop ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
@@ -5138,12 +5606,22 @@ namespace FirstTry_app_1
                     // Get the dragged ListViewItem
                     ListView listView = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    if (listViewItem != null && listViewItem.Background != System.Windows.Media.Brushes.LightGreen && listViewItem.Background != System.Windows.Media.Brushes.LightPink) listViewItem.Background = System.Windows.Media.Brushes.Lavender;
-                    if (listViewItem == null) return;            //Abort
-                                                                 //Find the data behind the ListViewItem
+                    if (listViewItem != null && listViewItem.Background != System.Windows.Media.Brushes.LightGreen && listViewItem.Background != System.Windows.Media.Brushes.LightPink)
+                    {
+                        listViewItem.Background = System.Windows.Media.Brushes.Lavender;
+                    }
+
+                    if (listViewItem == null)
+                    {
+                        return;            //Abort
+                    }
+                    //Find the data behind the ListViewItem
                     TestSuit item = (TestSuit)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
-                    if (item == null) return;                    //Abort
-                                                                 //Initialize the drag & drop operation
+                    if (item == null)
+                    {
+                        return;                    //Abort
+                    }
+                    //Initialize the drag & drop operation
                     startIndex1 = listView.SelectedIndex;
                     DataObject dragData = new DataObject("TestSuit", item);
                     DragDrop.DoDragDrop(listViewItem, dragData, DragDropEffects.Copy | DragDropEffects.Move);
@@ -5181,7 +5659,11 @@ namespace FirstTry_app_1
                     // Get the drop ListViewItem destination
                     ListView listView1 = sender as ListView;
                     ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-                    if (listViewItem != null) listViewItem.Background = System.Windows.Media.Brushes.White;
+                    if (listViewItem != null)
+                    {
+                        listViewItem.Background = System.Windows.Media.Brushes.White;
+                    }
+
                     if (listViewItem == null)
                     {
                         // Abort
@@ -5203,9 +5685,13 @@ namespace FirstTry_app_1
                     {
                         TestList.ElementAt(i - 1).TestNumber = i;
                     }
-                    var obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                    if (obj1 != null) obj1.IsSaved = false;
-                    var bc = new BrushConverter();
+                    TestSuit obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
+                    if (obj1 != null)
+                    {
+                        obj1.IsSaved = false;
+                    }
+
+                    BrushConverter bc = new BrushConverter();
                     SaveFileIcon.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FFFF6565");
                     HandleTestList();
                     edit = false;
@@ -5242,9 +5728,9 @@ namespace FirstTry_app_1
             handleRightClickBugTestlist = true;
         }
 
-        string suittemp;
-        int indexError = 0;
-        double step;
+        private string suittemp;
+        private int indexError = 0;
+        private double step;
         private async void Update_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -5275,7 +5761,11 @@ namespace FirstTry_app_1
                 {
                     CurrentCommand = (Commands)listView.SelectedItems[0];
                     ListViewItem CurrentContainer = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
-                    if (CurrentContainer != null && CurrentContainer.Background != System.Windows.Media.Brushes.LightGreen && CurrentContainer.Background != System.Windows.Media.Brushes.LightPink) CurrentContainer.Background = System.Windows.Media.Brushes.Lavender;
+                    if (CurrentContainer != null && CurrentContainer.Background != System.Windows.Media.Brushes.LightGreen && CurrentContainer.Background != System.Windows.Media.Brushes.LightPink)
+                    {
+                        CurrentContainer.Background = System.Windows.Media.Brushes.Lavender;
+                    }
+
                     _commandCounter = CurrentCommand.Number;
                     CommandsComboBox.Text = CurrentCommand.Command.Replace("\t", "");
                     tabInCommandForEdit = CurrentCommand.Command.Replace(CommandsComboBox.Text, "");
@@ -5295,7 +5785,10 @@ namespace FirstTry_app_1
                 {
                     CurrentCommand = (Commands)listView.SelectedItems[0];
                     ListViewItem CurrentContainer = listView.ItemContainerGenerator.ContainerFromIndex(CurrentCommand.Number - 1) as ListViewItem;
-                    if (CurrentContainer != null) CurrentContainer.Background = System.Windows.Media.Brushes.White;
+                    if (CurrentContainer != null)
+                    {
+                        CurrentContainer.Background = System.Windows.Media.Brushes.White;
+                    }
                 }
             }
         }
@@ -5327,9 +5820,9 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("RefreshLists ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
@@ -5338,7 +5831,7 @@ namespace FirstTry_app_1
 
         /////////OldIDEConverter///////
         #region OldIDEConverter
-        bool isSuit = false;
+        private bool isSuit = false;
         public async void openOldTestCase(string caseAddress)
         {
             try
@@ -5399,11 +5892,20 @@ namespace FirstTry_app_1
                     CommandCounter1++;
                     string tempCommand = FindBetween(input[i + 1], "<td>", "</td>");
                     if (tempCommand == "open2" || tempCommand == "open2AndWait")
+                    {
                         tempCommand = "open";
+                    }
+
                     if (tempCommand == "clickAndWait" || tempCommand == "clickAt")
+                    {
                         tempCommand = "click";
+                    }
+
                     if (tempCommand == "fireEvent")
+                    {
                         tempCommand = "runScript";
+                    }
+
                     App.Current.Dispatcher.Invoke(delegate
                     {
                         ListDB.Add(new Commands(CommandCounter1, tempCommand, FindBetween(input[i + 2], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 3], "<td>", "</td>").Replace("&quot;", "\"").Replace("&amp;", "&"), FindBetween(input[i + 1], "<td>", "</td>") + Convert.ToString(CommandCounter1 + 1), "None", Pass.noExe));
@@ -5436,7 +5938,7 @@ namespace FirstTry_app_1
         /////////NewIDEConverter///////
         #region NewIDEConverter
 
-        List<NewIDEType> mainList = new List<NewIDEType>();
+        private readonly List<NewIDEType> mainList = new List<NewIDEType>();
         public async void openNewTestSuit(string caseAddress)
         {
             try
@@ -5470,10 +5972,10 @@ namespace FirstTry_app_1
             });
 
             //var myTestCases = input.Where(stringToCheck => stringToCheck.Contains("    \"name\": \"")).ToList();
-            var testCaseList = input.Where(stringToCheck => stringToCheck.Contains("  \"tests\": [\"")).ToList();
-            var _testCaseSequence = testCaseList[0].Replace("    \"tests\": [\"", "").Replace("\"]", "");
+            List<string> testCaseList = input.Where(stringToCheck => stringToCheck.Contains("  \"tests\": [\"")).ToList();
+            string _testCaseSequence = testCaseList[0].Replace("    \"tests\": [\"", "").Replace("\"]", "");
             string[] testCaseSequence = _testCaseSequence.Split(new string[] { "\", \"" }, StringSplitOptions.None);
-            var testCaseSequenceORG = input.Where(stringToCheck => stringToCheck.Contains("  \"id\": \"")).ToList();
+            List<string> testCaseSequenceORG = input.Where(stringToCheck => stringToCheck.Contains("  \"id\": \"")).ToList();
             int m = 0;
             while (m < testCaseSequenceORG.Count)
             {
@@ -5503,13 +6005,16 @@ namespace FirstTry_app_1
                     string secondIndexID = FindBetween(testCaseSequenceORG[secondIndexTemp], " \"id\": \"", "\",");
                     secondIndex = input.FindIndex(r => r.Contains(secondIndexID));
                 }
-                else secondIndex = input.Count;
+                else
+                {
+                    secondIndex = input.Count;
+                }
 
-                var result = input.Skip(firstIndex + 1).Take(secondIndex - (firstIndex));
+                IEnumerable<string> result = input.Skip(firstIndex + 1).Take(secondIndex - (firstIndex));
 
-                var myCommands = result.Where(stringToCheck => stringToCheck.Contains("\"command\"")).ToList();
-                var myTargets = result.Where(stringToCheck => stringToCheck.Contains("\"target\"")).ToList();
-                var myValues = result.Where(stringToCheck => stringToCheck.Contains("\"value\"")).ToList();
+                List<string> myCommands = result.Where(stringToCheck => stringToCheck.Contains("\"command\"")).ToList();
+                List<string> myTargets = result.Where(stringToCheck => stringToCheck.Contains("\"target\"")).ToList();
+                List<string> myValues = result.Where(stringToCheck => stringToCheck.Contains("\"value\"")).ToList();
 
                 for (int i = 0; i < myCommands.Count; i++)
                 {
@@ -5519,16 +6024,23 @@ namespace FirstTry_app_1
                     CommandCounter++;
                     CommandCounter1++;
 
-                    var myCurrentCommand = FindBetween(myCommands[i], " \"command\": \"", "\",");
-                    if (myCurrentCommand == "store") myCurrentCommand = "storeEval";
+                    string myCurrentCommand = FindBetween(myCommands[i], " \"command\": \"", "\",");
+                    if (myCurrentCommand == "store")
+                    {
+                        myCurrentCommand = "storeEval";
+                    }
 
-                    var myCurrentTarget = FindBetween(myTargets[i], " \"target\": \"", "\",");
+                    string myCurrentTarget = FindBetween(myTargets[i], " \"target\": \"", "\",");
                     if (myCurrentCommand == "storeEval")
+                    {
                         myCurrentTarget = ConvertTextToIdeFormat(myCurrentTarget, false, false);
+                    }
 
-                    var myCurrentValue = FindBetween(myValues[i], " \"value\": \"", "\"");
+                    string myCurrentValue = FindBetween(myValues[i], " \"value\": \"", "\"");
                     if (myCurrentCommand == "empty")
+                    {
                         myCurrentValue = ConvertTextToIdeFormat(myCurrentValue, false, false);
+                    }
 
                     App.Current.Dispatcher.Invoke(delegate
                     {
@@ -5550,19 +6062,20 @@ namespace FirstTry_app_1
         #endregion
 
         /////////Runner///////
-        ListViewItem lvitem;
+        private ListViewItem lvitem;
         #region Runner
         public static Dictionary<int, bool> runnerInWhile = new Dictionary<int, bool>();
         public static Dictionary<int, bool> runnerInIf = new Dictionary<int, bool>();
         public static Dictionary<int, bool> runnerEnd = new Dictionary<int, bool>();
+
         //
-        int startOfWhile = 0;
-        int commandCounterWhile;
-        bool _break = false;
-        Commands currentWhile;
-        int endPos;
-        ListViewItem lvitemWhile;
-        ListViewItem lvitemIf;
+        private int startOfWhile = 0;
+        private int commandCounterWhile;
+        private bool _break = false;
+        private readonly Commands currentWhile;
+        private int endPos;
+        private ListViewItem lvitemWhile;
+        private ListViewItem lvitemIf;
         public async Task runCommand(Commands thisCommand, int caseIndex, int commandIndex)
         {
             try
@@ -5617,9 +6130,11 @@ namespace FirstTry_app_1
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
                         string itemBackGround = lvitem.Background.ToString();
-                        var bc = new BrushConverter();
+                        BrushConverter bc = new BrushConverter();
                         if (itemBackGround != "#00FFFFFF")
+                        {
                             lvitem.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#00FFFFFF");
+                        }
                     }));
                 }
 
@@ -5627,9 +6142,14 @@ namespace FirstTry_app_1
                 ///////specifyTarget
                 string targetType = "";
                 if (thisCommand.Target.Contains('=') && !thisCommand.Target.Contains("//"))
+                {
                     targetType = thisCommand.Target.Split('=')[0];
+                }
                 else if (!thisCommand.Target.Contains('=') || thisCommand.Target.Contains("//"))
+                {
                     targetType = "xpath";
+                }
+
                 string tempTarget = "";
                 switch (targetType)
                 {
@@ -5678,6 +6198,7 @@ namespace FirstTry_app_1
                 Thread.Sleep(Convert.ToInt16(tempSpeed * 3));
 
                 if (!pause)
+                {
                     switch (thisCommand.Command.Replace("\t", ""))
                     {
                         #region ===> open
@@ -5706,8 +6227,6 @@ namespace FirstTry_app_1
                             }
                             catch (Exception ex)
                             {
-
-
                                 thisCommand.Pass = Pass.failed;
 
                                 //change command color in listveiw
@@ -5721,9 +6240,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
                             }
@@ -5817,9 +6336,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("waitForElementPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -5915,9 +6434,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("waitForElementVisible " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -6008,9 +6527,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("waitForElementNotPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -6100,9 +6619,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("waitForNotText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -6199,9 +6718,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("waitForText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -6297,9 +6816,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("waitForValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
                             }
@@ -6355,8 +6874,9 @@ namespace FirstTry_app_1
                                 }
 
                                 if (!el_waitForAttribute.GetAttribute("class").Contains("active"))
+                                {
                                     throw new Exception("Element is not active");
-
+                                }
 
                                 jsExecutor.ExecuteScript("arguments[0].classList.add(\"myHighlight\");", el_waitForAttribute);
                                 Thread.Sleep(150);
@@ -6389,9 +6909,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("waitForAttribute " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -6404,8 +6924,6 @@ namespace FirstTry_app_1
                         case "waitForWindowPresent":
                             try
                             {
-                                IWebElement el_waitForWindowPresent;
-
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
                                     listView.SelectedIndex = thisCommand.Number - 1;
@@ -6443,9 +6961,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("waitForWindowPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -6458,8 +6976,6 @@ namespace FirstTry_app_1
                         case "waitForNumberOfWindowPresent":
                             try
                             {
-                                IWebElement el_waitForNumberOfWindowPresent;
-
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
                                     listView.SelectedIndex = thisCommand.Number - 1;
@@ -6499,9 +7015,9 @@ namespace FirstTry_app_1
 
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("waitForNumberOfWindowPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
                             }
@@ -6561,7 +7077,9 @@ namespace FirstTry_app_1
                                 jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_type);
                                 el_type.Clear();
                                 if (!thisCommand.Value.Contains("${"))
+                                {
                                     el_type.SendKeys(thisCommand.Value);
+                                }
                                 else
                                 {
                                     string final = "";
@@ -6608,9 +7126,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("type " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -6698,9 +7216,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("sendKeys " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -6787,9 +7305,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("clearText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -6876,9 +7394,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("click " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -6929,9 +7447,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -7025,9 +7543,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("select " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -7115,9 +7633,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("selectByValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -7207,9 +7725,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("selectByIndex " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -7298,9 +7816,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("storeText " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -7390,9 +7908,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("storeValue " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -7481,9 +7999,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("storeWicketPath " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -7572,9 +8090,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("storeInnerHTML " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -7662,9 +8180,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("storeName " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -7753,9 +8271,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("storeId " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -7844,9 +8362,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("storeHref " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -7902,9 +8420,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("storeEval " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                                 }));
 
@@ -7942,7 +8460,9 @@ namespace FirstTry_app_1
                                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
                                         }
                                         else
+                                        {
                                             throw new Exception("Element is not active");
+                                        }
 
                                         break;
                                     case "css selector":
@@ -7957,7 +8477,10 @@ namespace FirstTry_app_1
                                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
                                         }
                                         else
+                                        {
                                             throw new Exception("Element is not active");
+                                        }
+
                                         break;
                                     case "id":
                                         if (IsElementPresent(By.Id(tempTarget)))
@@ -7971,7 +8494,10 @@ namespace FirstTry_app_1
                                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
                                         }
                                         else
+                                        {
                                             throw new Exception("Element is not active");
+                                        }
+
                                         break;
                                     case "link text":
                                         if (IsElementPresent(By.LinkText(tempTarget)))
@@ -7985,7 +8511,11 @@ namespace FirstTry_app_1
                                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
                                         }
                                         else
-                                            throw new Exception("Element is not active"); break;
+                                        {
+                                            throw new Exception("Element is not active");
+                                        }
+
+                                        break;
                                     case "name":
                                         if (IsElementPresent(By.Name(tempTarget)))
                                         {
@@ -7998,7 +8528,11 @@ namespace FirstTry_app_1
                                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
                                         }
                                         else
-                                            throw new Exception("Element is not active"); break;
+                                        {
+                                            throw new Exception("Element is not active");
+                                        }
+
+                                        break;
                                     case "partial link text":
                                         if (IsElementPresent(By.PartialLinkText(tempTarget)))
                                         {
@@ -8011,7 +8545,11 @@ namespace FirstTry_app_1
                                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
                                         }
                                         else
-                                            throw new Exception("Element is not active"); break;
+                                        {
+                                            throw new Exception("Element is not active");
+                                        }
+
+                                        break;
                                     case "tag name":
                                         if (IsElementPresent(By.TagName(tempTarget)))
                                         {
@@ -8024,7 +8562,11 @@ namespace FirstTry_app_1
                                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
                                         }
                                         else
-                                            throw new Exception("Element is not active"); break;
+                                        {
+                                            throw new Exception("Element is not active");
+                                        }
+
+                                        break;
                                     case "xpath":
                                         if (IsElementPresent(By.XPath(tempTarget)))
                                         {
@@ -8037,7 +8579,11 @@ namespace FirstTry_app_1
                                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
                                         }
                                         else
-                                            throw new Exception("Element is not active"); break;
+                                        {
+                                            throw new Exception("Element is not active");
+                                        }
+
+                                        break;
                                     default:
                                         if (IsElementPresent(By.XPath(tempTarget)))
                                         {
@@ -8050,7 +8596,11 @@ namespace FirstTry_app_1
                                             jsExecutor.ExecuteScript("arguments[0].classList.remove(\"myHighlight\");", el_storeElementPresent);
                                         }
                                         else
-                                            throw new Exception("Element is not active"); break;
+                                        {
+                                            throw new Exception("Element is not active");
+                                        }
+
+                                        break;
                                 }
 
                                 thisCommand.Pass = Pass.passed;
@@ -8079,9 +8629,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("storeElementPresent " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8135,9 +8685,9 @@ namespace FirstTry_app_1
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
 
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("alert " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8189,9 +8739,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("replace " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8249,9 +8799,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("runScript " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8338,9 +8888,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("switch " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8393,9 +8943,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8484,9 +9034,9 @@ namespace FirstTry_app_1
                                 }));
 
                                 // Get the line number from the stack frame
-                                var st = new StackTrace(ex, true);
-                                var frame = st.GetFrame(st.FrameCount - 1);
-                                var line = frame.GetFileLineNumber();
+                                StackTrace st = new StackTrace(ex, true);
+                                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                int line = frame.GetFileLineNumber();
                                 Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
                             }
 
@@ -8548,9 +9098,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("while " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8601,9 +9151,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("break " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8661,9 +9211,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("if " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8703,15 +9253,19 @@ namespace FirstTry_app_1
                                 //change command color in lvitem While
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
-                                    if (lvitemWhile != null) lvitemWhile.Background = System.Windows.Media.Brushes.LightGreen;
-
+                                    if (lvitemWhile != null)
+                                    {
+                                        lvitemWhile.Background = System.Windows.Media.Brushes.LightGreen;
+                                    }
                                 }));
 
                                 //change command color in lvitem If
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
-                                    if (lvitemIf != null) lvitemIf.Background = System.Windows.Media.Brushes.LightGreen;
-
+                                    if (lvitemIf != null)
+                                    {
+                                        lvitemIf.Background = System.Windows.Media.Brushes.LightGreen;
+                                    }
                                 }));
 
                                 //return;
@@ -8732,9 +9286,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("end " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8784,9 +9338,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8837,9 +9391,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8888,9 +9442,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8941,9 +9495,9 @@ namespace FirstTry_app_1
                                 {
                                     lvitem.Background = System.Windows.Media.Brushes.LightPink;
                                     // Get the line number from the stack frame
-                                    var st = new StackTrace(ex, true);
-                                    var frame = st.GetFrame(st.FrameCount - 1);
-                                    var line = frame.GetFileLineNumber();
+                                    StackTrace st = new StackTrace(ex, true);
+                                    StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                                    int line = frame.GetFileLineNumber();
                                     Log.Items.Add("open " + thisCommand.Number + " ---> Failed in line " + line + " Because of error : " + ex.ToString());
 
                                 }));
@@ -8952,6 +9506,7 @@ namespace FirstTry_app_1
                             #endregion
 
                     }
+                }
                 else
                 {
                     pausedCommandIndex = commandIndex;
@@ -8962,9 +9517,9 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("runCommand ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
@@ -8985,11 +9540,15 @@ namespace FirstTry_app_1
 
                     //normal commands
                     if (i == 0)
+                    {
                         await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
+                    }
                     else
                     {
                         if (TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i - 1).Pass == Pass.passed || _break)
+                        {
                             await Task.Run(() => runCommand(TestList.ElementAt(testCaseNumber - 1).TestValue.ElementAt(i), testCaseNumber - 1, i));
+                        }
                         else
                         {
                             passed = false;
@@ -8997,7 +9556,9 @@ namespace FirstTry_app_1
                         }
                     }
                     if (_break)
+                    {
                         i = endPos - 1;
+                    }
                 }
 
                 if (passed)
@@ -9025,9 +9586,9 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("runCase ---> Failed in line " + line + " Because of error : " + ex.ToString());
                 return false;
             }
@@ -9043,11 +9604,15 @@ namespace FirstTry_app_1
                     bool passed = true;
                     waitType = WaitType._case;
                     if (i == 1)
+                    {
                         await Task.Run(() => runCase(i, 0));
+                    }
                     else
                     {
                         if (TestList.ElementAt(i - 2).IsPassed == Pass.passed || RunFromMiddle)
+                        {
                             await Task.Run(() => runCase(i, 0));
+                        }
                         else
                         {
                             passed = false;
@@ -9063,9 +9628,9 @@ namespace FirstTry_app_1
             catch (Exception ex)
             {
                 // Get the line number from the stack frame
-                var st = new StackTrace(ex, true);
-                var frame = st.GetFrame(st.FrameCount - 1);
-                var line = frame.GetFileLineNumber();
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
                 Log.Items.Add("runSuit ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }

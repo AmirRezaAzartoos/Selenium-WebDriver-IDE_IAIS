@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace FirstTry_app_1
 {
@@ -19,10 +14,7 @@ namespace FirstTry_app_1
 
         public int TestNumber
         {
-            get
-            {
-                return _testNumber;
-            }
+            get => _testNumber;
             set
             {
                 _testNumber = value;
@@ -34,7 +26,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_testName))
+                {
                     return "Unknown";
+                }
 
                 return _testName;
             }
@@ -46,10 +40,7 @@ namespace FirstTry_app_1
         }
         public ObservableCollection<Commands> TestValue
         {
-            get
-            {
-                return _testValue;
-            }
+            get => _testValue;
             set
             {
                 _testValue = value;
@@ -61,7 +52,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_testFolder))
+                {
                     return "Unknown";
+                }
 
                 return _testFolder;
             }
@@ -76,7 +69,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_savedPath))
+                {
                     return null;
+                }
 
                 return _savedPath;
             }
@@ -88,10 +83,7 @@ namespace FirstTry_app_1
         }
         public bool IsSaved
         {
-            get
-            {
-                return _isSaved;
-            }
+            get => _isSaved;
             set
             {
                 _isSaved = value;
@@ -100,10 +92,7 @@ namespace FirstTry_app_1
         }
         public MainWindow.Pass IsPassed
         {
-            get
-            {
-                return _isPassed;
-            }
+            get => _isPassed;
             set
             {
                 _isPassed = value;

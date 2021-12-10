@@ -1,19 +1,10 @@
 ﻿using FirstTry_app_1.MessageBox;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace FirstTry_app_1
 {
@@ -38,8 +29,10 @@ namespace FirstTry_app_1
             mainWindow.ValueTB.Text = "";
             mainWindow.DescriptionTB.Text = "";
             mainWindow.TestCaseListView.ItemsSource = MainWindow.TestList;
-            AddTestFirst addTestFirst = new AddTestFirst();
-            addTestFirst.Owner = this;
+            AddTestFirst addTestFirst = new AddTestFirst
+            {
+                Owner = this
+            };
             MainWindow.testCaseCounter++;
             mainWindow.TestCaseListView.SelectedIndex = MainWindow._testCaseCounter;
             MainWindow.TestList.Add(new TestSuit() { TestNumber = MainWindow.testCaseCounter, TestName = TestCaseTB.Text, IsSaved = false });
@@ -76,7 +69,7 @@ namespace FirstTry_app_1
         {
             MainBorder.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _emptyFieldDialog = new MessageBox.EmptyField();
+            EmptyField _emptyFieldDialog = new MessageBox.EmptyField();
             _emptyFieldDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainBorder.Effect = null;

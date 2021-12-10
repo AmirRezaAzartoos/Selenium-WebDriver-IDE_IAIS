@@ -2,7 +2,7 @@
 
 namespace FirstTry_app_1
 {
-    class NewIDEType : ObservableObject
+    internal class NewIDEType : ObservableObject
     {
         private string _id;
         private string _name;
@@ -11,9 +11,9 @@ namespace FirstTry_app_1
 
         public NewIDEType(string v1, string v2, object p)
         {
-            this.Id = v1;
-            this.Name = v2;
-            this.Commands = (List<Commands>)p;
+            Id = v1;
+            Name = v2;
+            Commands = (List<Commands>)p;
         }
 
         public string Id
@@ -21,7 +21,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_id))
+                {
                     return "None";
+                }
 
                 return _id;
             }
@@ -38,7 +40,9 @@ namespace FirstTry_app_1
             get
             {
                 if (string.IsNullOrWhiteSpace(_name))
+                {
                     return "None";
+                }
 
                 return _name;
             }
@@ -51,10 +55,7 @@ namespace FirstTry_app_1
 
         public List<Commands> Commands
         {
-            get
-            {
-                return _comands;
-            }
+            get => _comands;
             set
             {
                 _comands = value;

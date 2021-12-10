@@ -1,4 +1,10 @@
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\WebDriverIDE.exe
+C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Data\extention-test.crx
+C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Data\StaticCode-Case.py
+C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Data\StaticCode.py
+C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Data\StaticCode_ubuntu-Case.py
+C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Data\StaticCode_ubuntu.py
+C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\WebDriverIDE.ico
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\WebDriverIDE.dll.config
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\WebDriverIDE.deps.json
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\WebDriverIDE.runtimeconfig.json
@@ -6,9 +12,6 @@ C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\WebDriverIDE.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\ref\WebDriverIDE.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\WebDriverIDE.pdb
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\CommonServiceLocator.dll
-C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Microsoft.Dynamic.dll
-C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Microsoft.Scripting.Metadata.dll
-C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Microsoft.Scripting.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\MaterialDesignColors.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\MaterialDesignThemes.Wpf.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Microsoft.Bcl.AsyncInterfaces.dll
@@ -19,7 +22,6 @@ C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Microsoft.Extens
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Microsoft.Win32.Registry.AccessControl.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Microsoft.Win32.SystemEvents.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
-C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\nunit.framework.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\WebDriver.Support.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\WebDriver.dll
 C:\webdriver-ide-source\FirstTry app 1\bin\Debug\net6.0-windows\System.CodeDom.dll
@@ -153,6 +155,7 @@ C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\MessageBox\Updat
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\RenameTestCase.g.cs
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\StartUpMessage.g.cs
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\App.g.cs
+C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\WebDriverIDE_Content.g.cs
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\WebDriverIDE_MarkupCompile.cache
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\WebDriverIDE_MarkupCompile.lref
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\AddTestCase.baml
@@ -170,6 +173,7 @@ C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry_app_1.P
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.csproj.GenerateResource.cache
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.GeneratedMSBuildEditorConfig.editorconfig
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.csproj.CoreCompileInputs.cache
+C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\FirstTry app 1.csproj.CopyComplete
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\WebDriverIDE.dll
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\ref\WebDriverIDE.dll
 C:\webdriver-ide-source\FirstTry app 1\obj\Debug\net6.0-windows\WebDriverIDE.pdb

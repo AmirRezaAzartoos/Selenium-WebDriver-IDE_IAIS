@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Windows.Data;
-
-namespace FirstTry_app_1.BL
+﻿namespace FirstTry_app_1.BL
 {/*
     class NewIDEConverter
     {
@@ -77,4 +69,5 @@ namespace FirstTry_app_1.BL
             }
         }
     }
-*/}
+*/
+}

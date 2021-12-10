@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace FirstTry_app_1
 {
@@ -30,10 +22,16 @@ namespace FirstTry_app_1
         {
             MainWindow mainWindow = Owner as MainWindow;
             mainWindow.TestCaseListView.ItemsSource = MainWindow.TestList;
-            RenameTestCase renameTestCase = new RenameTestCase();
-            renameTestCase.Owner = this;
-            var obj = MainWindow.TestList.FirstOrDefault(x => x.TestName == MainWindow.SelectedTest.TestName);
-            if (obj != null) obj.TestName = RenameTestCaseTB.Text;
+            RenameTestCase renameTestCase = new RenameTestCase
+            {
+                Owner = this
+            };
+            TestSuit obj = MainWindow.TestList.FirstOrDefault(x => x.TestName == MainWindow.SelectedTest.TestName);
+            if (obj != null)
+            {
+                obj.TestName = RenameTestCaseTB.Text;
+            }
+
             ICollectionView view = CollectionViewSource.GetDefaultView(MainWindow.TestList);
             view.Refresh();
             Close();
@@ -42,7 +40,7 @@ namespace FirstTry_app_1
         {
             MainBorder.Effect = new BlurEffect();
             Splash.Visibility = Visibility.Visible;
-            var _emptyFieldDialog = new MessageBox.EmptyField();
+            MessageBox.EmptyField _emptyFieldDialog = new MessageBox.EmptyField();
             _emptyFieldDialog.ShowDialog();
             Splash.Visibility = Visibility.Collapsed;
             MainBorder.Effect = null;
