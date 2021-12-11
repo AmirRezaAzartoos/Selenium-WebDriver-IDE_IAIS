@@ -40,10 +40,7 @@ namespace FirstTry_app_1
             mainWindow.TestCaseCounterTB.Text = Convert.ToString(MainWindow.testCaseCounter);
             MainWindow._commandCounter = MainWindow.CommandCounter = 0;
             mainWindow.CommandCounterTB.Text = Convert.ToString(MainWindow.CommandCounter);
-            ICollectionView view = CollectionViewSource.GetDefaultView(MainWindow.TestList);
-            view.Refresh();
-            ICollectionView view2 = CollectionViewSource.GetDefaultView(MainWindow.ListDB);
-            view2.Refresh();
+            mainWindow.RefreshLists(true, true);
             Close();
             MainWindow._testCaseFileName = TestCaseTB.Text + ".py";
         }

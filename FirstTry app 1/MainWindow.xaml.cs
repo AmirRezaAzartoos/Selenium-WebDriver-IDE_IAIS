@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Html5;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -184,7 +185,7 @@ namespace FirstTry_app_1
                 set => SetField(ref selectedValue, value);
             }
         }
-        
+
         public MainWindow()
         {
             try
@@ -214,6 +215,17 @@ namespace FirstTry_app_1
                 options.AddExtension(startupPath + "\\Data\\extention-test.crx");
                 //options.AddArguments("user-data-dir=" + startupPath + "\\data\\User Data");
                 //var temp124 = ConfigurationManager.AppSettings.Get("IAIS");
+
+                //add first testcase
+                MainWindow.testCaseCounter++;
+                mainWindow.TestCaseListView.SelectedIndex = MainWindow._testCaseCounter;
+                MainWindow.TestList.Add(new TestSuit() { TestNumber = MainWindow.testCaseCounter, TestName = "Untitled", IsSaved = false });
+                MainWindow._testCaseCounter = MainWindow.testCaseCounter;
+                mainWindow.TestCaseCounterTB.Text = Convert.ToString(MainWindow.testCaseCounter);
+                MainWindow._commandCounter = MainWindow.CommandCounter = 0;
+                CommandCounterTB.Text = Convert.ToString(MainWindow.CommandCounter);
+                RefreshLists(true, true);
+                MainWindow._testCaseFileName = "Untitled.py";
             }
             catch (Exception ex)
             {
@@ -1394,8 +1406,8 @@ namespace FirstTry_app_1
                         }
                         else if (input.Contains("find_element_by"))
                         {
-                            outType = FindBetween(input, "find_element_by_", "(\"");
-                            outValue = FindBetween(input, "find_element_by_" + outType + "(\"", "\")");
+                            outType = input.Contains("(\"") ? FindBetween(input, "find_element_by_", "(\"") : FindBetween(input, "find_element_by_", "('");
+                            outValue = input.Contains("(\"") ? FindBetween(input, "find_element_by_" + outType + "(\"", "\")") : FindBetween(input, "find_element_by_" + outType + "('", "')");
                         }
                         switch (outType.Replace("_", " "))
                         {
@@ -1666,28 +1678,11 @@ namespace FirstTry_app_1
                                 string temprunScript = specifyTarget(lines.ElementAt(_counter + 1));
                                 if (temprunScript == "empty")
                                 {
-                                    if (lines.ElementAt(_counter + 1).Contains("execute_script(\""))
-                                    {
-                                        _currentValue = lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("execute_script(\"") + 16);
-                                        _currentValue = _currentValue.Remove(_currentValue.LastIndexOf("\")"), 2);
-                                    }
-                                    if (lines.ElementAt(_counter + 1).Contains("execute_script('"))
-                                    {
-                                        _currentValue = lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("execute_script('") + 16).Remove(lines.ElementAt(_counter + 1).LastIndexOf("')"), 2);
-                                    }
+                                    _currentValue = lines.ElementAt(_counter + 1).Substring(lines.ElementAt(_counter + 1).IndexOf("(") + 2, lines.ElementAt(_counter + 1).LastIndexOf(")") - lines.ElementAt(_counter + 1).IndexOf("(") - 3);
                                 }
                                 else
                                 {
-                                    if (lines.ElementAt(_counter + 1).Contains("execute_script(\""))
-                                    {
-                                        _currentValue = FindBetween(lines.ElementAt(_counter + 1), "execute_script(\"", "\", ");
-                                    }
-
-                                    if (lines.ElementAt(_counter + 1).Contains("execute_script('"))
-                                    {
-                                        _currentValue = FindBetween(lines.ElementAt(_counter + 1), "execute_script('", "', ");
-                                    }
-
+                                    _currentValue = lines.ElementAt(_counter + 1).Substring(lines.ElementAt(_counter + 1).IndexOf("(") + 2, lines.ElementAt(_counter + 1).IndexOf(",") - lines.ElementAt(_counter + 1).IndexOf("(") - 3);
                                     _currentTarget = temprunScript;
                                 }
                                 _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
@@ -1812,497 +1807,499 @@ namespace FirstTry_app_1
 
         public void OpenTestSuit(string D)
         {
-            if (D != null)
+            try
             {
-                ListDB.Clear();
-                string _testName = "";
-                int _commandCounter = 1;
-                int _counter = 0;
-                int _counter1 = 0;
-                int i = 1;
-                int j = 0;
-                bool passed = false;
-                string tabNeededTemp = "";
-                List<string> lines = File.ReadLines(@D).ToList();
-                while (_counter < lines.Count)
+                if (D != null)
                 {
-                    if (lines.ElementAt(_counter).Contains("try:"))
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        _counter++;
-                    }
-                }
-                while (j < lines.Count)
-                {
-                    if (lines.ElementAt(j).Contains("class ") && !lines.ElementAt(j).Contains("class StoreEvalDB()"))
-                    {
-                        j++;
-                        _counter1++;
-                    }
-                    else
-                    {
-                        j++;
-                    }
-                }
-                while (_counter1 > i)
-                {
-                    while (lines.Count > _counter)
-                    {
-                        if (lines.ElementAt(_counter).Contains("class ") && passed == false)
-                        {
-                            _testName = FindBetween(lines.ElementAt(_counter), "class ", ":");
-                            passed = true;
-                            _counter++;
-                            testCaseCounter++;
-                        }
-
-                        string _currentTarget = "";
-                        string _currentValue = "";
-                        string _currentVariableName = "";
-                        string _currentDescription = "";
-                        string specifyTarget(string input)
-                        {
-                            string outType = "empty";
-                            string outValue = "empty";
-                            string OUT = "empty";
-                            if (input.Contains("present_in_element_value"))
-                            {
-                                outType = FindBetween(input, "present_in_element_value((\"", "\", \"");
-                                outValue = FindBetween(input, "\", \"", "\"), ");
-                            }
-                            else if (input.Contains("present_in_element"))
-                            {
-                                outType = FindBetween(input, "present_in_element((\"", "\", \"");
-                                outValue = FindBetween(input, "\", \"", "\"), ");
-                            }
-                            else if (input.Contains("element_located"))
-                            {
-                                outType = FindBetween(input, "element_located((\"", "\", \"");
-                                outValue = FindBetween(input, "\", \"", "\")))");
-                            }
-                            else if (input.Contains("elements_located"))
-                            {
-                                outType = FindBetween(input, "elements_located((\"", "\", \"");
-                                outValue = FindBetween(input, "\", \"", "\")))");
-                            }
-                            else if (input.Contains("find_element_by"))
-                            {
-                                outType = FindBetween(input, "find_element_by_", "(\"");
-                                outValue = FindBetween(input, "find_element_by_" + outType + "(\"", "\")");
-                            }
-                            switch (outType.Replace("_", " "))
-                            {
-                                case "class name":
-                                    outType = "class";
-                                    OUT = "class=" + outValue;
-                                    break;
-                                case "css selector":
-                                    outType = "css";
-                                    OUT = "css=" + outValue;
-                                    break;
-                                case "id":
-                                    outType = "id";
-                                    OUT = "id=" + outValue;
-                                    break;
-                                case "link text":
-                                    outType = "link";
-                                    OUT = "link=" + outValue;
-                                    break;
-                                case "name":
-                                    outType = "name";
-                                    OUT = "name=" + outValue;
-                                    break;
-                                case "partial link text":
-                                    outType = "partial";
-                                    OUT = "partial=" + outValue;
-                                    break;
-                                case "tag name":
-                                    outType = "tag";
-                                    OUT = "tag=" + outValue;
-                                    break;
-                                case "xpath":
-                                    outType = "xpath";
-                                    OUT = outValue;
-                                    break;
-                            }
-                            return OUT;
-                        }
-                        if (lines.ElementAt(_counter).Contains(" | "))
-                        {
-                            _currentVariableName = lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", "") + _commandCounter.ToString();
-                            tabNeededTemp = lines.ElementAt(_counter).Remove(lines.ElementAt(_counter).IndexOf("\t#"), lines.ElementAt(_counter).Length - lines.ElementAt(_counter).IndexOf("\t#"));
-                            string tempCurrentCommand = lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", "");
-                            switch (tempCurrentCommand)
-                            {
-                                #region ===> open
-                                case "open":
-                                    _currentTarget = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 1), "driver.get(", ")"));
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> waitForElementPresent
-                                case "waitForElementPresent":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> waitForElementVisible
-                                case "waitForElementVisible":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> waitForElementNotPresent
-                                case "waitForElementNotPresent":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> waitForText
-                                case "waitForText":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 1), "\"), ", "))"));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> waitForNotText
-                                case "waitForNotText":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 1), "), ", "))"));
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> waitForValue
-                                case "waitForValue":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 1), "), ", "))"));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> waitForAttribute
-                                case "waitForAttribute":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 3));
-                                    _currentDescription = lines.ElementAt(_counter + 12).Remove(0, lines.ElementAt(_counter + 12).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> waitForWindowPresent
-                                case "waitForWindowPresent":
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> waitForNumberOfWindowPresent
-                                case "waitForNumberOfWindowPresent":
-                                    _currentTarget = FindBetween(lines.ElementAt(_counter + 1), "number_of_windows_to_be(", "))");
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> type
-                                case "type":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 4), ".send_keys(", ")"));
-                                    _currentDescription = lines.ElementAt(_counter + 5).Remove(0, lines.ElementAt(_counter + 5).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> sendKeys
-                                case "sendKeys":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), ".send_keys(", ")"));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> clearText
-                                case "clearText":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> click
-                                case "click":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> select
-                                case "select":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), "//option[. = ", "]\")"));
-                                    _currentDescription = lines.ElementAt(_counter + 6).Remove(0, lines.ElementAt(_counter + 6).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> selectByVisibleText
-                                case "selectByVisibleText":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), "select_by_visible_text(", ")"));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> selectByValue
-                                case "selectByValue":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), "select_by_value(", ")"));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> selectByIndex
-                                case "selectByIndex":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), "select_by_index(", ")"));
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> storeText
-                                case "storeText":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> storeValue
-                                case "storeValue":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> storeWicketPath
-                                case "storeWicketPath":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> storeInnerHTML
-                                case "storeInnerHTML":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> storeName
-                                case "storeName":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> storeId
-                                case "storeId":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> storeHref
-                                case "storeHref":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> storeEval
-                                case "storeEval":
-                                    _currentTarget = ConvertTextFromIdeFormat(lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("\"] = ") + 5));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 1), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> storeElementPresent
-                                case "storeElementPresent":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 2));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 6).Remove(0, lines.ElementAt(_counter + 6).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> alert
-                                case "alert":
-                                    _currentDescription = lines.ElementAt(_counter + 3).Remove(0, lines.ElementAt(_counter + 3).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> replace
-                                case "replace":
-                                    _currentTarget = ConvertTextFromIdeFormat(lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("\"] = ") + 5));
-                                    _currentValue = FindBetween(lines.ElementAt(_counter + 1), "StoreEvalDB.vars[\"", "\"] = ");
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> runScript
-                                case "runScript":
-                                    string temprunScript = specifyTarget(lines.ElementAt(_counter + 1));
-                                    if (temprunScript == "empty")
-                                    {
-                                        if (lines.ElementAt(_counter + 1).Contains("execute_script(\""))
-                                        {
-                                            _currentValue = lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("execute_script(\"") + 16);
-                                            _currentValue = _currentValue.Remove(_currentValue.LastIndexOf("\")"), 2);
-                                        }
-                                        if (lines.ElementAt(_counter + 1).Contains("execute_script('"))
-                                        {
-                                            _currentValue = lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("execute_script('") + 16).Remove(lines.ElementAt(_counter + 1).LastIndexOf("')"), 2);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (lines.ElementAt(_counter + 1).Contains("execute_script(\""))
-                                        {
-                                            _currentValue = FindBetween(lines.ElementAt(_counter + 1), "execute_script(\"", "\", ");
-                                        }
-
-                                        if (lines.ElementAt(_counter + 1).Contains("execute_script('"))
-                                        {
-                                            _currentValue = FindBetween(lines.ElementAt(_counter + 1), "execute_script('", "', ");
-                                        }
-
-                                        _currentTarget = temprunScript;
-                                    }
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> switch
-                                case "switch":
-                                    _currentTarget = FindBetween(lines.ElementAt(_counter + 1), ".switch_to.", "(");
-                                    string tempswitch = lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).LastIndexOf("driver.") + 7);
-                                    _currentValue = tempswitch.Remove(tempswitch.Length - 1, 1);
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> switchToDefault
-                                case "switchToDefault":
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> scrollInto
-                                case "scrollInto":
-                                    _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
-                                    _currentDescription = lines.ElementAt(_counter + 3).Remove(0, lines.ElementAt(_counter + 3).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> while
-                                case "while":
-                                    inWhileOrIf.Add(_commandCounter, true);
-                                    _currentTarget = FindBetween(lines.ElementAt(_counter + 1), "while ", ":");
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> break
-                                case "break":
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> if
-                                case "if":
-                                    inWhileOrIf.Add(_commandCounter, true);
-                                    _currentTarget = FindBetween(lines.ElementAt(_counter + 1), "if ", ":");
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> end
-                                /*case "end":
-                                    break;*/
-                                #endregion
-
-                                #region ===> refresh
-                                case "refresh":
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> close
-                                case "close":
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> failTest
-                                case "failTest":
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                #region ===> pause
-                                case "pause":
-                                    _currentTarget = (Convert.ToInt16(FindBetween(lines.ElementAt(_counter + 1), "time.sleep(", ")")) * 1000).ToString();
-                                    _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
-                                    break;
-                                #endregion
-
-                                default:
-                                    //_commandCounter++;
-                                    _counter++;
-                                    continue;
-                            }
-                            _commandCounter++;
-                            ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
-                        }
-
-                        else if (lines.ElementAt(_counter).Contains("# end"))
-                        {
-                            _commandCounter++;
-                            ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
-                            if (sumTrue == 0)
-                            {
-                                throw new Exception("Unvalid Command : No operations exist");
-                            }
-                            else
-                            {
-                                sumTrue--;
-                                tabNeeded = string.Concat(Enumerable.Repeat("\t", sumTrue));
-                                inWhileOrIf.Remove(inWhileOrIf.Keys.LastOrDefault());
-                            }
-                        }
-
-                        _counter++;
-
-                        sumTrue = inWhileOrIf.Count(x => x.Value == true);
-                        tabNeeded = string.Concat(Enumerable.Repeat("\t", sumTrue));
-                    }
-                    TestList.Add(new TestSuit() { TestNumber = testCaseCounter, TestName = _testName, TestValue = new ObservableCollection<Commands>(ListDB), IsSaved = true });
-                    TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
-                    i++;
-                    _commandCounter = 1;
-                    passed = false;
                     ListDB.Clear();
+                    string _testName = "";
+                    int _commandCounter = 1;
+                    int _counter = 0;
+                    int _counter1 = 0;
+                    int i = 1;
+                    int j = 0;
+                    bool passed = false;
+                    string tabNeededTemp = "";
+                    List<string> lines = File.ReadLines(@D).ToList();
+                    while (_counter < lines.Count)
+                    {
+                        if (lines.ElementAt(_counter).Contains("try:"))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            _counter++;
+                        }
+                    }
+                    while (j < lines.Count)
+                    {
+                        if (lines.ElementAt(j).Contains("	class ") && !lines.ElementAt(j).Contains("class StoreEvalDB()"))
+                        {
+                            j++;
+                            _counter1++;
+                        }
+                        else
+                        {
+                            j++;
+                        }
+                    }
+                    while (_counter1 + 1 > i)
+                    {
+                        while (lines.Count > _counter)
+                        {
+                            if (lines.ElementAt(_counter).Contains("\tclass "))
+                            {
+                                if (!passed)
+                                {
+                                    _testName = FindBetween(lines.ElementAt(_counter), "class ", ":");
+                                    passed = true;
+                                    _counter++;
+                                    testCaseCounter++;
+                                }
+                                else
+                                {
+                                    passed = false;
+                                    break;
+                                }
+                            }
+
+                            string _currentTarget = "";
+                            string _currentValue = "";
+                            string _currentVariableName = "";
+                            string _currentDescription = "";
+                            string specifyTarget(string input)
+                            {
+                                string outType = "empty";
+                                string outValue = "empty";
+                                string OUT = "empty";
+                                if (input.Contains("present_in_element_value"))
+                                {
+                                    outType = FindBetween(input, "present_in_element_value((\"", "\", \"");
+                                    outValue = FindBetween(input, "\", \"", "\"), ");
+                                }
+                                else if (input.Contains("present_in_element"))
+                                {
+                                    outType = FindBetween(input, "present_in_element((\"", "\", \"");
+                                    outValue = FindBetween(input, "\", \"", "\"), ");
+                                }
+                                else if (input.Contains("element_located"))
+                                {
+                                    outType = FindBetween(input, "element_located((\"", "\", \"");
+                                    outValue = FindBetween(input, "\", \"", "\")))");
+                                }
+                                else if (input.Contains("elements_located"))
+                                {
+                                    outType = FindBetween(input, "elements_located((\"", "\", \"");
+                                    outValue = FindBetween(input, "\", \"", "\")))");
+                                }
+                                else if (input.Contains("find_element_by"))
+                                {
+                                    outType = input.Contains("(\"") ? FindBetween(input, "find_element_by_", "(\"") : FindBetween(input, "find_element_by_", "('");
+                                    outValue = input.Contains("(\"") ? FindBetween(input, "find_element_by_" + outType + "(\"", "\")") : FindBetween(input, "find_element_by_" + outType + "('", "')");
+                                }
+                                switch (outType.Replace("_", " "))
+                                {
+                                    case "class name":
+                                        outType = "class";
+                                        OUT = "class=" + outValue;
+                                        break;
+                                    case "css selector":
+                                        outType = "css";
+                                        OUT = "css=" + outValue;
+                                        break;
+                                    case "id":
+                                        outType = "id";
+                                        OUT = "id=" + outValue;
+                                        break;
+                                    case "link text":
+                                        outType = "link";
+                                        OUT = "link=" + outValue;
+                                        break;
+                                    case "name":
+                                        outType = "name";
+                                        OUT = "name=" + outValue;
+                                        break;
+                                    case "partial link text":
+                                        outType = "partial";
+                                        OUT = "partial=" + outValue;
+                                        break;
+                                    case "tag name":
+                                        outType = "tag";
+                                        OUT = "tag=" + outValue;
+                                        break;
+                                    case "xpath":
+                                        outType = "xpath";
+                                        OUT = outValue;
+                                        break;
+                                }
+                                return OUT;
+                            }
+                            if (lines.ElementAt(_counter).Contains(" | ") && !lines.ElementAt(_counter + 1).Contains(" | "))
+                            {
+                                _currentVariableName = lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", "") + _commandCounter.ToString();
+                                tabNeededTemp = lines.ElementAt(_counter).Remove(lines.ElementAt(_counter).IndexOf("\t#"), lines.ElementAt(_counter).Length - lines.ElementAt(_counter).IndexOf("\t#"));
+                                string tempCurrentCommand = lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", "");
+                                switch (tempCurrentCommand)
+                                {
+                                    #region ===> open
+                                    case "open":
+                                        _currentTarget = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 1), "driver.get(", ")"));
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> waitForElementPresent
+                                    case "waitForElementPresent":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> waitForElementVisible
+                                    case "waitForElementVisible":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> waitForElementNotPresent
+                                    case "waitForElementNotPresent":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> waitForText
+                                    case "waitForText":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 1), "\"), ", "))"));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> waitForNotText
+                                    case "waitForNotText":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 1), "), ", "))"));
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> waitForValue
+                                    case "waitForValue":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 1), "), ", "))"));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> waitForAttribute
+                                    case "waitForAttribute":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 3));
+                                        _currentDescription = lines.ElementAt(_counter + 12).Remove(0, lines.ElementAt(_counter + 12).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> waitForWindowPresent
+                                    case "waitForWindowPresent":
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> waitForNumberOfWindowPresent
+                                    case "waitForNumberOfWindowPresent":
+                                        _currentTarget = FindBetween(lines.ElementAt(_counter + 1), "number_of_windows_to_be(", "))");
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> type
+                                    case "type":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 4), ".send_keys(", ")"));
+                                        _currentDescription = lines.ElementAt(_counter + 5).Remove(0, lines.ElementAt(_counter + 5).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> sendKeys
+                                    case "sendKeys":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), ".send_keys(", ")"));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> clearText
+                                    case "clearText":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> click
+                                    case "click":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> select
+                                    case "select":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), "//option[. = ", "]\")"));
+                                        _currentDescription = lines.ElementAt(_counter + 6).Remove(0, lines.ElementAt(_counter + 6).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> selectByVisibleText
+                                    case "selectByVisibleText":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), "select_by_visible_text(", ")"));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> selectByValue
+                                    case "selectByValue":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), "select_by_value(", ")"));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> selectByIndex
+                                    case "selectByIndex":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = ConvertTextFromIdeFormat(FindBetween(lines.ElementAt(_counter + 3), "select_by_index(", ")"));
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> storeText
+                                    case "storeText":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> storeValue
+                                    case "storeValue":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> storeWicketPath
+                                    case "storeWicketPath":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> storeInnerHTML
+                                    case "storeInnerHTML":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> storeName
+                                    case "storeName":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> storeId
+                                    case "storeId":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> storeHref
+                                    case "storeHref":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 4).Remove(0, lines.ElementAt(_counter + 4).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> storeEval
+                                    case "storeEval":
+                                        _currentTarget = ConvertTextFromIdeFormat(lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("\"] = ") + 5));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 1), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> storeElementPresent
+                                    case "storeElementPresent":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 2));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 3), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 6).Remove(0, lines.ElementAt(_counter + 6).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> alert
+                                    case "alert":
+                                        _currentDescription = lines.ElementAt(_counter + 3).Remove(0, lines.ElementAt(_counter + 3).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> replace
+                                    case "replace":
+                                        _currentTarget = ConvertTextFromIdeFormat(lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).IndexOf("\"] = ") + 5));
+                                        _currentValue = FindBetween(lines.ElementAt(_counter + 1), "StoreEvalDB.vars[\"", "\"] = ");
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> runScript
+                                    case "runScript":
+                                        string temprunScript = specifyTarget(lines.ElementAt(_counter + 1));
+                                        if (temprunScript == "empty")
+                                        {
+                                            _currentValue = lines.ElementAt(_counter + 1).Substring(lines.ElementAt(_counter + 1).IndexOf("(") + 2, lines.ElementAt(_counter + 1).LastIndexOf(")") - lines.ElementAt(_counter + 1).IndexOf("(") - 3);
+                                        }
+                                        else
+                                        {
+                                            _currentValue = lines.ElementAt(_counter + 1).Substring(lines.ElementAt(_counter + 1).IndexOf("(") + 2, lines.ElementAt(_counter + 1).IndexOf(",") - lines.ElementAt(_counter + 1).IndexOf("(") - 3);
+                                            _currentTarget = temprunScript;
+                                        }
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> switch
+                                    case "switch":
+                                        _currentTarget = FindBetween(lines.ElementAt(_counter + 1), ".switch_to.", "(");
+                                        string tempswitch = lines.ElementAt(_counter + 1).Remove(0, lines.ElementAt(_counter + 1).LastIndexOf("driver.") + 7);
+                                        _currentValue = tempswitch.Remove(tempswitch.Length - 1, 1);
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> switchToDefault
+                                    case "switchToDefault":
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> scrollInto
+                                    case "scrollInto":
+                                        _currentTarget = specifyTarget(lines.ElementAt(_counter + 1));
+                                        _currentDescription = lines.ElementAt(_counter + 3).Remove(0, lines.ElementAt(_counter + 3).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> while
+                                    case "while":
+                                        inWhileOrIf.Add(_commandCounter, true);
+                                        _currentTarget = FindBetween(lines.ElementAt(_counter + 1), "while ", ":");
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> break
+                                    case "break":
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> if
+                                    case "if":
+                                        inWhileOrIf.Add(_commandCounter, true);
+                                        _currentTarget = FindBetween(lines.ElementAt(_counter + 1), "if ", ":");
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> end
+                                    /*case "end":
+                                        break;*/
+                                    #endregion
+
+                                    #region ===> refresh
+                                    case "refresh":
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> close
+                                    case "close":
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> failTest
+                                    case "failTest":
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    #region ===> pause
+                                    case "pause":
+                                        _currentTarget = (Convert.ToInt16(FindBetween(lines.ElementAt(_counter + 1), "time.sleep(", ")")) * 1000).ToString();
+                                        _currentDescription = lines.ElementAt(_counter + 2).Remove(0, lines.ElementAt(_counter + 2).IndexOf("Description: ") + 13);
+                                        break;
+                                    #endregion
+
+                                    default:
+                                        //_commandCounter++;
+                                        _counter++;
+                                        continue;
+                                }
+                                ListDB.Add(new Commands(_commandCounter, tabNeededTemp + lines.ElementAt(_counter).Remove(0, lines.ElementAt(_counter).IndexOf("| ") + 2).Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
+                                _commandCounter++;
+                            }
+
+                            else if (lines.ElementAt(_counter).Contains("# end"))
+                            {
+                                _commandCounter++;
+                                ListDB.Add(new Commands(_commandCounter, lines.ElementAt(_counter).Replace("\t# ", "").Replace(" ", ""), _currentTarget, _currentValue, _currentVariableName, _currentDescription, Pass.noExe));
+                                if (sumTrue == 0)
+                                {
+                                    throw new Exception("Unvalid Command : No operations exist");
+                                }
+                                else
+                                {
+                                    sumTrue--;
+                                    tabNeeded = string.Concat(Enumerable.Repeat("\t", sumTrue));
+                                    inWhileOrIf.Remove(inWhileOrIf.Keys.LastOrDefault());
+                                }
+                            }
+
+                            _counter++;
+
+                            sumTrue = inWhileOrIf.Count(x => x.Value == true);
+                            tabNeeded = string.Concat(Enumerable.Repeat("\t", sumTrue));
+                        }
+                        TestList.Add(new TestSuit() { TestNumber = testCaseCounter, TestName = _testName, TestValue = new ObservableCollection<Commands>(ListDB), IsSaved = true });
+                        TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
+                        i++;
+                        _commandCounter = 1;
+                        passed = false;
+                        ListDB.Clear();
+                    }
+                    _testCaseCounter = testCaseCounter;
+                    RefreshLists(true, true);
                 }
-                _testCaseCounter = testCaseCounter;
-                RefreshLists(true, true);
+            }
+            catch (Exception ex)
+            {
+                // Get the line number from the stack frame
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
+                Log.Items.Add("OpenTestSuit_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
         #endregion
@@ -3068,7 +3065,11 @@ namespace FirstTry_app_1
             }
             catch (Exception ex)
             {
-                Log.Items.Add("HandleTestList ---> Failed Because of error : " + ex.ToString());
+                // Get the line number from the stack frame
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
+                //Log.Items.Add("HandleTestList ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
 
         }
@@ -3474,21 +3475,26 @@ namespace FirstTry_app_1
                 IN = IN.Remove(IN.Length - 1, 1);
                 OUT = IN;
             }
-            if (IN.Substring(0, 1) == "\"" && IN.Substring(IN.Length - 1, 1) == "\"")
+            if (IN.Length != 0)
             {
-                IN = IN.Remove(0, 1);
-                IN = IN.Remove(IN.Length - 1, 1);
-                OUT = IN;
-            }
-            if (!IN.Contains("str(StoreEvalDB.vars") && !IN.Contains(" or "))
-            {
-                return IN;
+                if (IN.Substring(0, 1) == "\"" && IN.Substring(IN.Length - 1, 1) == "\"")
+                {
+                    IN = IN.Remove(0, 1);
+                    IN = IN.Remove(IN.Length - 1, 1);
+                    OUT = IN;
+                }
+                if (!IN.Contains("str(StoreEvalDB.vars") && !IN.Contains(" or "))
+                {
+                    return IN;
+                }
+                else
+                {
+                    OUT = IN.Replace("' + str(StoreEvalDB.vars[\"", "${").Replace("\" + str(StoreEvalDB.vars[\"", "${").Replace("str(StoreEvalDB.vars[\"", "${").Replace("\"]) + '", "}").Replace("\"]) + \"", "}").Replace("\"]) + ", "}").Replace("\"])", "}").Replace("' or '", "*").Replace("\" or \"", "*").Replace("' or ", "*").Replace("\" or ", "*").Replace(" or '", "*").Replace(" or \"", "*").Replace(" or ", "*");
+                    return OUT;
+                }
             }
             else
-            {
-                OUT = IN.Replace("' + str(StoreEvalDB.vars[\"", "${").Replace("\" + str(StoreEvalDB.vars[\"", "${").Replace("str(StoreEvalDB.vars[\"", "${").Replace("\"]) + '", "}").Replace("\"]) + \"", "}").Replace("\"]) + ", "}").Replace("\"])", "}").Replace("' or '", "*").Replace("\" or \"", "*").Replace("' or ", "*").Replace("\" or ", "*").Replace(" or '", "*").Replace(" or \"", "*").Replace(" or ", "*");
-                return OUT;
-            }
+                return "";
         }
 
         private bool IsElementPresent(By by)
@@ -4859,7 +4865,10 @@ namespace FirstTry_app_1
             }
             catch (Exception ex)
             {
-                Log.Items.Add("OpenTestCase_Click ---> Failed Because of error : " + ex.ToString());
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
+                Log.Items.Add("OpenTestCase_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
 
@@ -4867,38 +4876,67 @@ namespace FirstTry_app_1
         {
             try
             {
-                openFileDialog.Multiselect = false;
-                openFileDialog.Filter = "Python file (*.py)|*.py|Old Selenium IDE output (suit.*)|suit|NewSelenium IDE output (*.side)|*.side";
-                OpenDialog();
-                if (ok)
+                if (TestList.Count != 0)
                 {
-                    if (_openFileNameArray[0].Contains('.'))
+                    UnsavedContentDialog();
+                    if (Continue)
                     {
-                        switch (_openFileNameArray[0].Split('.')[1])
+                        TestList.Clear();
+                        openFileDialog.Multiselect = false;
+                        openFileDialog.Filter = "Python file (*.py)|*.py|Old Selenium IDE output (suit.*)|suit|NewSelenium IDE output (*.side)|*.side";
+                        OpenDialog();
+                        if (ok)
                         {
-                            case "py":
-                                testCaseCounter = 0;
-                                _openFileAddress = _openFileAddressArray[0];
-                                _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
-                                _openFileName = _openFileNameArray[0];
-                                _openFileName = _openFileName.Replace(".py", "");
-                                string mystring1 = _openFileAddress.Replace("\\" + _openFileName, "");
-                                for (int j = mystring1.Length; j > 0; j--)
+                            if (_openFileNameArray[0].Contains('.'))
+                            {
+                                switch (_openFileNameArray[0].Split('.')[1])
                                 {
-                                    mystring1 = mystring1.Substring(mystring1.IndexOf("\\") + 1);
-                                }
+                                    case "py":
+                                        testCaseCounter = 0;
+                                        _openFileAddress = _openFileAddressArray[0];
+                                        _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                                        _openFileName = _openFileNameArray[0];
+                                        _openFileName = _openFileName.Replace(".py", "");
+                                        string mystring1 = _openFileAddress.Replace("\\" + _openFileName, "");
+                                        for (int j = mystring1.Length; j > 0; j--)
+                                        {
+                                            mystring1 = mystring1.Substring(mystring1.IndexOf("\\") + 1);
+                                        }
 
-                                FolderName = mystring1;
-                                RefreshLists(true, true);
-                                OpenTestSuit(_openFileAddress);
-                                TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
-                                break;
-                            case "side":
+                                        FolderName = mystring1;
+                                        RefreshLists(true, true);
+                                        OpenTestSuit(_openFileAddress);
+                                        TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
+                                        break;
+                                    case "side":
+                                        testCaseCounter = 0;
+                                        _openFileAddress = _openFileAddressArray[0];
+                                        _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                                        _openFileName = _openFileNameArray[0];
+                                        _openFileName = _openFileName.Replace(".side", "");
+                                        string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
+                                        for (int j = mystring.Length; j > 0; j--)
+                                        {
+                                            mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                                        }
+
+                                        FolderName = mystring;
+                                        RefreshLists(true, true);
+                                        openNewTestSuit(_openFileAddress);
+                                        TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
+                                        break;
+                                    default:
+                                        EmptyFieldtDialog();
+                                        break;
+                                }
+                            }
+                            else
+                            {
                                 testCaseCounter = 0;
                                 _openFileAddress = _openFileAddressArray[0];
                                 _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
                                 _openFileName = _openFileNameArray[0];
-                                _openFileName = _openFileName.Replace(".side", "");
+                                _openFileName = _openFileName;
                                 string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
                                 for (int j = mystring.Length; j > 0; j--)
                                 {
@@ -4907,34 +4945,85 @@ namespace FirstTry_app_1
 
                                 FolderName = mystring;
                                 RefreshLists(true, true);
-                                openNewTestSuit(_openFileAddress);
+                                openOldTestSuit(_openFileAddress);
                                 TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
-                                break;
-                            default:
-                                EmptyFieldtDialog();
-                                break;
+                            }
+                            //BL.OpenFile _openFile = new BL.OpenFile();
                         }
                     }
-                    else
-                    {
-                        testCaseCounter = 0;
-                        _openFileAddress = _openFileAddressArray[0];
-                        _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
-                        _openFileName = _openFileNameArray[0];
-                        _openFileName = _openFileName;
-                        string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
-                        for (int j = mystring.Length; j > 0; j--)
-                        {
-                            mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
-                        }
-
-                        FolderName = mystring;
-                        RefreshLists(true, true);
-                        openOldTestSuit(_openFileAddress);
-                        TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
-                    }
-                    //BL.OpenFile _openFile = new BL.OpenFile();
                 }
+                else
+                {
+                    openFileDialog.Multiselect = false;
+                    openFileDialog.Filter = "Python file (*.py)|*.py|Old Selenium IDE output (suit.*)|suit|NewSelenium IDE output (*.side)|*.side";
+                    OpenDialog();
+                    if (ok)
+                    {
+                        if (_openFileNameArray[0].Contains('.'))
+                        {
+                            switch (_openFileNameArray[0].Split('.')[1])
+                            {
+                                case "py":
+                                    testCaseCounter = 0;
+                                    _openFileAddress = _openFileAddressArray[0];
+                                    _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                                    _openFileName = _openFileNameArray[0];
+                                    _openFileName = _openFileName.Replace(".py", "");
+                                    string mystring1 = _openFileAddress.Replace("\\" + _openFileName, "");
+                                    for (int j = mystring1.Length; j > 0; j--)
+                                    {
+                                        mystring1 = mystring1.Substring(mystring1.IndexOf("\\") + 1);
+                                    }
+
+                                    FolderName = mystring1;
+                                    RefreshLists(true, true);
+                                    OpenTestSuit(_openFileAddress);
+                                    TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
+                                    break;
+                                case "side":
+                                    testCaseCounter = 0;
+                                    _openFileAddress = _openFileAddressArray[0];
+                                    _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                                    _openFileName = _openFileNameArray[0];
+                                    _openFileName = _openFileName.Replace(".side", "");
+                                    string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
+                                    for (int j = mystring.Length; j > 0; j--)
+                                    {
+                                        mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                                    }
+
+                                    FolderName = mystring;
+                                    RefreshLists(true, true);
+                                    openNewTestSuit(_openFileAddress);
+                                    TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
+                                    break;
+                                default:
+                                    EmptyFieldtDialog();
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            testCaseCounter = 0;
+                            _openFileAddress = _openFileAddressArray[0];
+                            _openFileAddress = _openFileAddress.Replace("\\\\", "\\");
+                            _openFileName = _openFileNameArray[0];
+                            _openFileName = _openFileName;
+                            string mystring = _openFileAddress.Replace("\\" + _openFileName, "");
+                            for (int j = mystring.Length; j > 0; j--)
+                            {
+                                mystring = mystring.Substring(mystring.IndexOf("\\") + 1);
+                            }
+
+                            FolderName = mystring;
+                            RefreshLists(true, true);
+                            openOldTestSuit(_openFileAddress);
+                            TestCaseCounterTB.Text = Convert.ToString(testCaseCounter);
+                        }
+                        //BL.OpenFile _openFile = new BL.OpenFile();
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -5031,8 +5120,44 @@ namespace FirstTry_app_1
             AddCommand();
         }
 
-        private void SelectTarget_Click(object sender, RoutedEventArgs e)
+        string elementAddress;
+        string localStorage;
+        private async void SelectTarget_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                //ILocalStorage webStorage = ((IHasWebStorage)webDriver).WebStorage.LocalStorage;
+                //webStorage.SetItem("useTestData", "true");
+
+                string AddJquery = File.ReadAllText("C:\\webdriver-ide-source\\tmp\\First try extention\\src\\JS\\AddJquery.js");
+                jsExecutor.ExecuteScript(AddJquery);
+                string content = File.ReadAllText("C:\\webdriver-ide-source\\tmp\\First try extention\\src\\JS\\content1.js");
+                jsExecutor.ExecuteScript(content);
+                localStorage = File.ReadAllText("C:\\webdriver-ide-source\\tmp\\First try extention\\src\\JS\\localStorage.js");
+                //var first = webStorage.GetItem("useTestData");
+                await Task.Run(() => getLocalStorage());
+            }
+            catch (Exception ex)
+            {
+                // Get the line number from the stack frame
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
+                Log.Items.Add("SelectTarget_Click ---> Failed in line " + line + " Because of error : " + ex.ToString());
+            }
+        }
+        public async Task<Object> getLocalStorage()
+        {
+            while (true)
+            {
+                elementAddress = jsExecutor.ExecuteScript(localStorage).ToString();
+                if (elementAddress != null)
+                {
+                    break;
+                }
+                return "";
+            }
+            return "";
         }
 
         private void Find_Click(object sender, RoutedEventArgs e)
@@ -5265,7 +5390,10 @@ namespace FirstTry_app_1
             }
             catch (Exception ex)
             {
-                Log.Items.Add("TestCaseListView_SelectionChanged ---> Failed Because of error : " + ex.ToString());
+                StackTrace st = new StackTrace(ex, true);
+                StackFrame frame = st.GetFrame(st.FrameCount - 1);
+                int line = frame.GetFileLineNumber();
+                Log.Items.Add("TestCaseListView_SelectionChanged ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
         private void CommandsComboBox_MouseLeave(object sender, MouseEventArgs e)
@@ -5552,7 +5680,7 @@ namespace FirstTry_app_1
                         }
                     }
                     TestSuit obj1 = TestList.FirstOrDefault(x => x.TestNumber == _testCaseCounter);
-                    ListDB = new ObservableCollection<Commands>(obj1.TestValue);
+                    if (obj1 != null) ListDB = new ObservableCollection<Commands>(obj1.TestValue);
                     RefreshLists(true, true);
                     listView.SelectedIndex = index;
                 }
@@ -5562,7 +5690,7 @@ namespace FirstTry_app_1
                 StackTrace st = new StackTrace(ex, true);
                 StackFrame frame = st.GetFrame(st.FrameCount - 1);
                 int line = frame.GetFileLineNumber();
-                Log.Items.Add("ListView_Drop ---> Failed in line " + line + " Because of error : " + ex.ToString());
+                //Log.Items.Add("ListView_Drop ---> Failed in line " + line + " Because of error : " + ex.ToString());
             }
         }
 
@@ -6076,6 +6204,8 @@ namespace FirstTry_app_1
         private int endPos;
         private ListViewItem lvitemWhile;
         private ListViewItem lvitemIf;
+        IJavaScriptExecutor jsExecutor;
+
         public async Task runCommand(Commands thisCommand, int caseIndex, int commandIndex)
         {
             try
@@ -6119,7 +6249,7 @@ namespace FirstTry_app_1
                 }
 
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
-                IJavaScriptExecutor jsExecutor = driver;
+                jsExecutor = driver;
                 //highligh css class
                 jsExecutor.ExecuteScript("var styleContainer = document.createElement(\"style\"); styleContainer.innerHTML = \".myHighlight {background-color: rgba(255,255,0,0.9) !important;}\"; document.body.appendChild(styleContainer); ");
 

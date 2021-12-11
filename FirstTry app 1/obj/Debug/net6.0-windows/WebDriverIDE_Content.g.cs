@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("data/chromedriver.exe")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("data/extention-test.crx")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("data/staticcode-case.py")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("data/staticcode.py")]

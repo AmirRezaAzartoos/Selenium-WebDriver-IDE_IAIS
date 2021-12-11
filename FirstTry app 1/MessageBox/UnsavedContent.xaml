@@ -8,7 +8,7 @@
         Title="UnsavedContent" Height="134" Width="280" WindowStyle="None" WindowStartupLocation="CenterScreen" Background="Transparent" AllowsTransparency="True">
     <Border Background="WhiteSmoke" CornerRadius="5">
         <Grid Background="WhiteSmoke" RenderOptions.BitmapScalingMode="HighQuality" Margin="2,2,2,2">
-            <Label Content="Unsaved content alert !" Margin="17,34,17,0" VerticalAlignment="Top" FontFamily="roboto medium" Foreground="#DD3A3A3A" Background="{x:Null}"/>
+            <Label Content="All unsaved content would be lost !" Margin="17,34,17,0" VerticalAlignment="Top" FontFamily="roboto medium" Foreground="#DD3A3A3A" Background="{x:Null}"/>
             <Button FontFamily="roboto medium" FontSize="16" KeyDown="OKButton_KeyDown" Click="OKButton_Click" Content="Cancel" Name="OKButton" Margin="28,86,148,0" Background="#FFF0F0F0" BorderBrush="{x:Null}" Foreground="#FF656565" VerticalAlignment="Top"/>
             <Button FontFamily="roboto medium" FontSize="16" KeyDown="OKButton_KeyDown" Click="ContinueButton_Click" Content="Continue" x:Name="ContinueButton" Margin="148,86,28,0" Background="#FFF0F0F0" BorderBrush="{x:Null}" Foreground="#FF656565" VerticalAlignment="Top"/>
         </Grid>
